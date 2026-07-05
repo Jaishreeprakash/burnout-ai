@@ -12,6 +12,7 @@ import {
   ActivityRecord,
   DashboardData,
   Recommendation,
+  ResetPasswordRequest,
 } from '../types';
 
 const API_BASE_URL = 'https://burnout-backend-l438.onrender.com/api/v1';
@@ -230,6 +231,11 @@ export const authApi = {
 
   async getCurrentUser(): Promise<User> {
     const response = await api.get<User>('/auth/me');
+    return response.data;
+  },
+
+  async resetPassword(data: ResetPasswordRequest): Promise<{ status: string; message: string }> {
+    const response = await api.post<{ status: string; message: string }>('/auth/reset-password', data);
     return response.data;
   },
 };

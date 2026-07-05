@@ -16,60 +16,75 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { useAuth } from '../../context/AuthContext';
 import { Colors } from '../../constants/colors';
 import { AuthStackParamList } from '../../navigation/AuthNavigator';
+import { authApi } from '../../services/api';
 
 type Props = {
-  navigation: StackNavigationProp<AuthStackParamList, 'Login'>;
+  navigation: StackNavigationProp<AuthStackParamList, 'ForgotPassword'>;
 };
 
-const LoginScreen: React.FC<Props> = ({ navigation }) => {
-  const { login, demoLogin } = useAuth();
+const ForgotPasswordScreen: React.FC<Props> = ({ navigation }) => {
   const insets = useSafeAreaInsets();
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [isDemoLoading, setIsDemoLoading] = useState(false);
 
   // Animation values
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(40)).current;
-  const logoScale = useRef(new Animated.Value(0.8)).current;
 
   useEffect(() => {
     Animated.parallel([
       Animated.timing(fadeAnim, { toValue: 1, duration: 800, useNativeDriver: true }),
       Animated.timing(slideAnim, { toValue: 0, duration: 700, useNativeDriver: true }),
-      Animated.spring(logoScale, { toValue: 1, friction: 6, useNativeDriver: true }),
     ]).start();
   }, []);
 
-  const handleLogin = async () => {
-    if (!username.trim() || !password.trim()) {
-      Alert.alert('Missing Fields', 'Please enter your username/email and password.');
+  const handleResetPassword = async () => {
+    const trimmedEmail = email.trim();
+    const trimmedPassword = newPassword.trim();
+    const trimmedConfirm = confirmPassword.trim();
+
+    if (!trimmedEmail || !trimmedPassword || !trimmedConfirm) {
+      Alert.alert('Missing Fields', 'Please fill in all the fields.');
       return;
     }
+
+    if (trimmedPassword.length < 6) {
+      Alert.alert('Invalid Password', 'Your new password must be at least 6 characters long.');
+      return;
+    }
+
+    if (trimmedPassword !== trimmedConfirm) {
+      Alert.alert('Password Mismatch', 'New password and confirm password do not match.');
+      return;
+    }
+
     setIsLoading(true);
     try {
-      await login({ username: username.trim(), password });
+      const response = await authApi.resetPassword({
+        email: trimmedEmail,
+        new_password: trimmedPassword,
+      });
+      Alert.alert(
+        'Success',
+        response.message || 'Your password has been reset successfully. Please sign in with your new password.',
+        [
+          {
+            text: 'Sign In',
+            onPress: () => navigation.navigate('Login'),
+          },
+        ]
+      );
     } catch (error: any) {
-      const msg = error?.response?.data?.detail || 'Incorrect username/email or password.';
-      Alert.alert('Login Failed', msg);
+      const msg = error?.response?.data?.detail || 'Could not reset your password. Please verify your email/username.';
+      Alert.alert('Reset Failed', msg);
     } finally {
       setIsLoading(false);
-    }
-  };
-
-  const handleDemoLogin = async () => {
-    setIsDemoLoading(true);
-    try {
-      await demoLogin();
-    } catch (error) {
-      Alert.alert('Error', 'Demo login failed. Please try again.');
-    } finally {
-      setIsDemoLoading(false);
     }
   };
 
@@ -93,15 +108,22 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
         >
-          {/* Logo Section */}
-          <Animated.View style={[styles.logoSection, { opacity: fadeAnim, transform: [{ scale: logoScale }] }]}>
+          {/* Header Section */}
+          <Animated.View style={[styles.headerSection, { opacity: fadeAnim }]}>
+            <TouchableOpacity
+              onPress={() => navigation.goBack()}
+              style={styles.backButton}
+              activeOpacity={0.8}
+            >
+              <MaterialCommunityIcons name="arrow-left" size={24} color={Colors.text} />
+            </TouchableOpacity>
             <View style={styles.logoContainer}>
               <LinearGradient colors={['#6366f1', '#8b5cf6']} style={styles.logoGradient}>
-                <MaterialCommunityIcons name="brain" size={48} color="#fff" />
+                <MaterialCommunityIcons name="lock-reset" size={40} color="#fff" />
               </LinearGradient>
             </View>
-            <Text style={styles.appName}>BurnoutAI</Text>
-            <Text style={styles.tagline}>Your AI Mental Wellness Companion</Text>
+            <Text style={styles.appName}>Reset Password</Text>
+            <Text style={styles.tagline}>Create a new secure password for your account</Text>
           </Animated.View>
 
           {/* Form Section */}
@@ -111,40 +133,39 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
               { opacity: fadeAnim, transform: [{ translateY: slideAnim }] },
             ]}
           >
-            <Text style={styles.formTitle}>Welcome back</Text>
-            <Text style={styles.formSubtitle}>Sign in to continue your wellness journey</Text>
+            <Text style={styles.formTitle}>Enter new password</Text>
+            <Text style={styles.formSubtitle}>Update your password to log back in</Text>
 
-            {/* Username input */}
+            {/* Email/Username input */}
             <View style={styles.inputWrapper}>
               <View style={styles.inputIcon}>
                 <MaterialCommunityIcons name="account-outline" size={20} color={Colors.textMuted} />
               </View>
               <TextInput
                 style={styles.input}
-                placeholder="Username"
+                placeholder="Username or Email"
                 placeholderTextColor={Colors.textMuted}
-                value={username}
-                onChangeText={setUsername}
+                value={email}
+                onChangeText={setEmail}
                 autoCapitalize="none"
                 autoCorrect={false}
                 returnKeyType="next"
               />
             </View>
 
-            {/* Password input */}
+            {/* New Password input */}
             <View style={styles.inputWrapper}>
               <View style={styles.inputIcon}>
                 <MaterialCommunityIcons name="lock-outline" size={20} color={Colors.textMuted} />
               </View>
               <TextInput
                 style={[styles.input, { paddingRight: 50 }]}
-                placeholder="Password"
+                placeholder="New Password"
                 placeholderTextColor={Colors.textMuted}
-                value={password}
-                onChangeText={setPassword}
+                value={newPassword}
+                onChangeText={setNewPassword}
                 secureTextEntry={!showPassword}
-                returnKeyType="done"
-                onSubmitEditing={handleLogin}
+                returnKeyType="next"
               />
               <TouchableOpacity
                 style={styles.eyeButton}
@@ -158,75 +179,64 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
               </TouchableOpacity>
             </View>
 
-            {/* Forgot Password Link */}
-            <TouchableOpacity
-              onPress={() => navigation.navigate('ForgotPassword')}
-              style={styles.forgotPasswordWrapper}
-              activeOpacity={0.8}
-            >
-              <Text style={styles.forgotPasswordText}>Forgot password?</Text>
-            </TouchableOpacity>
+            {/* Confirm Password input */}
+            <View style={styles.inputWrapper}>
+              <View style={styles.inputIcon}>
+                <MaterialCommunityIcons name="lock-check-outline" size={20} color={Colors.textMuted} />
+              </View>
+              <TextInput
+                style={[styles.input, { paddingRight: 50 }]}
+                placeholder="Confirm New Password"
+                placeholderTextColor={Colors.textMuted}
+                value={confirmPassword}
+                onChangeText={setConfirmPassword}
+                secureTextEntry={!showConfirmPassword}
+                returnKeyType="done"
+                onSubmitEditing={handleResetPassword}
+              />
+              <TouchableOpacity
+                style={styles.eyeButton}
+                onPress={() => setShowConfirmPassword(!showConfirmPassword)}
+              >
+                <MaterialCommunityIcons
+                  name={showConfirmPassword ? 'eye-off-outline' : 'eye-outline'}
+                  size={20}
+                  color={Colors.textMuted}
+                />
+              </TouchableOpacity>
+            </View>
 
-            {/* Login Button */}
+            {/* Reset Button */}
             <TouchableOpacity
-              onPress={handleLogin}
+              onPress={handleResetPassword}
               disabled={isLoading}
               activeOpacity={0.85}
-              style={styles.loginButtonWrapper}
+              style={styles.resetButtonWrapper}
             >
               <LinearGradient
                 colors={['#6366f1', '#8b5cf6']}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 0 }}
-                style={styles.loginButton}
+                style={styles.resetButton}
               >
                 {isLoading ? (
                   <ActivityIndicator color="#fff" />
                 ) : (
                   <>
-                    <Text style={styles.loginButtonText}>Sign In</Text>
-                    <MaterialCommunityIcons name="arrow-right" size={20} color="#fff" />
+                    <Text style={styles.resetButtonText}>Reset Password</Text>
+                    <MaterialCommunityIcons name="check" size={20} color="#fff" />
                   </>
                 )}
               </LinearGradient>
             </TouchableOpacity>
 
-            {/* Divider */}
-            <View style={styles.divider}>
-              <View style={styles.dividerLine} />
-              <Text style={styles.dividerText}>or</Text>
-              <View style={styles.dividerLine} />
-            </View>
-
-            {/* Demo Button */}
+            {/* Back to Login link */}
             <TouchableOpacity
-              style={styles.demoButton}
-              onPress={handleDemoLogin}
-              disabled={isDemoLoading}
-              activeOpacity={0.8}
+              onPress={() => navigation.navigate('Login')}
+              style={styles.backToLoginRow}
             >
-              {isDemoLoading ? (
-                <ActivityIndicator color={Colors.primary} size="small" />
-              ) : (
-                <>
-                  <MaterialCommunityIcons name="play-circle-outline" size={20} color={Colors.primary} />
-                  <Text style={styles.demoButtonText}>Try Demo Mode</Text>
-                </>
-              )}
+              <Text style={styles.backToLoginLink}>Back to Sign In</Text>
             </TouchableOpacity>
-
-            {/* Register Link */}
-            <View style={styles.registerRow}>
-              <Text style={styles.registerText}>Don't have an account? </Text>
-              <TouchableOpacity onPress={() => navigation.navigate('Register')}>
-                <Text style={styles.registerLink}>Sign up</Text>
-              </TouchableOpacity>
-            </View>
-          </Animated.View>
-
-          {/* Footer */}
-          <Animated.View style={[styles.footer, { opacity: fadeAnim }]}>
-            <Text style={styles.footerText}>Powered by AI • Built for your wellbeing</Text>
           </Animated.View>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -263,9 +273,23 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     justifyContent: 'center',
   },
-  logoSection: {
+  headerSection: {
     alignItems: 'center',
-    marginBottom: 40,
+    marginBottom: 32,
+    position: 'relative',
+  },
+  backButton: {
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: Colors.surface,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: Colors.border,
   },
   logoContainer: {
     marginBottom: 16,
@@ -274,25 +298,27 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.5,
     shadowRadius: 20,
     elevation: 10,
+    marginTop: 20,
   },
   logoGradient: {
-    width: 90,
-    height: 90,
-    borderRadius: 28,
+    width: 80,
+    height: 80,
+    borderRadius: 24,
     justifyContent: 'center',
     alignItems: 'center',
   },
   appName: {
-    fontSize: 36,
+    fontSize: 30,
     fontWeight: '900',
     color: Colors.text,
-    letterSpacing: 1,
+    letterSpacing: 0.5,
     marginBottom: 6,
   },
   tagline: {
-    fontSize: 15,
+    fontSize: 14,
     color: Colors.textMuted,
     textAlign: 'center',
+    paddingHorizontal: 10,
   },
   formCard: {
     backgroundColor: Colors.surface,
@@ -302,7 +328,7 @@ const styles = StyleSheet.create({
     borderColor: Colors.border,
   },
   formTitle: {
-    fontSize: 24,
+    fontSize: 22,
     fontWeight: '800',
     color: Colors.text,
     marginBottom: 6,
@@ -310,7 +336,7 @@ const styles = StyleSheet.create({
   formSubtitle: {
     fontSize: 14,
     color: Colors.textMuted,
-    marginBottom: 28,
+    marginBottom: 24,
   },
   inputWrapper: {
     flexDirection: 'row',
@@ -336,17 +362,7 @@ const styles = StyleSheet.create({
     height: 52,
     justifyContent: 'center',
   },
-  forgotPasswordWrapper: {
-    alignSelf: 'flex-end',
-    marginBottom: 20,
-    marginTop: -4,
-  },
-  forgotPasswordText: {
-    color: Colors.primary,
-    fontSize: 14,
-    fontWeight: '600',
-  },
-  loginButtonWrapper: {
+  resetButtonWrapper: {
     marginTop: 8,
     borderRadius: 14,
     overflow: 'hidden',
@@ -356,70 +372,27 @@ const styles = StyleSheet.create({
     shadowRadius: 12,
     elevation: 8,
   },
-  loginButton: {
+  resetButton: {
     height: 54,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
     gap: 8,
   },
-  loginButtonText: {
+  resetButtonText: {
     color: '#fff',
     fontSize: 17,
     fontWeight: '700',
   },
-  divider: {
-    flexDirection: 'row',
+  backToLoginRow: {
     alignItems: 'center',
-    marginVertical: 20,
-    gap: 12,
+    marginTop: 20,
   },
-  dividerLine: {
-    flex: 1,
-    height: 1,
-    backgroundColor: Colors.border,
-  },
-  dividerText: {
-    color: Colors.textMuted,
-    fontSize: 13,
-  },
-  demoButton: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: 52,
-    borderRadius: 14,
-    borderWidth: 1.5,
-    borderColor: Colors.primary,
-    gap: 8,
-    marginBottom: 20,
-  },
-  demoButtonText: {
-    color: Colors.primary,
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  registerRow: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-  },
-  registerText: {
-    color: Colors.textMuted,
-    fontSize: 14,
-  },
-  registerLink: {
+  backToLoginLink: {
     color: Colors.primary,
     fontSize: 14,
     fontWeight: '700',
   },
-  footer: {
-    alignItems: 'center',
-    marginTop: 32,
-  },
-  footerText: {
-    color: Colors.textDim,
-    fontSize: 12,
-  },
 });
 
-export default LoginScreen;
+export default ForgotPasswordScreen;

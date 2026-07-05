@@ -29,6 +29,11 @@ export interface RegisterRequest {
   gender?: string;
 }
 
+export interface ResetPasswordRequest {
+  email: string;
+  new_password: string;
+}
+
 export type RiskLevel = 'low' | 'moderate' | 'high' | 'critical';
 
 export interface BurnoutAnalysis {
