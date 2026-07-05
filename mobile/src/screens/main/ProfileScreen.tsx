@@ -45,21 +45,27 @@ const ProfileScreen: React.FC = () => {
   };
 
   // Calculate dynamic stats
-  const activeDays = data?.trend_data?.burnout_scores?.filter(s => s > 0).length || 0;
-  const activeWellness = data?.trend_data?.wellness_scores?.filter(s => s > 0) || [];
-  const avgWellnessVal = activeWellness.length ? Math.round(activeWellness.reduce((a, b) => a + b, 0) / activeWellness.length) : 0;
-
-  // Streak: count consecutive non-zero days at the end of the trend array
+  let activeDays = 0;
   let streak = 0;
-  if (data?.trend_data?.burnout_scores) {
-    for (let i = data.trend_data.burnout_scores.length - 1; i >= 0; i--) {
-      if (data.trend_data.burnout_scores[i] > 0) {
+  if (data?.trend_data) {
+    const { sleep_scores, emotion_scores, burnout_scores } = data.trend_data;
+    // Days Tracked
+    for (let i = 0; i < 7; i++) {
+      if ((sleep_scores?.[i] ?? 0) > 0 || (emotion_scores?.[i] ?? 0) > 0 || (burnout_scores?.[i] ?? 0) > 0) {
+        activeDays++;
+      }
+    }
+    // Streak
+    for (let i = 6; i >= 0; i--) {
+      if ((sleep_scores?.[i] ?? 0) > 0 || (emotion_scores?.[i] ?? 0) > 0 || (burnout_scores?.[i] ?? 0) > 0) {
         streak++;
       } else {
         break;
       }
     }
   }
+
+  const avgWellnessVal = burnout ? Math.round(burnout.wellness?.overall_score ?? burnout.wellness_score ?? 0) : 0;
 
   const stats = [
     { label: 'Days Tracked', value: `${activeDays}`, icon: 'calendar-check' },
