@@ -244,8 +244,23 @@ export const authApi = {
 
 export const dashboardApi = {
   async getDashboard(): Promise<DashboardData> {
-    const response = await api.get<DashboardData>('/wellness/dashboard');
-    return response.data;
+    const response = await api.get<any>('/wellness/dashboard');
+    const data = response.data;
+    if (data.recent_phone_usage) {
+      data.recent_phone_usage = {
+        id: data.recent_phone_usage.id,
+        user_id: data.recent_phone_usage.user_id,
+        date: data.recent_phone_usage.date,
+        total_hours: data.recent_phone_usage.screen_time_hours || 0,
+        social_media_hours: data.recent_phone_usage.app_usage_data?.social_media_hours || 0,
+        productive_hours: data.recent_phone_usage.app_usage_data?.productive_hours || 0,
+        entertainment_hours: data.recent_phone_usage.app_usage_data?.entertainment_hours || 0,
+        pickups_count: data.recent_phone_usage.pickups_count || 0,
+        late_night_usage: data.recent_phone_usage.late_night_usage || false,
+        created_at: data.recent_phone_usage.created_at,
+      };
+    }
+    return data;
   },
 
   async getBurnoutAnalysis(): Promise<BurnoutAnalysis> {
@@ -277,16 +292,50 @@ export const sleepApi = {
 export const phoneApi = {
   async getPhoneUsageRecords(days = 7): Promise<PhoneUsageRecord[]> {
     try {
-      const response = await api.get<PhoneUsageRecord[]>(`/tracking/phone-usage?days=${days}`);
-      return response.data;
+      const response = await api.get<any[]>(`/tracking/phone-usage?days=${days}`);
+      return response.data.map((r) => ({
+        id: r.id,
+        user_id: r.user_id,
+        date: r.date,
+        total_hours: r.screen_time_hours || 0,
+        social_media_hours: r.app_usage_data?.social_media_hours || 0,
+        productive_hours: r.app_usage_data?.productive_hours || 0,
+        entertainment_hours: r.app_usage_data?.entertainment_hours || 0,
+        pickups_count: r.pickups_count || 0,
+        late_night_usage: r.late_night_usage || false,
+        created_at: r.created_at,
+      }));
     } catch {
       return [];
     }
   },
 
   async logPhoneUsage(data: Partial<PhoneUsageRecord>): Promise<PhoneUsageRecord> {
-    const response = await api.post<PhoneUsageRecord>('/tracking/phone-usage', data);
-    return response.data;
+    const payload = {
+      date: data.date,
+      screen_time_hours: data.total_hours,
+      pickups_count: data.pickups_count,
+      late_night_usage: data.late_night_usage,
+      app_usage_data: {
+        social_media_hours: data.social_media_hours || 0,
+        productive_hours: data.productive_hours || 0,
+        entertainment_hours: data.entertainment_hours || 0,
+      },
+    };
+    const response = await api.post<any>('/tracking/phone-usage', payload);
+    const r = response.data;
+    return {
+      id: r.id,
+      user_id: r.user_id,
+      date: r.date,
+      total_hours: r.screen_time_hours || 0,
+      social_media_hours: r.app_usage_data?.social_media_hours || 0,
+      productive_hours: r.app_usage_data?.productive_hours || 0,
+      entertainment_hours: r.app_usage_data?.entertainment_hours || 0,
+      pickups_count: r.pickups_count || 0,
+      late_night_usage: r.late_night_usage || false,
+      created_at: r.created_at,
+    };
   },
 };
 
