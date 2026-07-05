@@ -119,6 +119,32 @@ def _build_latest_data(user_id: int, db: Session) -> Dict[str, Any]:
     }
 
 
+def _get_personalized_recommendations(user_id: int, db: Session) -> List[Dict[str, Any]]:
+    """Helper function to fetch AI recommendations or rule-based fallbacks."""
+    user = db.query(User).filter(User.id == user_id).first()
+    username = (user.full_name or user.username) if user else "User"
+    
+    burnout_score = _latest_burnout_score(user_id, db)
+    latest        = _build_latest_data(user_id, db)
+    risk_level    = _risk_label(burnout_score)
+
+    try:
+        recs = generate_ai_recommendations(
+            burnout_score    = burnout_score,
+            risk_level       = risk_level,
+            component_scores = latest["component_scores"],
+            sleep_data       = latest["sleep_data"],
+            phone_data       = latest["phone_data"],
+            activity_data    = latest["activity_data"],
+            emotion_data     = latest["emotion_data"],
+            username         = username,
+        )
+    except Exception:
+        recs = generate_recommendations(burnout_score, latest["component_scores"],
+                                        {"phone": latest["phone_data"] or {}})
+    return recs
+
+
 # ── Routes ───────────────────────────────────────────────────────────────────
 
 @router.get("/")
@@ -128,34 +154,15 @@ def get_recommendations(
 ):
     """Get GPT-powered personalized recommendations based on real user data."""
     burnout_score = _latest_burnout_score(current_user.id, db)
-    latest        = _build_latest_data(current_user.id, db)
     risk_level    = _risk_label(burnout_score)
-
-    try:
-        # --- OpenAI GPT recommendations ---
-        recs = generate_ai_recommendations(
-            burnout_score    = burnout_score,
-            risk_level       = risk_level,
-            component_scores = latest["component_scores"],
-            sleep_data       = latest["sleep_data"],
-            phone_data       = latest["phone_data"],
-            activity_data    = latest["activity_data"],
-            emotion_data     = latest["emotion_data"],
-            username         = current_user.full_name or current_user.username,
-        )
-        source = "gpt"
-    except Exception as e:
-        # Fallback to rule-based engine
-        recs = generate_recommendations(burnout_score, latest["component_scores"],
-                                        {"phone": latest["phone_data"] or {}})
-        source = "rule-based"
+    recs          = _get_personalized_recommendations(current_user.id, db)
 
     return {
         "burnout_score":         burnout_score,
         "risk_level":            risk_level,
         "recommendations":       recs,
         "total_recommendations": len(recs),
-        "ai_source":             source,
+        "ai_source":             "gpt" if len(recs) > 0 else "rule-based",
         "generated_at":          datetime.now(timezone.utc).isoformat(),
     }
 
