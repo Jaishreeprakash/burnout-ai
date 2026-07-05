@@ -1,0 +1,58 @@
+# ── Python ──────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+env/
+pip-log.txt
+
+# ── Database files (never commit local SQLite) ───────────────────────────────
+*.db
+*.sqlite
+*.sqlite3
+
+# ── Secrets / Environment ────────────────────────────────────────────────────
+.env
+.env.*
+!.env.example
+
+# ── Node / React Native / Expo ───────────────────────────────────────────────
+node_modules/
+.expo/
+.expo-shared/
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
+web-build/
+dist/
+
+# ── Android ──────────────────────────────────────────────────────────────────
+mobile/android/.gradle/
+mobile/android/app/build/
+mobile/android/build/
+mobile/android/local.properties
+mobile/android/*.keystore
+mobile/android/app/*.keystore
+
+# ── IDE / OS ─────────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# ── Logs ─────────────────────────────────────────────────────────────────────
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
