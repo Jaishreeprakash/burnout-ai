@@ -9,7 +9,7 @@ class SleepRecordCreate(BaseModel):
     date: datetime
     duration_hours: float
     quality_score: float        # 0-100
-    consistency_score: float    # 0-100
+    consistency_score: float = 70.0
     bedtime: Optional[str] = None
     wake_time: Optional[str] = None
 
