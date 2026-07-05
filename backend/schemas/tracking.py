@@ -80,10 +80,10 @@ class TypingBehaviorResponse(BaseModel):
 # ---- Emotion Record Schemas ----
 
 class EmotionRecordCreate(BaseModel):
-    timestamp: datetime
-    emotion_type: str           # facial/voice
+    timestamp: Optional[datetime] = None
+    emotion_type: Optional[str] = "facial"
     dominant_emotion: str
-    confidence: float
+    confidence: float = 1.0
     emotion_scores: Optional[Dict[str, float]] = None
 
 

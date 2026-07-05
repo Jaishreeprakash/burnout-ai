@@ -187,17 +187,16 @@ def log_emotion(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-    """Log an emotion record (facial or voice analysis) for the current user."""
-    if data.emotion_type not in ("facial", "voice"):
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="emotion_type must be 'facial' or 'voice'",
-        )
+    emotion_type = data.emotion_type or "facial"
+    timestamp = data.timestamp or datetime.now(timezone.utc)
+    if emotion_type not in ("facial", "voice", "manual"):
+        emotion_type = "facial"
+
     emotion_scores_str = json.dumps(data.emotion_scores) if data.emotion_scores else None
     record = EmotionRecord(
         user_id=current_user.id,
-        timestamp=data.timestamp,
-        emotion_type=data.emotion_type,
+        timestamp=timestamp,
+        emotion_type=emotion_type,
         dominant_emotion=data.dominant_emotion,
         confidence=data.confidence,
         emotion_scores=emotion_scores_str,
