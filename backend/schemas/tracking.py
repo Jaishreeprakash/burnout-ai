@@ -1,6 +1,7 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator
 from typing import Optional, Dict, Any, List
 from datetime import datetime
+import json
 
 
 # ---- Sleep Schemas ----
@@ -49,6 +50,16 @@ class PhoneUsageResponse(BaseModel):
     pickups_count: Optional[int] = None
     created_at: datetime
 
+    @field_validator("app_usage_data", mode="before")
+    @classmethod
+    def parse_json(cls, v):
+        if isinstance(v, str):
+            try:
+                return json.loads(v)
+            except Exception:
+                return {}
+        return v
+
     class Config:
         from_attributes = True
 
@@ -96,6 +107,16 @@ class EmotionRecordResponse(BaseModel):
     confidence: float
     emotion_scores: Optional[Dict[str, float]] = None
     created_at: datetime
+
+    @field_validator("emotion_scores", mode="before")
+    @classmethod
+    def parse_json(cls, v):
+        if isinstance(v, str):
+            try:
+                return json.loads(v)
+            except Exception:
+                return {}
+        return v
 
     class Config:
         from_attributes = True
