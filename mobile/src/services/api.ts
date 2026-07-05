@@ -244,21 +244,13 @@ export const authApi = {
 
 export const dashboardApi = {
   async getDashboard(): Promise<DashboardData> {
-    try {
-      const response = await api.get<DashboardData>('/dashboard');
-      return response.data;
-    } catch {
-      return MOCK_DASHBOARD;
-    }
+    const response = await api.get<DashboardData>('/wellness/dashboard');
+    return response.data;
   },
 
   async getBurnoutAnalysis(): Promise<BurnoutAnalysis> {
-    try {
-      const response = await api.get<BurnoutAnalysis>('/burnout/analyze');
-      return response.data;
-    } catch {
-      return MOCK_BURNOUT;
-    }
+    const response = await api.get<BurnoutAnalysis>('/burnout/analysis');
+    return response.data;
   },
 };
 

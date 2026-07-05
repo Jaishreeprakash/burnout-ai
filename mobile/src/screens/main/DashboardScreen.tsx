@@ -116,8 +116,8 @@ const DashboardScreen: React.FC = () => {
             <Text style={styles.sectionTitle}>Burnout Risk Score</Text>
             <View style={styles.gaugeContainer}>
               <BurnoutGauge
-                score={burnout?.burnout_score ?? 42}
-                riskLevel={burnout?.risk_level ?? 'moderate'}
+                score={burnout?.burnout_score ?? 0}
+                riskLevel={burnout?.risk_level ?? 'low'}
                 size={220}
               />
             </View>
@@ -146,35 +146,35 @@ const DashboardScreen: React.FC = () => {
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
               <MetricCard
                 title="Sleep Score"
-                value={burnout?.sleep_quality_score ?? 55}
+                value={burnout?.sleep_quality_score ?? 0}
                 icon="moon-waning-crescent"
                 unit="%"
-                score={burnout?.sleep_quality_score ?? 55}
-                change={-5}
+                score={burnout?.sleep_quality_score ?? 0}
+                change={data?.recent_sleep ? -5 : undefined}
               />
               <MetricCard
                 title="Phone Usage"
-                value="5.2"
+                value={data?.recent_phone_usage ? `${data.recent_phone_usage.total_hours.toFixed(1)}` : '0.0'}
                 icon="cellphone"
                 unit="h"
-                score={burnout?.phone_usage_score ?? 48}
-                change={12}
+                score={burnout?.phone_usage_score ?? 0}
+                change={data?.recent_phone_usage ? 12 : undefined}
               />
               <MetricCard
                 title="Activity"
-                value={burnout?.activity_score ?? 70}
+                value={burnout?.activity_score ?? 0}
                 icon="lightning-bolt"
                 unit="%"
-                score={burnout?.activity_score ?? 70}
-                change={8}
+                score={burnout?.activity_score ?? 0}
+                change={data?.recent_activity ? 8 : undefined}
               />
               <MetricCard
                 title="Mood Stability"
-                value={burnout?.emotional_stability_index ?? 68}
+                value={burnout?.emotional_stability_index ?? 0}
                 icon="heart-pulse"
                 unit="%"
-                score={burnout?.emotional_stability_index ?? 68}
-                change={3}
+                score={burnout?.emotional_stability_index ?? 0}
+                change={data?.recent_emotion ? 3 : undefined}
               />
             </ScrollView>
           </View>
@@ -189,13 +189,13 @@ const DashboardScreen: React.FC = () => {
             </View>
             <View style={styles.wellnessCard}>
               <View style={styles.wellnessLeft}>
-                <WellnessRing score={burnout?.wellness_score ?? 62} label="Wellness" size={110} />
+                <WellnessRing score={burnout?.wellness_score ?? 0} label="Wellness" size={110} />
               </View>
               <View style={styles.wellnessRight}>
-                <WellnessRingLegend score={burnout?.sleep_quality_score ?? 55} label="Sleep" />
-                <WellnessRingLegend score={burnout?.emotional_stability_index ?? 68} label="Mood" />
-                <WellnessRingLegend score={burnout?.activity_score ?? 70} label="Activity" />
-                <WellnessRingLegend score={burnout?.phone_usage_score ?? 48} label="Screen" />
+                <WellnessRingLegend score={burnout?.sleep_quality_score ?? 0} label="Sleep" />
+                <WellnessRingLegend score={burnout?.emotional_stability_index ?? 0} label="Mood" />
+                <WellnessRingLegend score={burnout?.activity_score ?? 0} label="Activity" />
+                <WellnessRingLegend score={burnout?.phone_usage_score ?? 0} label="Screen" />
               </View>
             </View>
           </View>
