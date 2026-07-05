@@ -222,6 +222,11 @@ def get_dashboard(
                 "productivity_score": 0.0,
             },
             recommendations=[],
+            wellness_score=0.0,
+            emotional_stability_index=0.0,
+            sleep_quality_score=0.0,
+            phone_usage_score=0.0,
+            activity_score=0.0,
         )
         return DashboardData(
             burnout_analysis=zero_analysis,

@@ -193,6 +193,11 @@ def _build_analysis(user_id: int, db: Session) -> BurnoutAnalysis:
         emotion_analysis=emotion_summary,
         activity_analysis=activity_analysis,
         wellness=wellness,
+        wellness_score=wellness.get("overall_score", 0.0) if wellness else 0.0,
+        emotional_stability_index=emotion_data.get("stability_score", 0.0) if emotion_data else 0.0,
+        sleep_quality_score=comp.get("sleep_score", 0.0),
+        phone_usage_score=comp.get("phone_overuse_score", 0.0),
+        activity_score=comp.get("activity_score", 0.0),
     )
 
 

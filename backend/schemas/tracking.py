@@ -176,6 +176,11 @@ class BurnoutAnalysis(BaseModel):
     wellness: Optional[Dict[str, Any]] = None
     trend: Optional[Dict[str, Any]] = None
     recommendations: Optional[List[Dict[str, Any]]] = []
+    wellness_score: float = 0.0
+    emotional_stability_index: float = 0.0
+    sleep_quality_score: float = 0.0
+    phone_usage_score: float = 0.0
+    activity_score: float = 0.0
 
 
 # ---- Dashboard Data Schema ----
