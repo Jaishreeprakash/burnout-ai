@@ -4,7 +4,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from database import get_db
 from models.user import User
-from schemas.user import Token, UserCreate, UserResponse
+from schemas.user import Token, UserCreate, UserResponse, ResetPasswordRequest
 from utils.auth_utils import (
     create_access_token,
     get_current_user,
@@ -99,3 +99,24 @@ def login(
 def get_me(current_user: User = Depends(get_current_user)):
     """Get the currently authenticated user's profile."""
     return current_user
+
+
+@router.post("/reset-password", status_code=status.HTTP_200_OK)
+def reset_password(req: ResetPasswordRequest, db: Session = Depends(get_db)):
+    """Reset a user's password."""
+    # Find user by email or username
+    user = db.query(User).filter(User.email == req.email).first()
+    if not user:
+        user = db.query(User).filter(User.username == req.email).first()
+
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="No account found with this email or username",
+        )
+
+    # Hash the new password and update user in DB
+    hashed_pw = get_password_hash(req.new_password)
+    user.hashed_password = hashed_pw
+    db.commit()
+    return {"status": "success", "message": "Password updated successfully"}
