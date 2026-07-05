@@ -228,7 +228,7 @@ const DashboardScreen: React.FC = () => {
           </View>
 
           {/* AI Recommendation */}
-          {burnout?.recommendations[0] && (
+          {burnout?.recommendations?.[0] && (
             <View style={styles.recSection}>
               <View style={styles.sectionHeader}>
                 <Text style={styles.sectionTitle}>Top AI Recommendation</Text>

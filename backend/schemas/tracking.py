@@ -175,6 +175,7 @@ class BurnoutAnalysis(BaseModel):
     activity_analysis: Optional[Dict[str, Any]] = None
     wellness: Optional[Dict[str, Any]] = None
     trend: Optional[Dict[str, Any]] = None
+    recommendations: Optional[List[Dict[str, Any]]] = []
 
 
 # ---- Dashboard Data Schema ----
