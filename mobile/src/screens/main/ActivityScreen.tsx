@@ -112,7 +112,7 @@ const ActivityScreen: React.FC = () => {
         exercise_minutes: parseInt(exerciseMinutes) || 0,
         break_count: parseInt(breakCount) || 0,
         notes: activityNotes,
-        date: new Date().toISOString().split('T')[0],
+        date: new Date().toISOString(),
         focus_score: focusScore,
       });
       Alert.alert('Saved!', 'Activity logged successfully.', [

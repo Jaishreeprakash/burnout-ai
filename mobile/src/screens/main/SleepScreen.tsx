@@ -73,7 +73,7 @@ const SleepScreen: React.FC = () => {
         quality_score: quality * 10,
         interruptions: parseInt(interruptions) || 0,
         notes,
-        date: new Date().toISOString().split('T')[0],
+        date: new Date().toISOString(),
       });
       Alert.alert('Logged!', 'Your sleep record has been saved.', [
         { text: 'OK', onPress: loadData },
