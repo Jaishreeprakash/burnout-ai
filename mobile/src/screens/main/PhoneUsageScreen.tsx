@@ -54,10 +54,21 @@ const PhoneUsageScreen: React.FC = () => {
   const today = records[records.length - 1];
   const avgHours = records.length
     ? Math.round((records.reduce((s, r) => s + r.total_hours, 0) / records.length) * 10) / 10
-    : 5.2;
+    : 0.0;
 
-  const streak = 3; // Mock: 3 consecutive days under 4h
-  const usageScore = today ? Math.max(0, 100 - (today.total_hours - 2) * 15) : 48;
+  // Streak: consecutive days under 4 hours
+  let streak = 0;
+  if (records.length) {
+    for (let i = records.length - 1; i >= 0; i--) {
+      if (records[i].total_hours < 4.0) {
+        streak++;
+      } else {
+        break;
+      }
+    }
+  }
+
+  const usageScore = today ? Math.max(0, 100 - (today.total_hours - 2) * 15) : 0;
 
   const handleSubmit = async () => {
     if (!totalHours) {
@@ -74,7 +85,7 @@ const PhoneUsageScreen: React.FC = () => {
         entertainment_hours: parseFloat(entertainment) || 0,
         pickups_count: parseInt(pickups) || 0,
         late_night_usage: lateNight,
-        date: new Date().toISOString().split('T')[0],
+        date: new Date().toISOString(),
       });
       Alert.alert('Saved!', 'Phone usage logged successfully.', [
         { text: 'OK', onPress: () => { loadData(); setShowForm(false); } },
@@ -92,12 +103,25 @@ const PhoneUsageScreen: React.FC = () => {
     }
   };
 
+  const getPastSevenDays = () => {
+    const labels = [];
+    const weekdays = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date();
+      d.setDate(d.getDate() - i);
+      labels.push(weekdays[d.getDay()]);
+    }
+    return labels;
+  };
+
   const chartData = {
-    labels: records.slice(-7).map((r) => {
-      const d = new Date(r.date);
-      return ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'][d.getDay()];
-    }),
-    datasets: [{ data: records.slice(-7).map((r) => r.total_hours) }],
+    labels: records.length
+      ? records.slice(-7).map((r) => {
+          const d = new Date(r.date);
+          return ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'][d.getDay()];
+        })
+      : getPastSevenDays(),
+    datasets: [{ data: records.length ? records.slice(-7).map((r) => r.total_hours) : [0, 0, 0, 0, 0, 0, 0] }],
   };
 
   const chartConfig = {
