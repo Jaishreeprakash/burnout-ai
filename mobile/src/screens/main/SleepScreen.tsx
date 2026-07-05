@@ -91,18 +91,31 @@ const SleepScreen: React.FC = () => {
 
   const avgQuality = records.length
     ? Math.round(records.reduce((s, r) => s + r.quality_score, 0) / records.length)
-    : 65;
+    : 0;
 
   const avgDuration = records.length
     ? Math.round((records.reduce((s, r) => s + r.duration_hours, 0) / records.length) * 10) / 10
-    : 6.5;
+    : 0.0;
+
+  const getPastSevenDays = () => {
+    const labels = [];
+    const weekdays = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date();
+      d.setDate(d.getDate() - i);
+      labels.push(weekdays[d.getDay()]);
+    }
+    return labels;
+  };
 
   const chartData = {
-    labels: records.slice(-7).map((r) => {
-      const d = new Date(r.date);
-      return ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'][d.getDay()];
-    }),
-    datasets: [{ data: records.slice(-7).map((r) => r.duration_hours) }],
+    labels: records.length
+      ? records.slice(-7).map((r) => {
+          const d = new Date(r.date);
+          return ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'][d.getDay()];
+        })
+      : getPastSevenDays(),
+    datasets: [{ data: records.length ? records.slice(-7).map((r) => r.duration_hours) : [0, 0, 0, 0, 0, 0, 0] }],
   };
 
   const sleepTips = [

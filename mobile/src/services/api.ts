@@ -259,34 +259,16 @@ export const dashboardApi = {
 export const sleepApi = {
   async getSleepRecords(days = 7): Promise<SleepRecord[]> {
     try {
-      const response = await api.get<SleepRecord[]>(`/sleep?days=${days}`);
+      const response = await api.get<SleepRecord[]>(`/tracking/sleep?days=${days}`);
       return response.data;
     } catch {
-      const records: SleepRecord[] = [];
-      const durations = [6.5, 7.0, 5.5, 8.0, 6.0, 7.5, 6.5];
-      const scores = [65, 72, 48, 85, 58, 78, 65];
-      for (let i = 6; i >= 0; i--) {
-        const date = new Date();
-        date.setDate(date.getDate() - i);
-        records.push({
-          ...MOCK_SLEEP,
-          id: 7 - i,
-          date: date.toISOString().split('T')[0],
-          duration_hours: durations[6 - i],
-          quality_score: scores[6 - i],
-        });
-      }
-      return records;
+      return [];
     }
   },
 
   async logSleep(data: Partial<SleepRecord>): Promise<SleepRecord> {
-    try {
-      const response = await api.post<SleepRecord>('/sleep', data);
-      return response.data;
-    } catch {
-      return { ...MOCK_SLEEP, ...data } as SleepRecord;
-    }
+    const response = await api.post<SleepRecord>('/tracking/sleep', data);
+    return response.data;
   },
 };
 
@@ -295,32 +277,16 @@ export const sleepApi = {
 export const phoneApi = {
   async getPhoneUsageRecords(days = 7): Promise<PhoneUsageRecord[]> {
     try {
-      const response = await api.get<PhoneUsageRecord[]>(`/phone-usage?days=${days}`);
+      const response = await api.get<PhoneUsageRecord[]>(`/tracking/phone-usage?days=${days}`);
       return response.data;
     } catch {
-      const records: PhoneUsageRecord[] = [];
-      const hours = [5.2, 4.8, 6.1, 3.9, 5.5, 4.2, 5.2];
-      for (let i = 6; i >= 0; i--) {
-        const date = new Date();
-        date.setDate(date.getDate() - i);
-        records.push({
-          ...MOCK_PHONE_USAGE,
-          id: 7 - i,
-          date: date.toISOString().split('T')[0],
-          total_hours: hours[6 - i],
-        });
-      }
-      return records;
+      return [];
     }
   },
 
   async logPhoneUsage(data: Partial<PhoneUsageRecord>): Promise<PhoneUsageRecord> {
-    try {
-      const response = await api.post<PhoneUsageRecord>('/phone-usage', data);
-      return response.data;
-    } catch {
-      return { ...MOCK_PHONE_USAGE, ...data } as PhoneUsageRecord;
-    }
+    const response = await api.post<PhoneUsageRecord>('/tracking/phone-usage', data);
+    return response.data;
   },
 };
 
@@ -329,40 +295,21 @@ export const phoneApi = {
 export const emotionApi = {
   async getEmotionRecords(days = 7): Promise<EmotionRecord[]> {
     try {
-      const response = await api.get<EmotionRecord[]>(`/emotions?days=${days}`);
+      const response = await api.get<EmotionRecord[]>(`/tracking/emotion?days=${days}`);
       return response.data;
     } catch {
-      const emotions = ['Happy', 'Neutral', 'Neutral', 'Sad', 'Anxious', 'Happy', 'Neutral'];
-      const emojis = ['😊', '😐', '😐', '😢', '😰', '😊', '😐'];
-      return emotions.map((emotion, i) => {
-        const date = new Date();
-        date.setDate(date.getDate() - (6 - i));
-        return {
-          ...MOCK_EMOTION,
-          id: i + 1,
-          dominant_emotion: emotion,
-          timestamp: date.toISOString(),
-          emotions: [
-            { emotion, confidence: 0.65 + Math.random() * 0.2 },
-            { emotion: 'Neutral', confidence: 0.2 },
-          ],
-        };
-      });
+      return [];
     }
   },
 
   async logEmotion(data: Partial<EmotionRecord>): Promise<EmotionRecord> {
-    try {
-      const response = await api.post<EmotionRecord>('/emotions', data);
-      return response.data;
-    } catch {
-      return { ...MOCK_EMOTION, ...data } as EmotionRecord;
-    }
+    const response = await api.post<EmotionRecord>('/tracking/emotion', data);
+    return response.data;
   },
 
   async analyzeCamera(imageBase64: string): Promise<EmotionRecord> {
     try {
-      const response = await api.post<EmotionRecord>('/emotions/analyze-camera', {
+      const response = await api.post<EmotionRecord>('/tracking/emotion/analyze-camera', {
         image: imageBase64,
       });
       return response.data;
@@ -387,33 +334,16 @@ export const emotionApi = {
 export const activityApi = {
   async getActivityRecords(days = 7): Promise<ActivityRecord[]> {
     try {
-      const response = await api.get<ActivityRecord[]>(`/activity?days=${days}`);
+      const response = await api.get<ActivityRecord[]>(`/tracking/activity?days=${days}`);
       return response.data;
     } catch {
-      const studyHours = [3, 4, 2.5, 5, 3.5, 1, 3];
-      const workHours = [6, 7, 8, 6.5, 7, 4, 6];
-      return studyHours.map((sh, i) => {
-        const date = new Date();
-        date.setDate(date.getDate() - (6 - i));
-        return {
-          ...MOCK_ACTIVITY,
-          id: i + 1,
-          date: date.toISOString().split('T')[0],
-          study_hours: sh,
-          work_hours: workHours[i],
-          focus_score: 60 + Math.floor(Math.random() * 30),
-        };
-      });
+      return [];
     }
   },
 
   async logActivity(data: Partial<ActivityRecord>): Promise<ActivityRecord> {
-    try {
-      const response = await api.post<ActivityRecord>('/activity', data);
-      return response.data;
-    } catch {
-      return { ...MOCK_ACTIVITY, ...data } as ActivityRecord;
-    }
+    const response = await api.post<ActivityRecord>('/tracking/activity', data);
+    return response.data;
   },
 };
 
@@ -425,7 +355,7 @@ export const recommendationsApi = {
       const response = await api.get<Recommendation[]>('/recommendations');
       return response.data;
     } catch {
-      return MOCK_BURNOUT.recommendations;
+      return [];
     }
   },
 };

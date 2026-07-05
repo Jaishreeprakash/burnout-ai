@@ -100,7 +100,7 @@ const ActivityScreen: React.FC = () => {
   };
 
   const today = records[records.length - 1];
-  const focusScore = today?.focus_score ?? 72;
+  const focusScore = today?.focus_score ?? 0;
 
   const handleSubmit = async () => {
     setIsSubmitting(true);
@@ -182,7 +182,7 @@ const ActivityScreen: React.FC = () => {
           <View style={styles.circlesRow}>
             <ProgressCircle
               label="Study"
-              current={today?.study_hours ?? 3}
+              current={today?.study_hours ?? 0}
               goal={4}
               unit="h"
               color={Colors.info}
@@ -190,7 +190,7 @@ const ActivityScreen: React.FC = () => {
             />
             <ProgressCircle
               label="Work"
-              current={today?.work_hours ?? 6}
+              current={today?.work_hours ?? 0}
               goal={8}
               unit="h"
               color={Colors.warning}
@@ -198,7 +198,7 @@ const ActivityScreen: React.FC = () => {
             />
             <ProgressCircle
               label="Exercise"
-              current={today?.exercise_minutes ?? 20}
+              current={today?.exercise_minutes ?? 0}
               goal={30}
               unit="min"
               color={Colors.success}
@@ -210,7 +210,7 @@ const ActivityScreen: React.FC = () => {
             <View style={styles.breakCard}>
               <MaterialCommunityIcons name="coffee-outline" size={20} color={Colors.primary} />
               <View>
-                <Text style={styles.breakValue}>{today?.break_count ?? 4}</Text>
+                <Text style={styles.breakValue}>{today?.break_count ?? 0}</Text>
                 <Text style={styles.breakLabel}>Breaks taken</Text>
               </View>
             </View>
@@ -218,7 +218,7 @@ const ActivityScreen: React.FC = () => {
               <MaterialCommunityIcons name="clock-outline" size={20} color={Colors.success} />
               <View>
                 <Text style={styles.breakValue}>
-                  {(((today?.study_hours ?? 3) + (today?.work_hours ?? 6)) * 60 / ((today?.break_count ?? 4) + 1)).toFixed(0)} min
+                  {(((today?.study_hours ?? 0) + (today?.work_hours ?? 0)) * 60 / ((today?.break_count ?? 0) + 1)).toFixed(0)} min
                 </Text>
                 <Text style={styles.breakLabel}>Avg focus block</Text>
               </View>

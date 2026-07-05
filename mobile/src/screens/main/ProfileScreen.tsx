@@ -14,10 +14,13 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as Haptics from 'expo-haptics';
 import { useAuth } from '../../context/AuthContext';
 import { Colors } from '../../constants/colors';
+import { useDashboard } from '../../hooks/useDashboard';
 
 const ProfileScreen: React.FC = () => {
   const { user, logout } = useAuth();
   const insets = useSafeAreaInsets();
+  const { data, isLoading } = useDashboard();
+  const burnout = data?.burnout_analysis;
 
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [dailyReminders, setDailyReminders] = useState(true);
@@ -41,10 +44,27 @@ const ProfileScreen: React.FC = () => {
     ]);
   };
 
+  // Calculate dynamic stats
+  const activeDays = data?.trend_data?.burnout_scores?.filter(s => s > 0).length || 0;
+  const activeWellness = data?.trend_data?.wellness_scores?.filter(s => s > 0) || [];
+  const avgWellnessVal = activeWellness.length ? Math.round(activeWellness.reduce((a, b) => a + b, 0) / activeWellness.length) : 0;
+
+  // Streak: count consecutive non-zero days at the end of the trend array
+  let streak = 0;
+  if (data?.trend_data?.burnout_scores) {
+    for (let i = data.trend_data.burnout_scores.length - 1; i >= 0; i--) {
+      if (data.trend_data.burnout_scores[i] > 0) {
+        streak++;
+      } else {
+        break;
+      }
+    }
+  }
+
   const stats = [
-    { label: 'Days Tracked', value: '24', icon: 'calendar-check' },
-    { label: 'Current Streak', value: '7', icon: 'fire' },
-    { label: 'Avg Wellness', value: '68%', icon: 'heart-pulse' },
+    { label: 'Days Tracked', value: `${activeDays}`, icon: 'calendar-check' },
+    { label: 'Current Streak', value: `${streak}`, icon: 'fire' },
+    { label: 'Avg Wellness', value: `${avgWellnessVal}%`, icon: 'heart-pulse' },
   ];
 
   const settingSections = [
@@ -185,9 +205,9 @@ const ProfileScreen: React.FC = () => {
           </View>
           <View style={styles.summaryStats}>
             {[
-              { label: 'Burnout Risk', value: '42%', color: Colors.warning },
-              { label: 'Wellness Score', value: '62/100', color: Colors.success },
-              { label: 'Risk Level', value: 'Moderate', color: Colors.warning },
+              { label: 'Burnout Risk', value: burnout ? `${Math.round(burnout.burnout_score)}%` : '0%', color: Colors.warning },
+              { label: 'Wellness Score', value: burnout ? `${Math.round(burnout.wellness?.overall_score ?? burnout.wellness_score ?? 0)}/100` : '0/100', color: Colors.success },
+              { label: 'Risk Level', value: burnout ? (burnout.risk_level.charAt(0).toUpperCase() + burnout.risk_level.slice(1)) : 'Low', color: Colors.warning },
             ].map((item) => (
               <View key={item.label} style={styles.summaryItem}>
                 <Text style={[styles.summaryItemValue, { color: item.color }]}>{item.value}</Text>
