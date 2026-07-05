@@ -184,17 +184,18 @@ class TrendPoint(BaseModel):
     value: float
 
 
+class DashboardTrendData(BaseModel):
+    dates: List[str]
+    burnout_scores: List[float]
+    wellness_scores: List[float]
+    sleep_scores: List[float]
+    emotion_scores: List[float]
+
+
 class DashboardData(BaseModel):
-    current_burnout_score: float
-    risk_level: str
-    wellness_score: float
-    sleep_avg_hours: float
-    sleep_quality_avg: float
-    phone_screen_time_avg: float
-    exercise_minutes_avg: float
-    dominant_emotion: str
-    burnout_trend: List[TrendPoint]
-    sleep_trend: List[TrendPoint]
-    wellness_trend: List[TrendPoint]
-    recommendations_count: int
-    last_updated: datetime
+    burnout_analysis: BurnoutAnalysis
+    recent_sleep: Optional[SleepRecordResponse] = None
+    recent_phone_usage: Optional[PhoneUsageResponse] = None
+    recent_emotion: Optional[EmotionRecordResponse] = None
+    recent_activity: Optional[ActivityRecordResponse] = None
+    trend_data: DashboardTrendData
