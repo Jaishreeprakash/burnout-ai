@@ -253,6 +253,38 @@ def log_activity(
     db: Session = Depends(get_db),
 ):
     """Log an activity record for the current user."""
+    focus_score = data.focus_score
+    if focus_score <= 0.0 or focus_score == 50.0:
+        total_hours = data.study_hours + data.work_hours
+        if total_hours > 0:
+            breaks_per_hour = data.break_count / total_hours
+            if 0.5 <= breaks_per_hour <= 1.2:
+                break_multiplier = 1.0
+            elif breaks_per_hour < 0.5:
+                break_multiplier = 0.5 + (breaks_per_hour / 0.5) * 0.5
+            else:
+                break_multiplier = 1.0 - min((breaks_per_hour - 1.2) * 0.5, 0.5)
+            
+            if total_hours > 10:
+                fatigue_factor = 0.6
+            elif total_hours > 8:
+                fatigue_factor = 0.8
+            else:
+                fatigue_factor = 1.0
+                
+            base_focus = 85.0 * break_multiplier * fatigue_factor
+            
+            if data.exercise_minutes >= 30:
+                exercise_boost = 15.0
+            elif data.exercise_minutes >= 15:
+                exercise_boost = 10.0
+            else:
+                exercise_boost = 5.0
+                
+            focus_score = round(min(100.0, base_focus + exercise_boost), 2)
+        else:
+            focus_score = 50.0
+
     record = ActivityRecord(
         user_id=current_user.id,
         date=data.date,
@@ -260,7 +292,7 @@ def log_activity(
         work_hours=data.work_hours,
         exercise_minutes=data.exercise_minutes,
         break_count=data.break_count,
-        focus_score=data.focus_score,
+        focus_score=focus_score,
     )
     db.add(record)
     db.commit()
