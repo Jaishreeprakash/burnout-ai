@@ -151,6 +151,7 @@ const DashboardScreen: React.FC = () => {
                 unit="%"
                 score={burnout?.sleep_quality_score ?? 0}
                 change={data?.recent_sleep ? -5 : undefined}
+                onPress={() => navigation.navigate('Sleep' as any)}
               />
               <MetricCard
                 title="Phone Usage"
@@ -159,6 +160,7 @@ const DashboardScreen: React.FC = () => {
                 unit="h"
                 score={burnout?.phone_usage_score ?? 0}
                 change={data?.recent_phone_usage ? 12 : undefined}
+                onPress={() => navigation.navigate('PhoneUsage' as any)}
               />
               <MetricCard
                 title="Activity"
@@ -167,6 +169,7 @@ const DashboardScreen: React.FC = () => {
                 unit="%"
                 score={burnout?.activity_score ?? 0}
                 change={data?.recent_activity ? 8 : undefined}
+                onPress={() => navigation.navigate('Activity' as any)}
               />
               <MetricCard
                 title="Mood Stability"
@@ -175,6 +178,7 @@ const DashboardScreen: React.FC = () => {
                 unit="%"
                 score={burnout?.emotional_stability_index ?? 0}
                 change={data?.recent_emotion ? 3 : undefined}
+                onPress={() => navigation.navigate('Emotion' as any)}
               />
             </ScrollView>
           </View>

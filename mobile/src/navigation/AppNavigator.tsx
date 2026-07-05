@@ -3,12 +3,14 @@ import { createStackNavigator } from '@react-navigation/stack';
 import TabNavigator from './TabNavigator';
 import AnalyticsScreen from '../screens/analytics/AnalyticsScreen';
 import RecommendationsScreen from '../screens/main/RecommendationsScreen';
+import PhoneUsageScreen from '../screens/main/PhoneUsageScreen';
 import { Colors } from '../constants/colors';
 
 export type AppStackParamList = {
   MainTabs: undefined;
   Analytics: undefined;
   Recommendations: undefined;
+  PhoneUsage: undefined;
 };
 
 const Stack = createStackNavigator<AppStackParamList>();
@@ -46,6 +48,17 @@ const AppNavigator: React.FC = () => {
           headerStyle: { backgroundColor: Colors.surface },
           headerTintColor: Colors.text,
           headerTitle: 'AI Recommendations',
+          headerBackTitleVisible: false,
+        }}
+      />
+      <Stack.Screen
+        name="PhoneUsage"
+        component={PhoneUsageScreen}
+        options={{
+          headerShown: true,
+          headerStyle: { backgroundColor: Colors.surface },
+          headerTintColor: Colors.text,
+          headerTitle: 'Phone Usage',
           headerBackTitleVisible: false,
         }}
       />
