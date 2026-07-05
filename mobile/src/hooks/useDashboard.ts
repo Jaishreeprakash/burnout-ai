@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { useNavigation } from '@react-navigation/native';
 import { dashboardApi } from '../services/api';
 import { DashboardData } from '../types';
 
@@ -7,6 +8,7 @@ export const useDashboard = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const navigation = useNavigation();
 
   const fetchDashboard = useCallback(async (isRefresh = false) => {
     if (isRefresh) {
@@ -31,6 +33,13 @@ export const useDashboard = () => {
   useEffect(() => {
     fetchDashboard();
   }, [fetchDashboard]);
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      fetchDashboard(true);
+    });
+    return unsubscribe;
+  }, [navigation, fetchDashboard]);
 
   const refresh = () => fetchDashboard(true);
 
