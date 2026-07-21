@@ -7,6 +7,14 @@ on:
     branches: [ main, master ]
   workflow_dispatch:
 
+# Auto-cancel a superseded run when a newer push lands on the same branch,
+# instead of letting multiple full runs pile up and compete for the
+# account's concurrent-job budget (observed: overlapping runs caused one
+# job to sit queued for ~30 minutes, confounding real timing measurements).
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   verify-deployment:
     name: Verify Deployment
