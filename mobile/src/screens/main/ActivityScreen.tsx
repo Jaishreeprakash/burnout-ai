@@ -282,6 +282,8 @@ const ActivityScreen: React.FC = () => {
           style={styles.logButtonWrapper}
           onPress={() => { setShowForm(!showForm); Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light); }}
           activeOpacity={0.85}
+          accessibilityLabel={showForm ? "Close activity log form" : "Log today's activity"}
+          accessibilityRole="button"
         >
           <LinearGradient colors={['#16a34a', '#22c55e']} style={styles.logButton}>
             <MaterialCommunityIcons name={showForm ? 'close' : 'plus-circle-outline'} size={20} color="#fff" />
@@ -320,6 +322,8 @@ const ActivityScreen: React.FC = () => {
               onPress={handleSubmit}
               disabled={isSubmitting}
               activeOpacity={0.85}
+              accessibilityLabel="Save activity log"
+              accessibilityRole="button"
             >
               <LinearGradient colors={['#16a34a', '#22c55e']} style={styles.submitButton}>
                 {isSubmitting ? (

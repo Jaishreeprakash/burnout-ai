@@ -277,6 +277,8 @@ const SleepScreen: React.FC = () => {
                       q <= quality && { backgroundColor: getScoreColor(q * 10, colors) },
                     ]}
                     onPress={() => { setQuality(q); Haptics.selectionAsync(); }}
+                    accessibilityLabel={`Rate sleep quality ${q} out of 10`}
+                    accessibilityRole="button"
                   />
                 ))}
               </View>
@@ -295,6 +297,8 @@ const SleepScreen: React.FC = () => {
                     key={v}
                     style={[styles.countButton, interruptions === v && styles.countButtonActive]}
                     onPress={() => setInterruptions(v)}
+                    accessibilityLabel={`${v} wake-ups during the night`}
+                    accessibilityRole="button"
                   >
                     <Text style={[styles.countButtonText, interruptions === v && styles.countButtonTextActive]}>
                       {v}
@@ -324,6 +328,8 @@ const SleepScreen: React.FC = () => {
               onPress={handleSubmit}
               disabled={isSubmitting}
               activeOpacity={0.85}
+              accessibilityLabel="Save Sleep Record"
+              accessibilityRole="button"
             >
               <LinearGradient colors={['#3b82f6', '#6366f1']} style={styles.submitButton}>
                 {isSubmitting ? (
@@ -351,6 +357,8 @@ const SleepScreen: React.FC = () => {
                 Haptics.selectionAsync();
               }}
               activeOpacity={0.8}
+              accessibilityLabel={`${tip.title}, tap to ${expandedTip === index ? 'collapse' : 'expand'}`}
+              accessibilityRole="button"
             >
               <View style={styles.tipHeader}>
                 <View style={styles.tipIconWrapper}>

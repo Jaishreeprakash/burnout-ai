@@ -169,6 +169,8 @@ const EmotionScreen: React.FC = () => {
               setActiveTab(tab.key);
               Haptics.selectionAsync();
             }}
+            accessibilityLabel={`${tab.label} tab`}
+            accessibilityRole="tab"
           >
             <MaterialCommunityIcons
               name={tab.icon as any}
@@ -196,7 +198,12 @@ const EmotionScreen: React.FC = () => {
               <Text style={styles.permissionText}>
                 We need camera access to analyze your facial expressions and detect emotional state.
               </Text>
-              <TouchableOpacity style={styles.permissionButton} onPress={requestPermission}>
+              <TouchableOpacity
+                style={styles.permissionButton}
+                onPress={requestPermission}
+                accessibilityLabel="Grant camera access"
+                accessibilityRole="button"
+              >
                 <LinearGradient colors={['#6366f1', '#8b5cf6']} style={styles.permissionButtonGrad}>
                   <Text style={styles.permissionButtonText}>Grant Camera Access</Text>
                 </LinearGradient>
@@ -204,6 +211,8 @@ const EmotionScreen: React.FC = () => {
               <TouchableOpacity
                 style={styles.manualFallback}
                 onPress={() => setActiveTab('manual')}
+                accessibilityLabel="Log emotion manually instead"
+                accessibilityRole="button"
               >
                 <Text style={styles.manualFallbackText}>Or log manually →</Text>
               </TouchableOpacity>
@@ -247,6 +256,8 @@ const EmotionScreen: React.FC = () => {
                 onPress={handleAnalyze}
                 disabled={isAnalyzing}
                 activeOpacity={0.85}
+                accessibilityLabel="Analyze emotion from camera"
+                accessibilityRole="button"
               >
                 <LinearGradient colors={['#6366f1', '#8b5cf6']} style={styles.analyzeButton}>
                   {isAnalyzing ? (
@@ -304,6 +315,8 @@ const EmotionScreen: React.FC = () => {
                   setSelectedEmotion(e.value);
                   Haptics.selectionAsync();
                 }}
+                accessibilityLabel={`Select emotion: ${e.label}`}
+                accessibilityRole="button"
               >
                 <Text style={styles.emojiButtonEmoji}>{e.emoji}</Text>
                 <Text style={[
@@ -330,6 +343,8 @@ const EmotionScreen: React.FC = () => {
                       { backgroundColor: level <= stressLevel ? stressColors[level - 1] : colors.surfaceLight },
                     ]}
                     onPress={() => { setStressLevel(level); Haptics.selectionAsync(); }}
+                    accessibilityLabel={`Set stress level to ${level} out of 10`}
+                    accessibilityRole="button"
                   />
                 );
               })}
@@ -360,6 +375,8 @@ const EmotionScreen: React.FC = () => {
             onPress={handleManualSubmit}
             disabled={isSubmitting}
             activeOpacity={0.85}
+            accessibilityLabel="Save emotion log"
+            accessibilityRole="button"
           >
             <LinearGradient colors={['#8b5cf6', '#6366f1']} style={styles.submitButton}>
               {isSubmitting ? (

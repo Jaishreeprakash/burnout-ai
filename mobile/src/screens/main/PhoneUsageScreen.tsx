@@ -286,6 +286,8 @@ const PhoneUsageScreen: React.FC = () => {
             Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
           }}
           activeOpacity={0.85}
+          accessibilityLabel={showForm ? "Close form" : "Log screen time"}
+          accessibilityRole="button"
         >
           <LinearGradient colors={['#ef4444', '#f97316']} style={styles.logButton}>
             <MaterialCommunityIcons name={showForm ? 'close' : 'plus-circle-outline'} size={20} color="#fff" />
@@ -343,6 +345,8 @@ const PhoneUsageScreen: React.FC = () => {
               onPress={handleSubmit}
               disabled={isSubmitting}
               activeOpacity={0.85}
+              accessibilityLabel="Save phone usage log"
+              accessibilityRole="button"
             >
               <LinearGradient colors={['#ef4444', '#f97316']} style={styles.submitButton}>
                 {isSubmitting ? (

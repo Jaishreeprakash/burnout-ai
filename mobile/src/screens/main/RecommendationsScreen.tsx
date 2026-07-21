@@ -78,6 +78,8 @@ const RecommendationsScreen: React.FC = () => {
               style={[styles.filterChip, activeFilter === item.key && styles.filterChipActive]}
               onPress={() => setActiveFilter(item.key)}
               activeOpacity={0.8}
+              accessibilityLabel={`Filter: ${item.label}`}
+              accessibilityRole="button"
             >
               <MaterialCommunityIcons
                 name={item.icon as any}
@@ -125,6 +127,8 @@ const RecommendationsScreen: React.FC = () => {
                 <TouchableOpacity
                   style={styles.restoreButton}
                   onPress={() => setDismissed(new Set())}
+                  accessibilityLabel={`Restore ${dismissed.size} dismissed recommendations`}
+                  accessibilityRole="button"
                 >
                   <Text style={styles.restoreText}>Restore dismissed ({dismissed.size})</Text>
                 </TouchableOpacity>
@@ -134,7 +138,12 @@ const RecommendationsScreen: React.FC = () => {
           renderItem={({ item }) => (
             <View style={styles.cardWrapper}>
               <RecommendationCard recommendation={item} />
-              <TouchableOpacity style={styles.dismissButton} onPress={() => dismiss(item.id)}>
+              <TouchableOpacity
+                style={styles.dismissButton}
+                onPress={() => dismiss(item.id)}
+                accessibilityLabel="Dismiss this recommendation"
+                accessibilityRole="button"
+              >
                 <MaterialCommunityIcons name="close" size={14} color={colors.textMuted} />
                 <Text style={styles.dismissText}>Dismiss</Text>
               </TouchableOpacity>

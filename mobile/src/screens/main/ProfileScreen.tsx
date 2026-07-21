@@ -41,7 +41,11 @@ const ProfileScreen: React.FC = () => {
         style: 'destructive',
         onPress: async () => {
           Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
-          await logout();
+          try {
+            await logout();
+          } catch (error) {
+            Alert.alert('Sign Out Failed', 'Something went wrong while signing out. Please try again.');
+          }
         },
       },
     ]);

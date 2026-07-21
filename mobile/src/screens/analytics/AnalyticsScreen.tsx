@@ -41,6 +41,8 @@ const AnalyticsScreen: React.FC = () => {
     try {
       const dashData = await dashboardApi.getDashboard();
       setData(dashData);
+    } catch (error) {
+      Alert.alert('Error', 'Could not load analytics data. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -85,6 +87,8 @@ const AnalyticsScreen: React.FC = () => {
                 setTimeRange(range);
                 Haptics.selectionAsync();
               }}
+              accessibilityLabel={`Show data for ${range}`}
+              accessibilityRole="button"
             >
               <Text style={[styles.timeRangeText, timeRange === range && styles.timeRangeTextActive]}>
                 {range}
@@ -233,6 +237,8 @@ const AnalyticsScreen: React.FC = () => {
               style={styles.exportButton}
               onPress={() => Alert.alert('Export', 'Your wellness report will be emailed to you as a PDF.')}
               activeOpacity={0.85}
+              accessibilityLabel="Export wellness report"
+              accessibilityRole="button"
             >
               <LinearGradient colors={['#1e293b', '#334155']} style={styles.exportGradient}>
                 <MaterialCommunityIcons name="file-export-outline" size={20} color={colors.text} />
