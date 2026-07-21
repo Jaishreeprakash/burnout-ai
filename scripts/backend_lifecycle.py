@@ -26,6 +26,23 @@ def wait_for_health(base_url, timeout=45):
     return False
 
 
+def _precreate_schema(env):
+    """Create all tables in a single process before any multi-worker uvicorn
+    starts. main.py's lifespan handler calls Base.metadata.create_all() on
+    every worker process independently — with --workers > 1 that's N
+    processes racing to CREATE TABLE against the same SQLite file at once.
+    Confirmed in CI: intermittent ~80% error rate with every failing request
+    erroring instantly (not slow), consistent with one or more workers
+    losing that race at startup and never coming up cleanly. Creating the
+    schema once, up front, removes the race entirely."""
+    subprocess.run(
+        [sys.executable, "-c",
+         "import models.user, models.tracking; from database import Base, engine; "
+         "Base.metadata.create_all(bind=engine)"],
+        cwd=BACKEND_DIR, env=env, check=True,
+    )
+
+
 def spawn_server(base_url, db_filename="backend_ci_test.db", workers=1, openai_api_key=""):
     port = base_url.rsplit(":", 1)[-1]
     env = os.environ.copy()
@@ -49,6 +66,7 @@ def spawn_server(base_url, db_filename="backend_ci_test.db", workers=1, openai_a
         # out well before 100 concurrent users. Multiple worker processes is
         # the standard fix and is required for a meaningful load-test result.
         cmd += ["--workers", str(workers)]
+        _precreate_schema(env)
     proc = subprocess.Popen(
         cmd, cwd=BACKEND_DIR, env=env,
         stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
