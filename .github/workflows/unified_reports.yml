@@ -15,6 +15,15 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+env:
+  LIVE_BACKEND_URL: https://burnout-backend-l438.onrender.com/api/v1
+  PAGES_URL: https://jaishreeprakash.github.io/burnout-ai/
+
 jobs:
   verify-deployment:
     name: Verify Deployment
@@ -36,6 +45,150 @@ jobs:
           test -f web/package.json
           test -f mobile/android/gradlew
           echo "Deployment Verification Successful!"
+
+  deploy-web-pages:
+    name: Deploy Web App to GitHub Pages
+    needs: [verify-deployment]
+    runs-on: ubuntu-latest
+    outputs:
+      page_url: ${{ env.PAGES_URL }}
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Web Dependencies
+        run: |
+          cd web
+          npm ci
+
+      - name: Build Web App (pointed at the live backend, GH Pages base path)
+        env:
+          GH_PAGES: 'true'
+          VITE_API_URL: ${{ env.LIVE_BACKEND_URL }}
+        run: |
+          cd web
+          npm run build
+          # Standard GitHub-Pages-SPA fallback: Pages is a static file host,
+          # so a direct load of a client-side route (e.g. Selenium's
+          # driver.get(url + "/login")) has no matching file and would 404
+          # on GH Pages' own 404 page, not the app. Making 404.html an exact
+          # copy of index.html means GH Pages serves the app itself for any
+          # unknown path, and React Router (basename-aware, see App.tsx)
+          # then renders the correct route client-side.
+          cp dist/index.html dist/404.html
+
+      # Kept as a plain build artifact too so the final report-publishing
+      # step can re-include this exact same build later without rebuilding
+      # it (the gh-pages branch gets overwritten at root by that step too,
+      # so it needs this same build rather than a fresh one).
+      - name: Upload Web Build Artifact (for reuse when reports are added later)
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-dist-build
+          path: web/dist
+
+      # Real gh-pages branch (not the stateless "GitHub Actions" Pages build
+      # type) so the final report-publishing step can read back and rotate
+      # history — keep_files preserves any existing reports/ subtree from a
+      # prior run while this step replaces only the root-level app files.
+      - name: Deploy Web App to gh-pages branch (root)
+        uses: peaceiris/actions-gh-pages@v4.1.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: web/dist
+          publish_branch: gh-pages
+          keep_files: true
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
+          commit_message: 'Deploy web app build'
+
+      - name: Verify Deployment Is Actually Live
+        run: |
+          URL="${{ env.PAGES_URL }}"
+          echo "Verifying $URL ..."
+          for i in $(seq 1 20); do
+            CODE=$(curl -s -o /dev/null -w "%{http_code}" "$URL")
+            if [ "$CODE" = "200" ]; then
+              echo "Deployment is live (HTTP 200)."
+              break
+            fi
+            echo "Attempt $i: HTTP $CODE, retrying..."
+            sleep 10
+            if [ "$i" = "20" ]; then
+              echo "::error::Deployment did not return HTTP 200 after ~200s."
+              exit 1
+            fi
+          done
+          ASSET=$(curl -s "$URL" | grep -o 'assets/index-[^"]*\.js' | head -1)
+          if [ -z "$ASSET" ]; then
+            echo "::error::Could not find a built JS asset reference in the deployed page."
+            exit 1
+          fi
+          ASSET_CODE=$(curl -s -o /dev/null -w "%{http_code}" "$URL$ASSET")
+          if [ "$ASSET_CODE" != "200" ]; then
+            echo "::error::Built JS asset $ASSET returned HTTP $ASSET_CODE, not 200."
+            exit 1
+          fi
+          echo "Confirmed JS asset $ASSET loads (HTTP 200). Deployment verified."
+
+  static-security-scan:
+    name: Static Security Scan (Semgrep + Trivy + Gitleaks)
+    needs: [verify-deployment]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Gitleaks scans full git history, not just the current commit
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Run Semgrep (SAST)
+        run: |
+          python -m pip install --upgrade pip
+          pip install semgrep
+          mkdir -p reports
+          # continue-on-error at the step level (below) — real findings must
+          # not silently vanish just because Semgrep's own exit code means
+          # "findings present"; they're aggregated into the security score
+          # instead of failing this job outright.
+          semgrep --config=auto --json --output=reports/semgrep-results.json . || true
+        continue-on-error: true
+
+      - name: Run Trivy (dependency / filesystem scan)
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          format: 'json'
+          output: 'reports/trivy-results.json'
+          exit-code: '0'
+          severity: 'CRITICAL,HIGH,MEDIUM,LOW'
+
+      - name: Run Gitleaks (secret scan)
+        run: |
+          curl -sSL -o gitleaks.tar.gz https://github.com/gitleaks/gitleaks/releases/download/v8.30.1/gitleaks_8.30.1_linux_x64.tar.gz
+          tar -xzf gitleaks.tar.gz gitleaks
+          mkdir -p reports
+          ./gitleaks detect --source=. --report-format=json --report-path=reports/gitleaks-report.json --no-banner --redact || true
+
+      - name: Upload Static Security Scan Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: static-security-scan-results
+          path: |
+            reports/semgrep-results.json
+            reports/trivy-results.json
+            reports/gitleaks-report.json
 
   backend-security-tests:
     name: Backend & Security Tests
@@ -128,8 +281,8 @@ jobs:
           path: reports/api_load_test_results.*
 
   web-e2e-tests:
-    name: Website E2E Tests (real Selenium, Chrome + Firefox)
-    needs: [verify-deployment]
+    name: Website E2E Tests (real Selenium, against the LIVE GitHub Pages deployment)
+    needs: [deploy-web-pages]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -140,25 +293,24 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - name: Install Backend Dependencies
+      - name: Install Test Dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r backend/requirements.txt
           pip install selenium httpx
 
-      - name: Install Web Dependencies
+      - name: Run Real Selenium E2E Suite Against the LIVE Deployment
+        env:
+          PAGE_URL: ${{ needs.deploy-web-pages.outputs.page_url }}
         run: |
-          cd web
-          npm ci
-
-      - name: Run Real Selenium E2E Suite (real backend + real Vite dev server)
-        run: |
-          python scripts/run_selenium_suite.py
+          # --backend-url is intentionally the backend's ROOT (no /api/v1) —
+          # it's only used for the /health reachability check here; the
+          # deployed app itself already talks to the live backend directly
+          # (baked in at build time via VITE_API_URL), this script never
+          # constructs API paths from --backend-url.
+          PAGE_URL="${PAGE_URL%/}"
+          python scripts/run_selenium_suite.py \
+            --web-url "$PAGE_URL" --no-spawn-web \
+            --backend-url "https://burnout-backend-l438.onrender.com" --no-spawn-backend
 
       - name: Upload Website E2E Report
         if: always()
@@ -283,7 +435,7 @@ jobs:
 
   consolidate-and-verify-reports:
     name: Consolidate & Verify Reports
-    needs: [backend-security-tests, api-load-test, web-e2e-tests, mobile-tests]
+    needs: [static-security-scan, deploy-web-pages, backend-security-tests, api-load-test, web-e2e-tests, mobile-tests]
     if: always()
     runs-on: ubuntu-latest
     steps:
@@ -295,7 +447,12 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Download All Suite Reports
+      - name: Install Report Generator Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install openpyxl
+
+      - name: Download All Suite + Scan Reports
         uses: actions/download-artifact@v4
         with:
           path: reports
@@ -306,13 +463,87 @@ jobs:
         run: |
           python scripts/generate_unified_report.py reports
 
+      - name: Generate Excel Report (Automation_Test_Report.xlsx)
+        run: |
+          python scripts/generate_excel_reports.py reports reports/Automation_Test_Report.xlsx
+
+      - name: Generate Executive Summary (with security score)
+        run: |
+          python scripts/generate_executive_summary.py reports reports/executive-summary.md
+
       - name: Upload Unified Dashboard Artifacts
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: unified-test-verification-dashboard
           path: |
             reports/unified_test_dashboard.html
             reports/unified_test_dashboard.md
+            reports/Automation_Test_Report.xlsx
+            reports/executive-summary.md
             reports/*_results.json
             reports/*_results.csv
+            reports/semgrep-results.json
+            reports/trivy-results.json
+            reports/gitleaks-report.json
             QA_Test_Report_Live.csv
+
+      # ---- Publish the same reports to GitHub Pages, alongside the web app ----
+      - name: Download Web Build (to re-include at Pages root)
+        uses: actions/download-artifact@v4
+        with:
+          name: web-dist-build
+          path: web-dist-build
+
+      - name: Checkout gh-pages branch
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+          path: ghpages-checkout
+        continue-on-error: true
+
+      - name: Assemble Combined Pages Site (app + rotated report history)
+        run: |
+          mkdir -p ghpages-checkout
+          # Re-place the exact web app build the Selenium job already tested
+          # against (deploy-web-pages already put an earlier copy of this on
+          # the branch, but we rewrite it here too since this step commits
+          # the FULL final tree in one shot).
+          find ghpages-checkout -maxdepth 1 -mindepth 1 ! -name reports ! -name .git -exec rm -rf {} +
+          cp -r web-dist-build/. ghpages-checkout/
+
+          mkdir -p ghpages-checkout/reports/history
+          if [ -d ghpages-checkout/reports/latest ]; then
+            mv ghpages-checkout/reports/latest "ghpages-checkout/reports/history/build-${{ github.run_number }}"
+          fi
+          mkdir -p ghpages-checkout/reports/latest
+          cp reports/unified_test_dashboard.html ghpages-checkout/reports/latest/ 2>/dev/null || true
+          cp reports/unified_test_dashboard.md ghpages-checkout/reports/latest/ 2>/dev/null || true
+          cp reports/Automation_Test_Report.xlsx ghpages-checkout/reports/latest/ 2>/dev/null || true
+          cp reports/executive-summary.md ghpages-checkout/reports/latest/ 2>/dev/null || true
+          cp reports/*_results.json ghpages-checkout/reports/latest/ 2>/dev/null || true
+          cp reports/*_results.csv ghpages-checkout/reports/latest/ 2>/dev/null || true
+          cp reports/semgrep-results.json reports/trivy-results.json reports/gitleaks-report.json ghpages-checkout/reports/latest/ 2>/dev/null || true
+
+          # actions/checkout left its own .git here (this dir was checked out
+          # as its own worktree) — peaceiris does its own git init/push of
+          # publish_dir's contents, so this nested .git must not come along.
+          rm -rf ghpages-checkout/.git
+
+      - name: Publish Combined Site (app + reports + history) to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4.1.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ghpages-checkout
+          publish_branch: gh-pages
+          keep_files: false
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
+          commit_message: 'Publish reports for run ${{ github.run_number }}'
+
+      - name: Publish GitHub Actions Summary
+        if: always()
+        run: |
+          python scripts/generate_github_summary.py reports "${{ env.PAGES_URL }}" \
+            "${{ github.run_number }}" "${{ github.sha }}" "${{ github.ref_name }}" \
+            >> "$GITHUB_STEP_SUMMARY"

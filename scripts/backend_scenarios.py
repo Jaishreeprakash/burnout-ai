@@ -151,11 +151,40 @@ def valid_body(endpoint_id, now_iso, suffix=""):
     return builders.get(endpoint_id, lambda: {})()
 
 
+# Maps a scenario-name substring to a (CWE, OWASP Top 10 2021) pair, checked
+# in order — only scenarios that actually probe a real vulnerability class
+# get tagged; purely functional checks (boundary values, missing fields,
+# empty-string handling, etc.) legitimately have nothing to map and are left
+# blank rather than forced into a category that doesn't fit.
+CWE_OWASP_MAP = [
+    ("string_field_", "sql_injection", "CWE-89: SQL Injection", "A03:2021-Injection"),
+    ("string_field_", "xss_payload", "CWE-79: Cross-Site Scripting", "A03:2021-Injection"),
+    ("string_field_", "crlf_injection", "CWE-93: CRLF Injection", "A03:2021-Injection"),
+    ("string_field_", "oversized", "CWE-1284: Improper Validation of Specified Quantity in Input", "A04:2021-Insecure Design"),
+    ("", "missing_auth_token", "CWE-306: Missing Authentication for Critical Function", "A07:2021-Identification and Authentication Failures"),
+    ("", "malformed_auth_token", "CWE-287: Improper Authentication", "A07:2021-Identification and Authentication Failures"),
+    ("", "expired_auth_token", "CWE-613: Insufficient Session Expiration", "A07:2021-Identification and Authentication Failures"),
+    ("", "token_for_nonexistent_user", "CWE-287: Improper Authentication", "A07:2021-Identification and Authentication Failures"),
+    ("", "cors_preflight", "CWE-942: Overly Permissive Cross-domain Whitelist", "A05:2021-Security Misconfiguration"),
+    ("", "extra_unexpected_fields_ignored", "CWE-915: Improperly Controlled Modification of Dynamically-Determined Object Attributes", "A08:2021-Software and Data Integrity Failures"),
+    ("", "duplicate_email_rejected", "CWE-620: Unverified Password Change", "A07:2021-Identification and Authentication Failures"),
+    ("", "wrong_content_type", "CWE-436: Interpretation Conflict", "A05:2021-Security Misconfiguration"),
+]
+
+
+def _cwe_owasp_for(name):
+    for prefix, needle, cwe, owasp in CWE_OWASP_MAP:
+        if name.startswith(prefix) and needle in name:
+            return cwe, owasp
+    return "", ""
+
+
 def build_scenarios():
     """Returns a flat list of scenario dicts describing every real case to run."""
     scenarios = []
 
     def add(endpoint, category, name, **extra):
+        cwe, owasp = _cwe_owasp_for(name)
         scenarios.append({
             "endpoint": endpoint["id"],
             "method": endpoint["method"],
@@ -165,6 +194,8 @@ def build_scenarios():
             "category": category,
             "name": name,
             "module": MODULE_NAMES.get(endpoint["id"], "System"),
+            "cwe": cwe,
+            "owasp": owasp,
             **extra,
         })
 

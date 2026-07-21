@@ -14,6 +14,8 @@ pip-log.txt
 
 # ── Database files (never commit local SQLite) ───────────────────────────────
 *.db
+*.db-shm
+*.db-wal
 *.sqlite
 *.sqlite3
 
@@ -58,6 +60,11 @@ Thumbs.db
 # ── Generated per-suite test result data (regenerated fresh each CI run) ─────
 reports/*_results.json
 reports/*_results.csv
+reports/*.xlsx
+reports/semgrep-results.json
+reports/trivy-results.json
+reports/gitleaks-report.json
+reports/executive-summary.md
 
 # ── Logs ─────────────────────────────────────────────────────────────────────
 *.log

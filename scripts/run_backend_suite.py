@@ -266,6 +266,8 @@ def run(base_url, no_spawn, output_dir):
                 "Environment": "Backend (FastAPI @ 127.0.0.1:8000, local SQLite)",
                 "Status": verdict,
                 "Observed Result (evidence)": evidence,
+                "CWE": scenario.get("cwe", ""),
+                "OWASP": scenario.get("owasp", ""),
                 "Executed At": ts,
             })
 

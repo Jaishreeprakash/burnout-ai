@@ -17,7 +17,11 @@ import {
   Recommendation,
 } from '../types';
 
-const API_BASE_URL = `http://${window.location.hostname}:8000/api/v1`;
+// VITE_API_URL lets a deployed build (e.g. GitHub Pages, which can't host
+// this app's own FastAPI backend) point at a real external backend instead
+// of assuming one is running on the same host at :8000. Local dev is
+// unaffected since the env var isn't set there.
+const API_BASE_URL = import.meta.env.VITE_API_URL || `http://${window.location.hostname}:8000/api/v1`;
 
 const apiClient: AxiosInstance = axios.create({
   baseURL: API_BASE_URL,

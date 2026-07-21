@@ -114,58 +114,45 @@ def vu_worker(vu_id, base_url, account, deadline, local_results):
         client.close()
 
 
-def run(base_url, vus, duration, no_spawn, output_dir, workers):
-    proc, started_here = ensure_server(base_url, no_spawn, db_filename="backend_load_test.db", workers=workers)
-
-    print("=" * 80)
-    print("               REAL BASELINE / LOAD TEST — HealthSense AI API")
-    print("=" * 80)
-    print(f"Target: {base_url}")
-    print(f"Virtual users: {vus}   Duration: {duration}s (continuous)\n")
-
-    print(f"Provisioning {NUM_ACCOUNTS} real accounts for load generation...")
-    accounts = register_accounts(base_url, NUM_ACCOUNTS)
-    print("Accounts ready. Starting load...\n")
-
+def execute_phase(base_url, accounts, vus, duration):
+    """Runs `vus` concurrent virtual users against accounts (round-robin) for
+    `duration` real seconds and returns the raw per-request results. This is
+    the same real request engine baseline/stress/spike/endurance all share —
+    only the vus/duration schedule differs per mode."""
     per_vu_results = [[] for _ in range(vus)]
     deadline = time.time() + duration
     start_wall = time.time()
-
     with ThreadPoolExecutor(max_workers=vus) as pool:
         futures = [
-            pool.submit(vu_worker, vu_id, base_url, accounts[vu_id % NUM_ACCOUNTS], deadline, per_vu_results[vu_id])
+            pool.submit(vu_worker, vu_id, base_url, accounts[vu_id % len(accounts)], deadline, per_vu_results[vu_id])
             for vu_id in range(vus)
         ]
         for f in futures:
             f.result()
-
     actual_duration = time.time() - start_wall
     all_requests = [r for vu_list in per_vu_results for r in vu_list]
+    return all_requests, actual_duration
+
+
+def compute_stats(all_requests, actual_duration):
     total = len(all_requests)
     errors = [r for r in all_requests if r["error"] is not None or (r["status"] and r["status"] >= 500)]
     latencies = [r["elapsed_ms"] for r in all_requests if r["error"] is None]
-
     rps = total / actual_duration if actual_duration > 0 else 0.0
     avg_ms = statistics.mean(latencies) if latencies else 0.0
     min_ms = min(latencies) if latencies else 0.0
     max_ms = max(latencies) if latencies else 0.0
     p95_ms = statistics.quantiles(latencies, n=100)[94] if len(latencies) >= 20 else max_ms
     error_rate = (len(errors) / total * 100) if total else 0.0
+    return {
+        "total_requests": total, "requests_per_second": round(rps, 2),
+        "avg_response_time_ms": round(avg_ms, 1), "min_response_time_ms": round(min_ms, 1),
+        "max_response_time_ms": round(max_ms, 1), "p95_response_time_ms": round(p95_ms, 1),
+        "error_count": len(errors), "error_rate_percent": round(error_rate, 2),
+    }
 
-    print("-" * 80)
-    print("RESULTS — Requests per second (RPS)")
-    print(f"  {rps:.1f} req/sec")
-    print()
-    print("Response Time")
-    print(f"  Average: {avg_ms:.0f}ms")
-    print(f"  Min:     {min_ms:.0f}ms")
-    print(f"  Max:     {max_ms:.0f}ms")
-    print(f"  p95:     {p95_ms:.0f}ms")
-    print()
-    print(f"Total requests sent: {total:,} over {actual_duration:.1f}s")
-    print(f"Errors: {len(errors):,} ({error_rate:.2f}%)")
-    print("-" * 80)
 
+def endpoint_breakdown(all_requests):
     per_endpoint = {}
     for r in all_requests:
         e = per_endpoint.setdefault(r["endpoint"], {"count": 0, "errors": 0, "latencies": []})
@@ -174,24 +161,27 @@ def run(base_url, vus, duration, no_spawn, output_dir, workers):
             e["errors"] += 1
         if r["error"] is None:
             e["latencies"].append(r["elapsed_ms"])
-    endpoint_summary = []
+    summary = []
     for name, e in per_endpoint.items():
         lats = e["latencies"]
-        endpoint_summary.append({
+        summary.append({
             "endpoint": name, "requests": e["count"], "errors": e["errors"],
             "avg_ms": round(statistics.mean(lats), 1) if lats else None,
             "min_ms": round(min(lats), 1) if lats else None,
             "max_ms": round(max(lats), 1) if lats else None,
         })
+    return summary
 
-    # Build the 400-row (or fewer, if under 400 real requests) sampled report for the dashboard table.
-    sample_size = min(400, total)
+
+def sample_report_rows(all_requests, vus, base_url, limit=400):
+    total = len(all_requests)
+    sample_size = min(limit, total)
     sampled = random.sample(all_requests, sample_size) if total else []
     sampled.sort(key=lambda r: r["ts"])
-    report_rows = []
+    rows = []
     for i, r in enumerate(sampled, 1):
         status_ok = r["error"] is None and (r["status"] is None or r["status"] < 500)
-        report_rows.append({
+        rows.append({
             "TestID": f"LOAD-{i:05d}",
             "Category": "Performance",
             "Module / Page": r["endpoint"],
@@ -205,59 +195,217 @@ def run(base_url, vus, duration, no_spawn, output_dir, workers):
             ),
             "Executed At": r["ts"],
         })
+    return rows
 
+
+def print_stats_block(label, stats):
+    print("-" * 80)
+    print(f"RESULTS — {label} — Requests per second (RPS)")
+    print(f"  {stats['requests_per_second']:.1f} req/sec")
+    print()
+    print("Response Time")
+    print(f"  Average: {stats['avg_response_time_ms']:.0f}ms")
+    print(f"  Min:     {stats['min_response_time_ms']:.0f}ms")
+    print(f"  Max:     {stats['max_response_time_ms']:.0f}ms")
+    print(f"  p95:     {stats['p95_response_time_ms']:.0f}ms")
+    print()
+    print(f"Total requests: {stats['total_requests']:,}")
+    print(f"Errors: {stats['error_count']:,} ({stats['error_rate_percent']:.2f}%)")
+    print("-" * 80)
+
+
+def write_json(output_dir, filename, payload):
     os.makedirs(output_dir, exist_ok=True)
-    report_passed = sum(1 for r in report_rows if r["Status"] == "Pass")
-    report_total = len(report_rows)
+    path = os.path.join(output_dir, filename)
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(payload, f, indent=2)
+    return path
+
+
+def write_csv(output_dir, filename, rows):
+    if not rows:
+        return None
+    path = os.path.join(output_dir, filename)
+    with open(path, "w", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(f, fieldnames=list(rows[0].keys()))
+        writer.writeheader()
+        writer.writerows(rows)
+    return path
+
+
+def run_baseline(base_url, vus, duration, accounts, output_dir, workers):
+    print(f"Virtual users: {vus}   Duration: {duration}s (continuous)\n")
+    all_requests, actual_duration = execute_phase(base_url, accounts, vus, duration)
+    stats = compute_stats(all_requests, actual_duration)
+    print_stats_block("Baseline", stats)
+
+    report_rows = sample_report_rows(all_requests, vus, base_url)
+    passed = sum(1 for r in report_rows if r["Status"] == "Pass")
+    total_rows = len(report_rows)
     summary = {
-        "suite": "API Load Testing",
-        "test_type": "Baseline/Load Test",
-        "total": report_total,
-        "passed": report_passed,
-        "failed": report_total - report_passed,
-        "pass_rate": round((report_passed / report_total * 100) if report_total else 100.0, 2),
+        "suite": "API Load Testing", "test_type": "Baseline/Load Test",
+        "total": total_rows, "passed": passed, "failed": total_rows - passed,
+        "pass_rate": round((passed / total_rows * 100) if total_rows else 100.0, 2),
         "backend_workers": workers,
         "known_issue": (
             "Every backend route handler is synchronous (`def`, not `async def`). "
             "A single uvicorn worker process only exposes ~40 threadpool slots for "
             "concurrent requests, so 100 concurrent virtual users against a single "
-            "worker produces ~90% request timeouts (measured: 5.4 req/sec, 91.5% "
-            "errors) — consistent with the pre-existing backend/load_test_results.csv "
-            "in this repo. Running with multiple worker processes (as this suite does) "
-            "is the standard fix and is what production should be deployed with."
+            "worker produces ~90% request timeouts — consistent with the pre-existing "
+            "backend/load_test_results.csv in this repo. Multiple worker processes "
+            "(as this suite uses) is the standard fix."
         ) if workers > 1 else None,
-        "virtual_users": vus,
-        "target_duration_seconds": duration,
+        "virtual_users": vus, "target_duration_seconds": duration,
         "actual_duration_seconds": round(actual_duration, 2),
-        "total_requests": total,
-        "requests_per_second": round(rps, 2),
-        "avg_response_time_ms": round(avg_ms, 1),
-        "min_response_time_ms": round(min_ms, 1),
-        "max_response_time_ms": round(max_ms, 1),
-        "p95_response_time_ms": round(p95_ms, 1),
-        "error_count": len(errors),
-        "error_rate_percent": round(error_rate, 2),
-        "per_endpoint": endpoint_summary,
-        "sampled_report_rows": len(report_rows),
-        "results": report_rows,
+        "per_endpoint": endpoint_breakdown(all_requests),
+        "sampled_report_rows": len(report_rows), "results": report_rows,
+        **stats,
     }
-    json_path = os.path.join(output_dir, "api_load_test_results.json")
-    with open(json_path, "w", encoding="utf-8") as f:
-        json.dump(summary, f, indent=2)
-
-    csv_path = os.path.join(output_dir, "api_load_test_results.csv")
-    if report_rows:
-        with open(csv_path, "w", newline="", encoding="utf-8") as f:
-            writer = csv.DictWriter(f, fieldnames=list(report_rows[0].keys()))
-            writer.writeheader()
-            writer.writerows(report_rows)
-
+    json_path = write_json(output_dir, "api_load_test_results.json", summary)
+    csv_path = write_csv(output_dir, "api_load_test_results.csv", report_rows)
     print(f"\nReports written: {json_path}, {csv_path}")
+    return stats["error_rate_percent"]
+
+
+def run_stress(base_url, accounts, output_dir, phase_duration=30):
+    """Escalating concurrency (200 -> 500 -> 1000 VUs) to find the point
+    where the backend actually starts failing, not just a single fixed load."""
+    levels = [200, 500, 1000]
+    phases = []
+    failure_point = None
+    for vus in levels:
+        print(f"\n--- Stress phase: {vus} VUs for {phase_duration}s ---")
+        all_requests, actual_duration = execute_phase(base_url, accounts, vus, phase_duration)
+        stats = compute_stats(all_requests, actual_duration)
+        print_stats_block(f"{vus} VUs", stats)
+        phases.append({"virtual_users": vus, "duration_seconds": round(actual_duration, 2), **stats})
+        if failure_point is None and stats["error_rate_percent"] > 20:
+            failure_point = vus
+
+    summary = {
+        "suite": "API Stress Test", "test_type": "Stress Test",
+        "levels_tested": levels, "phase_duration_seconds": phase_duration,
+        "failure_point_vus": failure_point,
+        "phases": phases,
+    }
+    json_path = write_json(output_dir, "api_stress_test_results.json", summary)
+    print(f"\nFailure point: {failure_point if failure_point else 'not reached within tested levels'} VUs")
+    print(f"Report written: {json_path}")
+    return summary
+
+
+def run_spike(base_url, accounts, output_dir, baseline_vus=50, spike_vus=500,
+              baseline_duration=15, spike_duration=20, recovery_duration=15):
+    """Sudden jump from baseline_vus to spike_vus, then back down, to measure
+    whether the backend recovers cleanly rather than staying degraded."""
+    print(f"\n--- Spike phase 1/3: baseline {baseline_vus} VUs for {baseline_duration}s ---")
+    req1, dur1 = execute_phase(base_url, accounts, baseline_vus, baseline_duration)
+    stats1 = compute_stats(req1, dur1)
+    print_stats_block("Baseline (pre-spike)", stats1)
+
+    print(f"\n--- Spike phase 2/3: sudden spike to {spike_vus} VUs for {spike_duration}s ---")
+    req2, dur2 = execute_phase(base_url, accounts, spike_vus, spike_duration)
+    stats2 = compute_stats(req2, dur2)
+    print_stats_block("Spike", stats2)
+
+    print(f"\n--- Spike phase 3/3: recovery at {baseline_vus} VUs for {recovery_duration}s ---")
+    req3, dur3 = execute_phase(base_url, accounts, baseline_vus, recovery_duration)
+    stats3 = compute_stats(req3, dur3)
+    print_stats_block("Recovery (post-spike)", stats3)
+
+    recovered = (
+        stats3["error_rate_percent"] <= stats1["error_rate_percent"] + 5
+        and stats3["avg_response_time_ms"] <= stats1["avg_response_time_ms"] * 1.5
+    )
+    summary = {
+        "suite": "API Spike Test", "test_type": "Spike Test",
+        "baseline_vus": baseline_vus, "spike_vus": spike_vus,
+        "baseline": stats1, "spike": stats2, "recovery": stats3,
+        "recovered_cleanly": recovered,
+    }
+    json_path = write_json(output_dir, "api_spike_test_results.json", summary)
+    print(f"\nRecovered cleanly: {recovered}")
+    print(f"Report written: {json_path}")
+    return summary
+
+
+def run_endurance(base_url, accounts, output_dir, vus=100, duration=1800, bucket_seconds=300):
+    """Sustained load for a long duration, bucketed into windows to detect
+    performance degradation over time (a single continuous run, not
+    separate phases — resetting between windows would hide exactly the
+    kind of drift this test exists to catch)."""
+    print(f"\n--- Endurance: {vus} VUs for {duration}s ({duration/60:.0f} min), "
+          f"sampled every {bucket_seconds}s ---")
+    start_wall = time.time()
+    all_requests, actual_duration = execute_phase(base_url, accounts, vus, duration)
+    overall_stats = compute_stats(all_requests, actual_duration)
+    print_stats_block("Overall", overall_stats)
+
+    buckets = []
+    num_buckets = max(1, int(actual_duration // bucket_seconds) + 1)
+    for b in range(num_buckets):
+        b_start = start_wall + b * bucket_seconds
+        b_end = b_start + bucket_seconds
+        bucket_reqs = [r for r in all_requests
+                       if b_start <= datetime.fromisoformat(r["ts"].replace("Z", "+00:00")).timestamp() < b_end]
+        if not bucket_reqs:
+            continue
+        bstats = compute_stats(bucket_reqs, bucket_seconds)
+        buckets.append({"window": b, "window_start_offset_seconds": b * bucket_seconds, **bstats})
+
+    degradation_detected = False
+    if len(buckets) >= 2:
+        first_half = buckets[: len(buckets) // 2]
+        second_half = buckets[len(buckets) // 2:]
+        first_avg = statistics.mean(x["avg_response_time_ms"] for x in first_half)
+        second_avg = statistics.mean(x["avg_response_time_ms"] for x in second_half)
+        degradation_detected = second_avg > first_avg * 1.3  # >30% slower in the back half
+
+    summary = {
+        "suite": "API Endurance Test", "test_type": "Endurance Test",
+        "virtual_users": vus, "duration_seconds": duration,
+        "actual_duration_seconds": round(actual_duration, 2),
+        "bucket_seconds": bucket_seconds, "buckets": buckets,
+        "degradation_detected": degradation_detected,
+        **overall_stats,
+    }
+    json_path = write_json(output_dir, "api_endurance_test_results.json", summary)
+    print(f"\nDegradation detected across the run: {degradation_detected}")
+    print(f"Report written: {json_path}")
+    return summary
+
+
+def run(base_url, vus, duration, no_spawn, output_dir, workers, mode):
+    proc, started_here = ensure_server(base_url, no_spawn, db_filename="backend_load_test.db", workers=workers)
+
+    print("=" * 80)
+    print(f"               REAL {mode.upper()} LOAD TEST — HealthSense AI API")
+    print("=" * 80)
+    print(f"Target: {base_url}")
+
+    print(f"Provisioning {NUM_ACCOUNTS} real accounts for load generation...")
+    accounts = register_accounts(base_url, NUM_ACCOUNTS)
+    print("Accounts ready. Starting load...\n")
+
+    if mode == "baseline":
+        error_rate = run_baseline(base_url, vus, duration, accounts, output_dir, workers)
+        should_fail = error_rate > 20
+    elif mode == "stress":
+        run_stress(base_url, accounts, output_dir)
+        should_fail = False  # stress tests are expected to find a failure point; that's the point, not a bug
+    elif mode == "spike":
+        result = run_spike(base_url, accounts, output_dir)
+        should_fail = not result["recovered_cleanly"]
+    elif mode == "endurance":
+        result = run_endurance(base_url, accounts, output_dir, vus=vus, duration=duration)
+        should_fail = result["degradation_detected"]
+    else:
+        raise ValueError(f"Unknown mode: {mode}")
 
     teardown_server(proc, started_here, db_filename="backend_load_test.db")
 
-    if error_rate > 20:
-        print(f"\nWARNING: error rate {error_rate:.1f}% exceeds 20% threshold — investigate before treating this as a passing baseline.")
+    if should_fail:
+        print(f"\nWARNING: {mode} test flagged a real problem — see the report for details.")
         sys.exit(1)
 
 
@@ -270,5 +418,6 @@ if __name__ == "__main__":
     parser.add_argument("--output-dir", default=os.path.join(REPO_ROOT, "reports"))
     parser.add_argument("--workers", type=int, default=4,
                          help="uvicorn worker processes to spawn with (ignored if --no-spawn / already running)")
+    parser.add_argument("--mode", choices=["baseline", "stress", "spike", "endurance"], default="baseline")
     args = parser.parse_args()
-    run(args.base_url, args.vus, args.duration, args.no_spawn, args.output_dir, args.workers)
+    run(args.base_url, args.vus, args.duration, args.no_spawn, args.output_dir, args.workers, args.mode)
