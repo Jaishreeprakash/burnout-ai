@@ -70,6 +70,8 @@ jobs:
         with:
           target: 'http://localhost:8000'
           fail_action: false
+          allow_issue_writing: false  # we already capture the report as our own artifact below; filing a
+                                       # GitHub issue needs `issues: write`, which the default token lacks
           artifact_name: 'zap-baseline-report'
 
       - name: Upload Backend & Security Report
