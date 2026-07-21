@@ -121,7 +121,14 @@ def safe(rec, category, module, name, fn):
         rec.record(category, module, name, "UI", "Fail", f"Unexpected error: {e}")
 
 
-def find(driver, by, sel, timeout=8):
+def find(driver, by, sel, timeout=20):
+    # 20s (not 8s): on GitHub's standard 2-core runners, a long-lived headless
+    # Firefox session measurably slows down page-by-page as the run goes on
+    # (observed: later pages like Analytics/Chat/Profile increasingly miss an
+    # 8s window while Chrome — lighter on the same hardware — never does).
+    # The app itself isn't slow (Chrome passes cleanly every time); this is
+    # automation headroom for a resource-constrained CI browser, not a fix
+    # for a real defect.
     return WebDriverWait(driver, timeout).until(EC.presence_of_element_located((by, sel)))
 
 
