@@ -200,6 +200,22 @@ jobs:
             sleep 1
           done
 
+      - name: Generate Debug Keystore
+        run: |
+          # mobile/android/app/*.keystore is (correctly) gitignored — on a real
+          # dev machine the Android SDK/Android Studio auto-generates this on
+          # first build, but a fresh CI checkout has nothing there at all.
+          # These are the standard, non-secret Android debug-key defaults
+          # (same alias/passwords app/build.gradle's signingConfigs.debug
+          # expects), safe to generate fresh every run — debug builds are
+          # never distributed via this signature.
+          if [ ! -f mobile/android/app/debug.keystore ]; then
+            keytool -genkeypair -v -keystore mobile/android/app/debug.keystore \
+              -storepass android -alias androiddebugkey -keypass android \
+              -keyalg RSA -keysize 2048 -validity 10000 \
+              -dname "CN=Android Debug,O=Android,C=US"
+          fi
+
       - name: Build Debug APK
         env:
           # Inlined into the JS bundle at build time (Expo SDK 49+) so the
