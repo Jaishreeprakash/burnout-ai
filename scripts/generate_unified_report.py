@@ -5,9 +5,12 @@ run_selenium_suite.py, and run_mobile_suite.py. Every number in this
 report is read from those suites' actual JSON results — nothing here is
 computed from a static replayed CSV.
 """
+import csv
 import json
 import os
 import sys
+
+REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 def load(path):
@@ -30,6 +33,23 @@ def fmt_rows(rows, limit=100):
     return lines
 
 
+def write_combined_csv(components, out_path):
+    """Merges every suite's real result rows into one flat CSV, each row
+    tagged with which component it came from — one file, all real cases,
+    same shape as the historical QA_Test_Report_*.csv files."""
+    fieldnames = ["Component", "TestID", "Category", "Module / Page", "Test Case",
+                  "Method", "Environment", "Status", "Observed Result (evidence)", "Executed At"]
+    with open(out_path, "w", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        writer.writeheader()
+        for component_name, data in components:
+            if not data:
+                continue
+            for row in data["results"]:
+                writer.writerow({"Component": component_name, **{k: row.get(k, "") for k in fieldnames if k != "Component"}})
+    return out_path
+
+
 def generate_report(reports_dir="reports", output_dir="reports"):
     backend = load(os.path.join(reports_dir, "backend_security_results.json"))
     load_test = load(os.path.join(reports_dir, "api_load_test_results.json"))
@@ -43,6 +63,14 @@ def generate_report(reports_dir="reports", output_dir="reports"):
               f"Their section will be omitted from the dashboard.")
 
     os.makedirs(output_dir, exist_ok=True)
+
+    combined_csv_path = os.path.join(REPO_ROOT, "QA_Test_Report_Live.csv")
+    write_combined_csv(
+        [("Website E2E", web), ("Mobile App E2E", mobile),
+         ("Backend & Security", backend), ("API Load Testing", load_test)],
+        combined_csv_path,
+    )
+    print(f"Generated combined real-results CSV at {combined_csv_path}")
 
     md = []
     md.append("# 🧪 HealthSense AI Unified Test Verification Dashboard\n")
