@@ -137,6 +137,12 @@ def run(appium_url, udid, apk_path, no_spawn_appium, output_dir):
     options.app_activity = APP_ACTIVITY
     options.no_reset = apk_path is None
     options.new_command_timeout = 120
+    # Appium's own uiautomator2-server helper APK install timed out at the
+    # 20s default on a constrained CI emulator (real, transient — confirmed
+    # via the actual error, which names this exact capability as the fix).
+    options.set_capability("appium:uiautomator2ServerInstallTimeout", 90000)
+    options.set_capability("appium:androidInstallTimeout", 90000)
+    options.set_capability("appium:adbExecTimeout", 90000)
     if udid:
         options.udid = udid
     if apk_path:
