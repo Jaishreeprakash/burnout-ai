@@ -86,7 +86,10 @@ def ensure_server(base_url, no_spawn, db_filename="backend_ci_test.db", workers=
             sys.exit(1)
         print("Backend is up.")
         return proc, True
-    elif not wait_for_health(base_url, timeout=5):
+    elif not wait_for_health(base_url, timeout=90):
+        # 90s, not a quick fail: with --no-spawn this is usually the live Render
+        # backend, which spins down on the free tier after inactivity and can
+        # take 30-60s+ to cold-start on the first request.
         print(f"No backend reachable at {base_url} and --no-spawn was set. Aborting.")
         sys.exit(1)
     return None, False
