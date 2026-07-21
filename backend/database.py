@@ -1,6 +1,6 @@
 import time
 
-from sqlalchemy import create_engine, text
+from sqlalchemy import create_engine, event, text
 from sqlalchemy.exc import OperationalError
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
@@ -11,7 +11,11 @@ if db_url.startswith("postgres://"):
     db_url = db_url.replace("postgres://", "postgresql://", 1)
 
 is_sqlite = db_url.startswith("sqlite")
-connect_args = {"check_same_thread": False} if is_sqlite else {}
+# timeout=30: how long sqlite3 waits for a lock before raising "database is
+# locked", instead of the 5s default — under concurrent writers (multiple
+# uvicorn workers sharing one file) that default was surfacing as real 500s
+# under load rather than just queuing briefly.
+connect_args = {"check_same_thread": False, "timeout": 30} if is_sqlite else {}
 
 # pool_pre_ping tests each connection with a cheap query before handing it to
 # the app, so a connection the remote DB has silently dropped (idle timeout,
@@ -23,6 +27,20 @@ if not is_sqlite:
     engine_kwargs.update(pool_size=20, max_overflow=30, pool_recycle=280, pool_timeout=30)
 
 engine = create_engine(db_url, **engine_kwargs)
+
+if is_sqlite:
+    @event.listens_for(engine, "connect")
+    def _set_sqlite_pragmas(dbapi_connection, _record):
+        # WAL mode lets readers and writers proceed concurrently instead of
+        # blocking each other on SQLite's default rollback journal — the
+        # single biggest lever for reducing "database is locked" under
+        # concurrent load. synchronous=NORMAL is the standard pairing with
+        # WAL (still durable against app crashes, just not an OS-level power
+        # loss mid-write, an acceptable tradeoff here).
+        cursor = dbapi_connection.cursor()
+        cursor.execute("PRAGMA journal_mode=WAL")
+        cursor.execute("PRAGMA synchronous=NORMAL")
+        cursor.close()
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
