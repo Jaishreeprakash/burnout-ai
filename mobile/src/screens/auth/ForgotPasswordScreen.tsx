@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import {
   View,
   Text,
@@ -16,7 +16,8 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { Colors } from '../../constants/colors';
+import { ThemeColors } from '../../constants/colors';
+import { useTheme } from '../../context/ThemeContext';
 import { AuthStackParamList } from '../../navigation/AuthNavigator';
 import { authApi } from '../../services/api';
 
@@ -26,6 +27,8 @@ type Props = {
 
 const ForgotPasswordScreen: React.FC<Props> = ({ navigation }) => {
   const insets = useSafeAreaInsets();
+  const { colors } = useTheme();
+  const styles = useMemo(() => createStyles(colors), [colors]);
   const [email, setEmail] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -114,8 +117,10 @@ const ForgotPasswordScreen: React.FC<Props> = ({ navigation }) => {
               onPress={() => navigation.goBack()}
               style={styles.backButton}
               activeOpacity={0.8}
+              accessibilityLabel="Go back"
+              accessibilityRole="button"
             >
-              <MaterialCommunityIcons name="arrow-left" size={24} color={Colors.text} />
+              <MaterialCommunityIcons name="arrow-left" size={24} color="#f1f5f9" />
             </TouchableOpacity>
             <View style={styles.logoContainer}>
               <LinearGradient colors={['#6366f1', '#8b5cf6']} style={styles.logoGradient}>
@@ -139,12 +144,12 @@ const ForgotPasswordScreen: React.FC<Props> = ({ navigation }) => {
             {/* Email/Username input */}
             <View style={styles.inputWrapper}>
               <View style={styles.inputIcon}>
-                <MaterialCommunityIcons name="account-outline" size={20} color={Colors.textMuted} />
+                <MaterialCommunityIcons name="account-outline" size={20} color={colors.textMuted} />
               </View>
               <TextInput
                 style={styles.input}
                 placeholder="Username or Email"
-                placeholderTextColor={Colors.textMuted}
+                placeholderTextColor={colors.textMuted}
                 value={email}
                 onChangeText={setEmail}
                 autoCapitalize="none"
@@ -156,12 +161,12 @@ const ForgotPasswordScreen: React.FC<Props> = ({ navigation }) => {
             {/* New Password input */}
             <View style={styles.inputWrapper}>
               <View style={styles.inputIcon}>
-                <MaterialCommunityIcons name="lock-outline" size={20} color={Colors.textMuted} />
+                <MaterialCommunityIcons name="lock-outline" size={20} color={colors.textMuted} />
               </View>
               <TextInput
                 style={[styles.input, { paddingRight: 50 }]}
                 placeholder="New Password"
-                placeholderTextColor={Colors.textMuted}
+                placeholderTextColor={colors.textMuted}
                 value={newPassword}
                 onChangeText={setNewPassword}
                 secureTextEntry={!showPassword}
@@ -170,11 +175,13 @@ const ForgotPasswordScreen: React.FC<Props> = ({ navigation }) => {
               <TouchableOpacity
                 style={styles.eyeButton}
                 onPress={() => setShowPassword(!showPassword)}
+                accessibilityLabel={showPassword ? 'Hide password' : 'Show password'}
+                accessibilityRole="button"
               >
                 <MaterialCommunityIcons
                   name={showPassword ? 'eye-off-outline' : 'eye-outline'}
                   size={20}
-                  color={Colors.textMuted}
+                  color={colors.textMuted}
                 />
               </TouchableOpacity>
             </View>
@@ -182,12 +189,12 @@ const ForgotPasswordScreen: React.FC<Props> = ({ navigation }) => {
             {/* Confirm Password input */}
             <View style={styles.inputWrapper}>
               <View style={styles.inputIcon}>
-                <MaterialCommunityIcons name="lock-check-outline" size={20} color={Colors.textMuted} />
+                <MaterialCommunityIcons name="lock-check-outline" size={20} color={colors.textMuted} />
               </View>
               <TextInput
                 style={[styles.input, { paddingRight: 50 }]}
                 placeholder="Confirm New Password"
-                placeholderTextColor={Colors.textMuted}
+                placeholderTextColor={colors.textMuted}
                 value={confirmPassword}
                 onChangeText={setConfirmPassword}
                 secureTextEntry={!showConfirmPassword}
@@ -197,11 +204,13 @@ const ForgotPasswordScreen: React.FC<Props> = ({ navigation }) => {
               <TouchableOpacity
                 style={styles.eyeButton}
                 onPress={() => setShowConfirmPassword(!showConfirmPassword)}
+                accessibilityLabel={showConfirmPassword ? 'Hide password' : 'Show password'}
+                accessibilityRole="button"
               >
                 <MaterialCommunityIcons
                   name={showConfirmPassword ? 'eye-off-outline' : 'eye-outline'}
                   size={20}
-                  color={Colors.textMuted}
+                  color={colors.textMuted}
                 />
               </TouchableOpacity>
             </View>
@@ -244,10 +253,10 @@ const ForgotPasswordScreen: React.FC<Props> = ({ navigation }) => {
   );
 };
 
-const styles = StyleSheet.create({
+const createStyles = (colors: ThemeColors) => StyleSheet.create({
   root: {
     flex: 1,
-    backgroundColor: Colors.background,
+    backgroundColor: colors.background,
   },
   decorCircle: {
     position: 'absolute',
@@ -257,14 +266,14 @@ const styles = StyleSheet.create({
   decorCircle1: {
     width: 300,
     height: 300,
-    backgroundColor: Colors.primary,
+    backgroundColor: colors.primary,
     top: -80,
     right: -80,
   },
   decorCircle2: {
     width: 200,
     height: 200,
-    backgroundColor: Colors.primaryLight,
+    backgroundColor: colors.primaryLight,
     bottom: 100,
     left: -60,
   },
@@ -285,15 +294,15 @@ const styles = StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: 22,
-    backgroundColor: Colors.surface,
+    backgroundColor: colors.surface,
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: Colors.border,
+    borderColor: colors.border,
   },
   logoContainer: {
     marginBottom: 16,
-    shadowColor: Colors.primary,
+    shadowColor: colors.primary,
     shadowOffset: { width: 0, height: 8 },
     shadowOpacity: 0.5,
     shadowRadius: 20,
@@ -307,44 +316,45 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  // appName/tagline are pinned (not theme-driven): they sit on the fixed dark hero gradient, not the themed surface.
   appName: {
     fontSize: 30,
     fontWeight: '900',
-    color: Colors.text,
+    color: '#f1f5f9',
     letterSpacing: 0.5,
     marginBottom: 6,
   },
   tagline: {
     fontSize: 14,
-    color: Colors.textMuted,
+    color: '#94a3b8',
     textAlign: 'center',
     paddingHorizontal: 10,
   },
   formCard: {
-    backgroundColor: Colors.surface,
+    backgroundColor: colors.surface,
     borderRadius: 24,
     padding: 28,
     borderWidth: 1,
-    borderColor: Colors.border,
+    borderColor: colors.border,
   },
   formTitle: {
     fontSize: 22,
     fontWeight: '800',
-    color: Colors.text,
+    color: colors.text,
     marginBottom: 6,
   },
   formSubtitle: {
     fontSize: 14,
-    color: Colors.textMuted,
+    color: colors.textMuted,
     marginBottom: 24,
   },
   inputWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: Colors.background,
+    backgroundColor: colors.background,
     borderRadius: 14,
     borderWidth: 1,
-    borderColor: Colors.border,
+    borderColor: colors.border,
     marginBottom: 14,
   },
   inputIcon: {
@@ -353,7 +363,7 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     height: 52,
-    color: Colors.text,
+    color: colors.text,
     fontSize: 16,
   },
   eyeButton: {
@@ -366,7 +376,7 @@ const styles = StyleSheet.create({
     marginTop: 8,
     borderRadius: 14,
     overflow: 'hidden',
-    shadowColor: Colors.primary,
+    shadowColor: colors.primary,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.4,
     shadowRadius: 12,
@@ -389,7 +399,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   backToLoginLink: {
-    color: Colors.primary,
+    color: colors.primary,
     fontSize: 14,
     fontWeight: '700',
   },

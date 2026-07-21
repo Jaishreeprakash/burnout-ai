@@ -25,6 +25,16 @@ const api: AxiosInstance = axios.create({
   },
 });
 
+// Notifies AuthContext when the server rejects the stored session (401), so
+// it can clear `user` state and let RootNavigation swap to the auth stack.
+// Without this, StorageService.clearAll() below wipes the token but the app
+// stays on the authenticated tab navigator showing stale data forever.
+type SessionExpiredHandler = () => void;
+let onSessionExpired: SessionExpiredHandler | null = null;
+export const setSessionExpiredHandler = (handler: SessionExpiredHandler | null) => {
+  onSessionExpired = handler;
+};
+
 // Request interceptor to add auth token
 api.interceptors.request.use(
   async (config) => {
@@ -43,6 +53,7 @@ api.interceptors.response.use(
   async (error: AxiosError) => {
     if (error.response?.status === 401) {
       await StorageService.clearAll();
+      onSessionExpired?.();
     }
     return Promise.reject(error);
   }
@@ -211,6 +222,15 @@ const MOCK_DASHBOARD: DashboardData = {
   trend_data: MOCK_TREND,
 };
 
+// The fixed token demoLogin() (AuthContext.tsx) stores — used here to detect
+// Demo Mode so requests are served from the mock data above instead of
+// hitting the real API with a token the server will always reject.
+export const DEMO_TOKEN = 'demo_token_xyz';
+const isDemoSession = async (): Promise<boolean> => {
+  const token = await StorageService.getToken();
+  return token === DEMO_TOKEN;
+};
+
 // ─── Auth API ───────────────────────────────────────────────────────────────────
 
 export const authApi = {
@@ -230,6 +250,7 @@ export const authApi = {
   },
 
   async getCurrentUser(): Promise<User> {
+    if (await isDemoSession()) return MOCK_USER;
     const response = await api.get<User>('/auth/me');
     return response.data;
   },
@@ -244,6 +265,7 @@ export const authApi = {
 
 export const dashboardApi = {
   async getDashboard(): Promise<DashboardData> {
+    if (await isDemoSession()) return MOCK_DASHBOARD;
     const response = await api.get<any>('/wellness/dashboard');
     const data = response.data;
     if (data.recent_phone_usage) {
@@ -264,6 +286,7 @@ export const dashboardApi = {
   },
 
   async getBurnoutAnalysis(): Promise<BurnoutAnalysis> {
+    if (await isDemoSession()) return MOCK_BURNOUT;
     const response = await api.get<BurnoutAnalysis>('/burnout/analysis');
     return response.data;
   },
@@ -273,6 +296,7 @@ export const dashboardApi = {
 
 export const sleepApi = {
   async getSleepRecords(days = 7): Promise<SleepRecord[]> {
+    if (await isDemoSession()) return [MOCK_SLEEP];
     try {
       const response = await api.get<SleepRecord[]>(`/tracking/sleep?days=${days}`);
       return response.data;
@@ -282,6 +306,7 @@ export const sleepApi = {
   },
 
   async logSleep(data: Partial<SleepRecord>): Promise<SleepRecord> {
+    if (await isDemoSession()) return { ...MOCK_SLEEP, ...data, id: Date.now() };
     const response = await api.post<SleepRecord>('/tracking/sleep', data);
     return response.data;
   },
@@ -291,6 +316,7 @@ export const sleepApi = {
 
 export const phoneApi = {
   async getPhoneUsageRecords(days = 7): Promise<PhoneUsageRecord[]> {
+    if (await isDemoSession()) return [MOCK_PHONE_USAGE];
     try {
       const response = await api.get<any[]>(`/tracking/phone-usage?days=${days}`);
       return response.data.map((r) => ({
@@ -311,6 +337,7 @@ export const phoneApi = {
   },
 
   async logPhoneUsage(data: Partial<PhoneUsageRecord>): Promise<PhoneUsageRecord> {
+    if (await isDemoSession()) return { ...MOCK_PHONE_USAGE, ...data, id: Date.now() };
     const payload = {
       date: data.date,
       screen_time_hours: data.total_hours,
@@ -343,6 +370,7 @@ export const phoneApi = {
 
 export const emotionApi = {
   async getEmotionRecords(days = 7): Promise<EmotionRecord[]> {
+    if (await isDemoSession()) return [MOCK_EMOTION];
     try {
       const response = await api.get<EmotionRecord[]>(`/tracking/emotion?days=${days}`);
       return response.data;
@@ -352,29 +380,24 @@ export const emotionApi = {
   },
 
   async logEmotion(data: Partial<EmotionRecord>): Promise<EmotionRecord> {
+    if (await isDemoSession()) return { ...MOCK_EMOTION, ...data, id: Date.now() };
     const response = await api.post<EmotionRecord>('/tracking/emotion', data);
     return response.data;
   },
 
   async analyzeCamera(imageBase64: string): Promise<EmotionRecord> {
-    try {
-      const response = await api.post<EmotionRecord>('/tracking/emotion/analyze-camera', {
-        image: imageBase64,
-      });
-      return response.data;
-    } catch {
-      const emotions = ['Happy', 'Neutral', 'Sad', 'Surprised', 'Anxious'];
-      const dominant = emotions[Math.floor(Math.random() * emotions.length)];
-      return {
-        ...MOCK_EMOTION,
-        dominant_emotion: dominant,
-        confidence: 0.7 + Math.random() * 0.2,
-        emotions: emotions.slice(0, 4).map((e) => ({
-          emotion: e,
-          confidence: e === dominant ? 0.7 + Math.random() * 0.2 : Math.random() * 0.15,
-        })),
-      };
+    // Demo Mode is explicitly canned data, so a labeled mock result here is
+    // honest. Outside Demo Mode, a real captured photo is sent to the real
+    // endpoint; if it fails (e.g. not yet implemented on the backend), the
+    // error is surfaced to the caller instead of silently fabricating a
+    // result the user would mistake for genuine analysis.
+    if (await isDemoSession()) {
+      return { ...MOCK_EMOTION, dominant_emotion: 'Neutral', confidence: 0.72 };
     }
+    const response = await api.post<EmotionRecord>('/tracking/emotion/analyze-camera', {
+      image: imageBase64,
+    });
+    return response.data;
   },
 };
 
@@ -382,6 +405,7 @@ export const emotionApi = {
 
 export const activityApi = {
   async getActivityRecords(days = 7): Promise<ActivityRecord[]> {
+    if (await isDemoSession()) return [MOCK_ACTIVITY];
     try {
       const response = await api.get<ActivityRecord[]>(`/tracking/activity?days=${days}`);
       return response.data;
@@ -391,6 +415,7 @@ export const activityApi = {
   },
 
   async logActivity(data: Partial<ActivityRecord>): Promise<ActivityRecord> {
+    if (await isDemoSession()) return { ...MOCK_ACTIVITY, ...data, id: Date.now() };
     const response = await api.post<ActivityRecord>('/tracking/activity', data);
     return response.data;
   },
@@ -400,6 +425,7 @@ export const activityApi = {
 
 export const recommendationsApi = {
   async getRecommendations(): Promise<Recommendation[]> {
+    if (await isDemoSession()) return MOCK_BURNOUT.recommendations;
     try {
       const response = await api.get<Recommendation[]>('/recommendations');
       return response.data;

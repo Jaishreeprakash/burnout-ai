@@ -4,15 +4,18 @@ import random
 from datetime import datetime, timedelta, timezone
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, Depends, HTTPException, status
+from fastapi import FastAPI, Depends, HTTPException, Request, status
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
+from fastapi.responses import JSONResponse
+from pydantic import BaseModel, field_validator
+from sqlalchemy.exc import DataError
 from sqlalchemy.orm import Session
 from typing import List, Optional
 
 from config import settings
 from database import Base, engine, get_db
 from models.tracking import BurnoutRecord
+from schemas.validators import reject_nul_bytes
 from routes import (
     auth_router,
     burnout_router,
@@ -60,6 +63,20 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
+@app.exception_handler(DataError)
+async def data_error_handler(request: Request, exc: DataError):
+    """
+    Postgres rejects certain byte sequences (e.g. NUL 0x00) in text columns
+    at the wire-protocol level, which otherwise surfaces as an unhandled 500.
+    Treat it as what it really is: invalid client input.
+    """
+    return JSONResponse(
+        status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+        content={"detail": "Invalid characters in request data."},
+    )
+
+
 # ---------------------------------------------------------------------------
 # Routers
 # ---------------------------------------------------------------------------
@@ -89,6 +106,8 @@ def health_check():
 class ChatMessage(BaseModel):
     message: str
     history: Optional[List[dict]] = []
+
+    _no_nul = field_validator("message", mode="before")(reject_nul_bytes)
 
 
 @app.post("/api/v1/chat")

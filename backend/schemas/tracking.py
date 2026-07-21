@@ -1,7 +1,9 @@
-from pydantic import BaseModel, field_validator
+from pydantic import BaseModel, Field, field_validator
 from typing import Optional, Dict, Any, List
 from datetime import datetime
 import json
+
+from .validators import reject_nul_bytes
 
 
 # ---- Sleep Schemas ----
@@ -13,6 +15,8 @@ class SleepRecordCreate(BaseModel):
     consistency_score: float = 70.0
     bedtime: Optional[str] = None
     wake_time: Optional[str] = None
+
+    _no_nul = field_validator("bedtime", "wake_time", mode="before")(reject_nul_bytes)
 
 
 class SleepRecordResponse(BaseModel):
@@ -37,7 +41,7 @@ class PhoneUsageCreate(BaseModel):
     screen_time_hours: float
     app_usage_data: Optional[Dict[str, Any]] = None
     late_night_usage: bool = False
-    pickups_count: Optional[int] = None
+    pickups_count: Optional[int] = Field(default=None, ge=0, le=10000)
 
 
 class PhoneUsageResponse(BaseModel):
@@ -97,6 +101,8 @@ class EmotionRecordCreate(BaseModel):
     confidence: float = 1.0
     emotion_scores: Optional[Dict[str, float]] = None
 
+    _no_nul = field_validator("emotion_type", "dominant_emotion", mode="before")(reject_nul_bytes)
+
 
 class EmotionRecordResponse(BaseModel):
     id: int
@@ -129,7 +135,7 @@ class ActivityRecordCreate(BaseModel):
     study_hours: float = 0.0
     work_hours: float = 0.0
     exercise_minutes: float = 0.0
-    break_count: int = 0
+    break_count: int = Field(default=0, ge=0, le=1000)
     focus_score: float = 50.0   # 0-100
 
 

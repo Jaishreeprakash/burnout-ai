@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { User, LoginRequest, RegisterRequest } from '../types';
-import { authApi } from '../services/api';
+import { authApi, setSessionExpiredHandler, DEMO_TOKEN } from '../services/api';
 import { StorageService } from '../services/storage';
 
 interface AuthContextType {
@@ -22,6 +22,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   useEffect(() => {
     checkAuth();
+    // When the API layer sees a 401 (expired/invalid session), clear `user`
+    // here too so RootNavigation (App.tsx) swaps to the auth stack instead
+    // of leaving the app stuck on an authenticated screen with a wiped token.
+    setSessionExpiredHandler(() => setUser(null));
+    return () => setSessionExpiredHandler(null);
   }, []);
 
   const checkAuth = async () => {
@@ -76,7 +81,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       created_at: new Date().toISOString(),
       is_active: true,
     };
-    await StorageService.saveToken('demo_token_xyz');
+    await StorageService.saveToken(DEMO_TOKEN);
     await StorageService.saveUser(demoUser);
     setUser(demoUser);
   };

@@ -1,7 +1,8 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useMemo } from 'react';
 import { View, Text, StyleSheet, Animated } from 'react-native';
 import Svg, { Path, Circle, Line, G, Defs, LinearGradient as SvgGradient, Stop } from 'react-native-svg';
-import { Colors, getRiskColor } from '../constants/colors';
+import { ThemeColors, getRiskColor } from '../constants/colors';
+import { useTheme } from '../context/ThemeContext';
 import { RiskLevel } from '../types';
 
 interface BurnoutGaugeProps {
@@ -11,6 +12,8 @@ interface BurnoutGaugeProps {
 }
 
 const BurnoutGauge: React.FC<BurnoutGaugeProps> = ({ score, riskLevel, size = 220 }) => {
+  const { colors } = useTheme();
+  const styles = useMemo(() => createStyles(colors), [colors]);
   const animatedScore = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -48,7 +51,7 @@ const BurnoutGauge: React.FC<BurnoutGaugeProps> = ({ score, riskLevel, size = 22
   const needleBase1 = polarToCartesian(scoreAngle + Math.PI / 2, 8);
   const needleBase2 = polarToCartesian(scoreAngle - Math.PI / 2, 8);
 
-  const color = getRiskColor(riskLevel);
+  const color = getRiskColor(riskLevel, colors);
 
   const riskLabels: Record<RiskLevel, string> = {
     low: 'Low Risk',
@@ -59,10 +62,10 @@ const BurnoutGauge: React.FC<BurnoutGaugeProps> = ({ score, riskLevel, size = 22
 
   // Zone arcs
   const zones = [
-    { from: Math.PI, to: Math.PI * 0.75, color: Colors.low },
-    { from: Math.PI * 0.75, to: Math.PI * 0.5, color: Colors.moderate },
-    { from: Math.PI * 0.5, to: Math.PI * 0.25, color: Colors.high },
-    { from: Math.PI * 0.25, to: 0, color: Colors.critical },
+    { from: Math.PI, to: Math.PI * 0.75, color: colors.low },
+    { from: Math.PI * 0.75, to: Math.PI * 0.5, color: colors.moderate },
+    { from: Math.PI * 0.5, to: Math.PI * 0.25, color: colors.high },
+    { from: Math.PI * 0.25, to: 0, color: colors.critical },
   ];
 
   return (
@@ -78,7 +81,7 @@ const BurnoutGauge: React.FC<BurnoutGaugeProps> = ({ score, riskLevel, size = 22
         {/* Background track */}
         <Path
           d={describeArc(Math.PI, 0, r)}
-          stroke={Colors.surfaceLight}
+          stroke={colors.surfaceLight}
           strokeWidth={strokeWidth}
           strokeLinecap="round"
           fill="none"
@@ -113,7 +116,7 @@ const BurnoutGauge: React.FC<BurnoutGaugeProps> = ({ score, riskLevel, size = 22
             fill={color}
             opacity={0.9}
           />
-          <Circle cx={cx} cy={cy} r={10} fill={Colors.surface} stroke={color} strokeWidth={2} />
+          <Circle cx={cx} cy={cy} r={10} fill={colors.surface} stroke={color} strokeWidth={2} />
           <Circle cx={cx} cy={cy} r={5} fill={color} />
         </G>
 
@@ -124,7 +127,7 @@ const BurnoutGauge: React.FC<BurnoutGaugeProps> = ({ score, riskLevel, size = 22
             const pt = polarToCartesian(angle, r + strokeWidth / 2 + 10);
             return (
               <G key={val}>
-                <Circle cx={pt.x} cy={pt.y} r={2} fill={Colors.textMuted} />
+                <Circle cx={pt.x} cy={pt.y} r={2} fill={colors.textMuted} />
               </G>
             );
           })}
@@ -133,15 +136,15 @@ const BurnoutGauge: React.FC<BurnoutGaugeProps> = ({ score, riskLevel, size = 22
 
       {/* Center text */}
       <View style={styles.scoreContainer}>
-        <Text style={[styles.score, { color }]}>{score}</Text>
-        <Text style={styles.scoreLabel}>/ 100</Text>
+        <Text style={[styles.score, { color }]} maxFontSizeMultiplier={1.2}>{score}</Text>
+        <Text style={styles.scoreLabel} maxFontSizeMultiplier={1.2}>/ 100</Text>
       </View>
-      <Text style={[styles.riskText, { color }]}>{riskLabels[riskLevel]}</Text>
+      <Text style={[styles.riskText, { color }]} maxFontSizeMultiplier={1.2}>{riskLabels[riskLevel]}</Text>
     </View>
   );
 };
 
-const styles = StyleSheet.create({
+const createStyles = (colors: ThemeColors) => StyleSheet.create({
   container: {
     alignItems: 'center',
   },
@@ -157,7 +160,7 @@ const styles = StyleSheet.create({
   },
   scoreLabel: {
     fontSize: 18,
-    color: Colors.textMuted,
+    color: colors.textMuted,
     marginLeft: 4,
     fontWeight: '600',
   },

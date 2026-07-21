@@ -1,6 +1,7 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useMemo } from 'react';
 import { View, Text, StyleSheet, Animated } from 'react-native';
-import { Colors } from '../constants/colors';
+import { ThemeColors } from '../constants/colors';
+import { useTheme } from '../context/ThemeContext';
 
 interface EmotionBarProps {
   emotion: string;
@@ -35,9 +36,11 @@ const EMOTION_COLORS: Record<string, string> = {
 };
 
 const EmotionBar: React.FC<EmotionBarProps> = ({ emotion, confidence, isTop = false }) => {
+  const { colors } = useTheme();
+  const styles = useMemo(() => createStyles(colors), [colors]);
   const widthAnim = useRef(new Animated.Value(0)).current;
   const percentage = Math.round(confidence * 100);
-  const color = EMOTION_COLORS[emotion] || Colors.primary;
+  const color = EMOTION_COLORS[emotion] || colors.primary;
   const emoji = EMOTION_EMOJIS[emotion] || '😐';
 
   useEffect(() => {
@@ -71,7 +74,7 @@ const EmotionBar: React.FC<EmotionBarProps> = ({ emotion, confidence, isTop = fa
   );
 };
 
-const styles = StyleSheet.create({
+const createStyles = (colors: ThemeColors) => StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -92,7 +95,7 @@ const styles = StyleSheet.create({
   },
   emotionName: {
     fontSize: 13,
-    color: Colors.text,
+    color: colors.text,
     fontWeight: '500',
   },
   topEmotionName: {
@@ -104,7 +107,7 @@ const styles = StyleSheet.create({
   },
   barTrack: {
     height: 8,
-    backgroundColor: Colors.surfaceLight,
+    backgroundColor: colors.surfaceLight,
     borderRadius: 4,
     overflow: 'hidden',
   },

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
   View,
   Text,
@@ -8,6 +8,8 @@ import {
   TextInput,
   Alert,
   ActivityIndicator,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -16,7 +18,8 @@ import Svg, { Circle } from 'react-native-svg';
 import * as Haptics from 'expo-haptics';
 import { activityApi } from '../../services/api';
 import { ActivityRecord } from '../../types';
-import { Colors, getScoreColor } from '../../constants/colors';
+import { ThemeColors, getScoreColor } from '../../constants/colors';
+import { useTheme } from '../../context/ThemeContext';
 
 interface ProgressCircleProps {
   label: string;
@@ -29,6 +32,8 @@ interface ProgressCircleProps {
 }
 
 const ProgressCircle: React.FC<ProgressCircleProps> = ({ label, current, goal, unit, color, icon, size = 100 }) => {
+  const { colors } = useTheme();
+  const progressStyles = useMemo(() => createProgressStyles(colors), [colors]);
   const strokeWidth = 10;
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
@@ -40,7 +45,7 @@ const ProgressCircle: React.FC<ProgressCircleProps> = ({ label, current, goal, u
       <Svg width={size} height={size}>
         <Circle
           cx={size / 2} cy={size / 2} r={radius}
-          stroke={Colors.surfaceLight} strokeWidth={strokeWidth} fill="none"
+          stroke={colors.surfaceLight} strokeWidth={strokeWidth} fill="none"
         />
         <Circle
           cx={size / 2} cy={size / 2} r={radius}
@@ -62,17 +67,19 @@ const ProgressCircle: React.FC<ProgressCircleProps> = ({ label, current, goal, u
   );
 };
 
-const progressStyles = StyleSheet.create({
+const createProgressStyles = (colors: ThemeColors) => StyleSheet.create({
   container: { alignItems: 'center' },
   center: { ...StyleSheet.absoluteFillObject, justifyContent: 'center', alignItems: 'center' },
   value: { fontSize: 18, fontWeight: '800' },
-  unit: { fontSize: 10, color: Colors.textMuted },
-  label: { fontSize: 12, fontWeight: '700', color: Colors.text, marginTop: 8 },
-  goalText: { fontSize: 10, color: Colors.textMuted },
+  unit: { fontSize: 10, color: colors.textMuted },
+  label: { fontSize: 12, fontWeight: '700', color: colors.text, marginTop: 8 },
+  goalText: { fontSize: 10, color: colors.textMuted },
 });
 
 const ActivityScreen: React.FC = () => {
   const insets = useSafeAreaInsets();
+  const { colors } = useTheme();
+  const styles = useMemo(() => createStyles(colors), [colors]);
   const [records, setRecords] = useState<ActivityRecord[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -139,27 +146,32 @@ const ActivityScreen: React.FC = () => {
   });
 
   const heatmapColor = (intensity: number) => {
-    if (intensity === 0) return Colors.surfaceLight;
-    if (intensity < 0.3) return Colors.success + '40';
-    if (intensity < 0.6) return Colors.success + '80';
-    return Colors.success;
+    if (intensity === 0) return colors.surfaceLight;
+    if (intensity < 0.3) return colors.success + '40';
+    if (intensity < 0.6) return colors.success + '80';
+    return colors.success;
   };
 
   const days = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 
   return (
     <View style={[styles.root, { paddingTop: insets.top }]}>
-      <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      >
+      <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
         {/* Header */}
-        <LinearGradient colors={['#14532d', Colors.background]} style={styles.header}>
+        {/* Fixed (not theme-driven) decorative banner gradient, matching the auth screens' hero background. */}
+        <LinearGradient colors={['#14532d', '#0f172a']} style={styles.header}>
           <View style={styles.headerTop}>
             <Text style={styles.headerTitle}>Activity Tracker</Text>
-            <MaterialCommunityIcons name="lightning-bolt" size={24} color={Colors.warning} />
+            <MaterialCommunityIcons name="lightning-bolt" size={24} color={colors.warning} />
           </View>
           <View style={styles.focusCard}>
             <View>
               <Text style={styles.focusLabel}>Focus Score</Text>
-              <Text style={[styles.focusScore, { color: getScoreColor(focusScore) }]}>{focusScore}</Text>
+              <Text style={[styles.focusScore, { color: getScoreColor(focusScore, colors) }]}>{focusScore}</Text>
               <Text style={styles.focusSubtext}>/ 100</Text>
             </View>
             <View style={styles.focusBars}>
@@ -168,7 +180,7 @@ const ActivityScreen: React.FC = () => {
                   key={i}
                   style={[
                     styles.focusBar,
-                    { backgroundColor: i < Math.floor(focusScore / 10) ? getScoreColor(focusScore) : Colors.surfaceLight },
+                    { backgroundColor: i < Math.floor(focusScore / 10) ? getScoreColor(focusScore, colors) : colors.surfaceLight },
                   ]}
                 />
               ))}
@@ -185,7 +197,7 @@ const ActivityScreen: React.FC = () => {
               current={today?.study_hours ?? 0}
               goal={4}
               unit="h"
-              color={Colors.info}
+              color={colors.info}
               icon="book-open-outline"
             />
             <ProgressCircle
@@ -193,7 +205,7 @@ const ActivityScreen: React.FC = () => {
               current={today?.work_hours ?? 0}
               goal={8}
               unit="h"
-              color={Colors.warning}
+              color={colors.warning}
               icon="briefcase-outline"
             />
             <ProgressCircle
@@ -201,21 +213,21 @@ const ActivityScreen: React.FC = () => {
               current={today?.exercise_minutes ?? 0}
               goal={30}
               unit="min"
-              color={Colors.success}
+              color={colors.success}
               icon="run"
             />
           </View>
 
           <View style={styles.breakRow}>
             <View style={styles.breakCard}>
-              <MaterialCommunityIcons name="coffee-outline" size={20} color={Colors.primary} />
+              <MaterialCommunityIcons name="coffee-outline" size={20} color={colors.primary} />
               <View>
                 <Text style={styles.breakValue}>{today?.break_count ?? 0}</Text>
                 <Text style={styles.breakLabel}>Breaks taken</Text>
               </View>
             </View>
             <View style={styles.breakCard}>
-              <MaterialCommunityIcons name="clock-outline" size={20} color={Colors.success} />
+              <MaterialCommunityIcons name="clock-outline" size={20} color={colors.success} />
               <View>
                 <Text style={styles.breakValue}>
                   {(((today?.study_hours ?? 0) + (today?.work_hours ?? 0)) * 60 / ((today?.break_count ?? 0) + 1)).toFixed(0)} min
@@ -283,10 +295,10 @@ const ActivityScreen: React.FC = () => {
             <Text style={styles.formTitle}>Log Activity</Text>
 
             <View style={styles.formGrid}>
-              <ActivityInput label="Study Hours" icon="book-open-outline" value={studyHours} onChangeText={setStudyHours} placeholder="3.0" />
-              <ActivityInput label="Work Hours" icon="briefcase-outline" value={workHours} onChangeText={setWorkHours} placeholder="6.0" />
-              <ActivityInput label="Exercise (min)" icon="run" value={exerciseMinutes} onChangeText={setExerciseMinutes} placeholder="30" keyboardType="number-pad" />
-              <ActivityInput label="Breaks Taken" icon="coffee-outline" value={breakCount} onChangeText={setBreakCount} placeholder="4" keyboardType="number-pad" />
+              <ActivityInput label="Study Hours" icon="book-open-outline" value={studyHours} onChangeText={setStudyHours} placeholder="3.0" colors={colors} styles={styles} />
+              <ActivityInput label="Work Hours" icon="briefcase-outline" value={workHours} onChangeText={setWorkHours} placeholder="6.0" colors={colors} styles={styles} />
+              <ActivityInput label="Exercise (min)" icon="run" value={exerciseMinutes} onChangeText={setExerciseMinutes} placeholder="30" keyboardType="number-pad" colors={colors} styles={styles} />
+              <ActivityInput label="Breaks Taken" icon="coffee-outline" value={breakCount} onChangeText={setBreakCount} placeholder="4" keyboardType="number-pad" colors={colors} styles={styles} />
             </View>
 
             <View style={styles.notesContainer}>
@@ -296,7 +308,7 @@ const ActivityScreen: React.FC = () => {
                 value={activityNotes}
                 onChangeText={setActivityNotes}
                 placeholder="How was your productivity today?"
-                placeholderTextColor={Colors.textMuted}
+                placeholderTextColor={colors.textMuted}
                 multiline
                 numberOfLines={3}
                 textAlignVertical="top"
@@ -322,6 +334,7 @@ const ActivityScreen: React.FC = () => {
 
         <View style={{ height: 30 }} />
       </ScrollView>
+      </KeyboardAvoidingView>
     </View>
   );
 };
@@ -333,10 +346,12 @@ const ActivityInput: React.FC<{
   onChangeText: (t: string) => void;
   placeholder?: string;
   keyboardType?: any;
-}> = ({ label, icon, value, onChangeText, placeholder, keyboardType }) => (
+  colors: ThemeColors;
+  styles: ReturnType<typeof createStyles>;
+}> = ({ label, icon, value, onChangeText, placeholder, keyboardType, colors, styles }) => (
   <View style={styles.activityInput}>
     <View style={styles.activityInputHeader}>
-      <MaterialCommunityIcons name={icon as any} size={14} color={Colors.textMuted} />
+      <MaterialCommunityIcons name={icon as any} size={14} color={colors.textMuted} />
       <Text style={styles.inputLabel}>{label}</Text>
     </View>
     <TextInput
@@ -344,52 +359,54 @@ const ActivityInput: React.FC<{
       value={value}
       onChangeText={onChangeText}
       placeholder={placeholder}
-      placeholderTextColor={Colors.textMuted}
+      placeholderTextColor={colors.textMuted}
       keyboardType={keyboardType ?? 'decimal-pad'}
     />
   </View>
 );
 
-const styles = StyleSheet.create({
-  root: { flex: 1, backgroundColor: Colors.background },
+const createStyles = (colors: ThemeColors) => StyleSheet.create({
+  root: { flex: 1, backgroundColor: colors.background },
   content: { paddingHorizontal: 20 },
   header: { borderRadius: 24, padding: 20, marginVertical: 16 },
   headerTop: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 },
-  headerTitle: { fontSize: 22, fontWeight: '800', color: Colors.text },
+  // Pinned (not theme-driven): sits on the fixed-color end of the header gradient, not the themed surface.
+  headerTitle: { fontSize: 22, fontWeight: '800', color: '#f1f5f9' },
   focusCard: { flexDirection: 'row', alignItems: 'center', gap: 20 },
-  focusLabel: { fontSize: 13, color: Colors.textMuted },
+  // focusLabel/focusSubtext are pinned (not theme-driven): they sit inside the fixed-color header banner.
+  focusLabel: { fontSize: 13, color: '#94a3b8' },
   focusScore: { fontSize: 48, fontWeight: '900', lineHeight: 54 },
-  focusSubtext: { fontSize: 13, color: Colors.textMuted },
+  focusSubtext: { fontSize: 13, color: '#94a3b8' },
   focusBars: { flex: 1, flexDirection: 'row', gap: 4 },
   focusBar: { flex: 1, height: 36, borderRadius: 6 },
   section: { marginBottom: 20 },
-  sectionTitle: { fontSize: 16, fontWeight: '700', color: Colors.text, marginBottom: 12 },
-  circlesRow: { flexDirection: 'row', justifyContent: 'space-around', backgroundColor: Colors.surface, borderRadius: 20, padding: 20, marginBottom: 12, borderWidth: 1, borderColor: Colors.border },
+  sectionTitle: { fontSize: 16, fontWeight: '700', color: colors.text, marginBottom: 12 },
+  circlesRow: { flexDirection: 'row', justifyContent: 'space-around', backgroundColor: colors.surface, borderRadius: 20, padding: 20, marginBottom: 12, borderWidth: 1, borderColor: colors.border },
   breakRow: { flexDirection: 'row', gap: 12 },
-  breakCard: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: 10, backgroundColor: Colors.surface, borderRadius: 16, padding: 14, borderWidth: 1, borderColor: Colors.border },
-  breakValue: { fontSize: 18, fontWeight: '800', color: Colors.text },
-  breakLabel: { fontSize: 11, color: Colors.textMuted },
-  heatmapCard: { backgroundColor: Colors.surface, borderRadius: 20, padding: 16, borderWidth: 1, borderColor: Colors.border },
+  breakCard: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: 10, backgroundColor: colors.surface, borderRadius: 16, padding: 14, borderWidth: 1, borderColor: colors.border },
+  breakValue: { fontSize: 18, fontWeight: '800', color: colors.text },
+  breakLabel: { fontSize: 11, color: colors.textMuted },
+  heatmapCard: { backgroundColor: colors.surface, borderRadius: 20, padding: 16, borderWidth: 1, borderColor: colors.border },
   heatmapDayLabels: { flexDirection: 'row', justifyContent: 'space-around', marginBottom: 6 },
-  heatmapDayLabel: { fontSize: 10, color: Colors.textMuted, width: 24, textAlign: 'center' },
+  heatmapDayLabel: { fontSize: 10, color: colors.textMuted, width: 24, textAlign: 'center' },
   heatmapGrid: { gap: 4 },
   heatmapRow: { flexDirection: 'row', gap: 4, justifyContent: 'space-around' },
   heatmapCell: { width: 28, height: 28, borderRadius: 6 },
   heatmapLegend: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginTop: 12, gap: 4 },
-  heatmapLegendLabel: { fontSize: 10, color: Colors.textMuted },
+  heatmapLegendLabel: { fontSize: 10, color: colors.textMuted },
   heatmapLegendCell: { width: 16, height: 16, borderRadius: 4 },
   logButtonWrapper: { borderRadius: 14, overflow: 'hidden', marginBottom: 16 },
   logButton: { height: 52, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 8 },
   logButtonText: { color: '#fff', fontSize: 16, fontWeight: '700' },
-  formCard: { backgroundColor: Colors.surface, borderRadius: 20, padding: 20, borderWidth: 1, borderColor: Colors.border, marginBottom: 16 },
-  formTitle: { fontSize: 18, fontWeight: '700', color: Colors.text, marginBottom: 16 },
+  formCard: { backgroundColor: colors.surface, borderRadius: 20, padding: 20, borderWidth: 1, borderColor: colors.border, marginBottom: 16 },
+  formTitle: { fontSize: 18, fontWeight: '700', color: colors.text, marginBottom: 16 },
   formGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 12, marginBottom: 14 },
   activityInput: { width: '47%' },
   activityInputHeader: { flexDirection: 'row', alignItems: 'center', gap: 4, marginBottom: 6 },
-  inputLabel: { fontSize: 12, color: Colors.textMuted, fontWeight: '600' },
-  input: { backgroundColor: Colors.background, borderRadius: 12, padding: 12, color: Colors.text, borderWidth: 1, borderColor: Colors.border, fontSize: 15 },
+  inputLabel: { fontSize: 12, color: colors.textMuted, fontWeight: '600' },
+  input: { backgroundColor: colors.background, borderRadius: 12, padding: 12, color: colors.text, borderWidth: 1, borderColor: colors.border, fontSize: 15 },
   notesContainer: { marginBottom: 14 },
-  notesInput: { backgroundColor: Colors.background, borderRadius: 12, padding: 12, color: Colors.text, borderWidth: 1, borderColor: Colors.border, minHeight: 80 },
+  notesInput: { backgroundColor: colors.background, borderRadius: 12, padding: 12, color: colors.text, borderWidth: 1, borderColor: colors.border, minHeight: 80 },
   submitWrapper: { borderRadius: 14, overflow: 'hidden' },
   submitButton: { height: 52, justifyContent: 'center', alignItems: 'center' },
   submitText: { color: '#fff', fontSize: 16, fontWeight: '700' },

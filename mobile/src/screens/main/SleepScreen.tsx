@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
   View,
   Text,
@@ -9,6 +9,8 @@ import {
   ActivityIndicator,
   Alert,
   Dimensions,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -18,12 +20,15 @@ import * as Haptics from 'expo-haptics';
 import { sleepApi } from '../../services/api';
 import { SleepRecord } from '../../types';
 import WellnessRing from '../../components/WellnessRing';
-import { Colors, getScoreColor } from '../../constants/colors';
+import { ThemeColors, getScoreColor } from '../../constants/colors';
+import { useTheme } from '../../context/ThemeContext';
 
 const { width } = Dimensions.get('window');
 
 const SleepScreen: React.FC = () => {
   const insets = useSafeAreaInsets();
+  const { colors } = useTheme();
+  const styles = useMemo(() => createStyles(colors), [colors]);
   const [records, setRecords] = useState<SleepRecord[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -142,21 +147,27 @@ const SleepScreen: React.FC = () => {
   ];
 
   const chartConfig = {
-    backgroundGradientFrom: Colors.surface,
-    backgroundGradientTo: Colors.surface,
+    backgroundGradientFrom: colors.surface,
+    backgroundGradientTo: colors.surface,
     decimalPlaces: 1,
     color: (opacity = 1) => `rgba(59, 130, 246, ${opacity})`,
-    labelColor: () => Colors.textMuted,
-    propsForBackgroundLines: { stroke: Colors.border },
+    labelColor: () => colors.textMuted,
+    propsForBackgroundLines: { stroke: colors.border },
     barPercentage: 0.7,
   };
 
   return (
     <View style={[styles.root, { paddingTop: insets.top }]}>
-      <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 40 : 0}
+      >
+      <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
         {/* Header */}
         <LinearGradient
-          colors={['#1e3a5f', Colors.background]}
+          // Fixed (not theme-driven) decorative banner gradient, matching the auth screens' hero background.
+          colors={['#1e3a5f', '#0f172a']}
           style={styles.header}
         >
           <View style={styles.headerTop}>
@@ -176,7 +187,7 @@ const SleepScreen: React.FC = () => {
                 </View>
               </View>
               <View style={styles.statRow}>
-                <MaterialCommunityIcons name="calendar-check" size={18} color={Colors.success} />
+                <MaterialCommunityIcons name="calendar-check" size={18} color={colors.success} />
                 <View>
                   <Text style={styles.statValue}>{records.length}</Text>
                   <Text style={styles.statLabel}>Days Tracked</Text>
@@ -191,7 +202,7 @@ const SleepScreen: React.FC = () => {
           <Text style={styles.sectionTitle}>This Week</Text>
           {isLoading ? (
             <View style={[styles.chartPlaceholder]}>
-              <ActivityIndicator color={Colors.primary} />
+              <ActivityIndicator color={colors.primary} />
             </View>
           ) : (
             <View style={styles.chartCard}>
@@ -218,28 +229,28 @@ const SleepScreen: React.FC = () => {
               <View style={styles.timeField}>
                 <Text style={styles.fieldLabel}>Bedtime</Text>
                 <View style={styles.timeInput}>
-                  <MaterialCommunityIcons name="bed-clock" size={20} color={Colors.info} />
+                  <MaterialCommunityIcons name="bed-clock" size={20} color={colors.info} />
                   <TextInput
                     style={styles.timeText}
                     value={bedtime}
                     onChangeText={setBedtime}
                     placeholder="23:00"
-                    placeholderTextColor={Colors.textMuted}
+                    placeholderTextColor={colors.textMuted}
                     keyboardType="numbers-and-punctuation"
                   />
                 </View>
               </View>
-              <MaterialCommunityIcons name="arrow-right" size={20} color={Colors.textMuted} style={{ marginTop: 30 }} />
+              <MaterialCommunityIcons name="arrow-right" size={20} color={colors.textMuted} style={{ marginTop: 30 }} />
               <View style={styles.timeField}>
                 <Text style={styles.fieldLabel}>Wake Time</Text>
                 <View style={styles.timeInput}>
-                  <MaterialCommunityIcons name="alarm" size={20} color={Colors.warning} />
+                  <MaterialCommunityIcons name="alarm" size={20} color={colors.warning} />
                   <TextInput
                     style={styles.timeText}
                     value={wakeTime}
                     onChangeText={setWakeTime}
                     placeholder="07:00"
-                    placeholderTextColor={Colors.textMuted}
+                    placeholderTextColor={colors.textMuted}
                     keyboardType="numbers-and-punctuation"
                   />
                 </View>
@@ -248,7 +259,7 @@ const SleepScreen: React.FC = () => {
 
             {/* Duration preview */}
             <View style={styles.durationPreview}>
-              <MaterialCommunityIcons name="timer-sand" size={16} color={Colors.primary} />
+              <MaterialCommunityIcons name="timer-sand" size={16} color={colors.primary} />
               <Text style={styles.durationText}>
                 Sleep duration: {calculateDuration()} hours
               </Text>
@@ -263,7 +274,7 @@ const SleepScreen: React.FC = () => {
                     key={q}
                     style={[
                       styles.qualityDot,
-                      q <= quality && { backgroundColor: getScoreColor(q * 10) },
+                      q <= quality && { backgroundColor: getScoreColor(q * 10, colors) },
                     ]}
                     onPress={() => { setQuality(q); Haptics.selectionAsync(); }}
                   />
@@ -301,7 +312,7 @@ const SleepScreen: React.FC = () => {
                 value={notes}
                 onChangeText={setNotes}
                 placeholder="How did you feel? Any dreams?"
-                placeholderTextColor={Colors.textMuted}
+                placeholderTextColor={colors.textMuted}
                 multiline
                 numberOfLines={3}
                 textAlignVertical="top"
@@ -343,13 +354,13 @@ const SleepScreen: React.FC = () => {
             >
               <View style={styles.tipHeader}>
                 <View style={styles.tipIconWrapper}>
-                  <MaterialCommunityIcons name="lightbulb-on-outline" size={16} color={Colors.warning} />
+                  <MaterialCommunityIcons name="lightbulb-on-outline" size={16} color={colors.warning} />
                 </View>
                 <Text style={styles.tipTitle}>{tip.title}</Text>
                 <MaterialCommunityIcons
                   name={expandedTip === index ? 'chevron-up' : 'chevron-down'}
                   size={18}
-                  color={Colors.textMuted}
+                  color={colors.textMuted}
                 />
               </View>
               {expandedTip === index && (
@@ -361,55 +372,58 @@ const SleepScreen: React.FC = () => {
 
         <View style={{ height: 30 }} />
       </ScrollView>
+      </KeyboardAvoidingView>
     </View>
   );
 };
 
-const styles = StyleSheet.create({
-  root: { flex: 1, backgroundColor: Colors.background },
+const createStyles = (colors: ThemeColors) => StyleSheet.create({
+  root: { flex: 1, backgroundColor: colors.background },
   content: { paddingHorizontal: 20 },
   header: { borderRadius: 24, padding: 20, marginVertical: 16 },
   headerTop: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 },
-  headerTitle: { fontSize: 22, fontWeight: '800', color: Colors.text },
+  // Pinned (not theme-driven): sits on the fixed-color end of the header gradient, not the themed surface.
+  headerTitle: { fontSize: 22, fontWeight: '800', color: '#f1f5f9' },
   headerStats: { flexDirection: 'row', alignItems: 'center', gap: 24 },
   statItem: {},
   statsRight: { flex: 1, gap: 12 },
   statRow: { flexDirection: 'row', alignItems: 'center', gap: 10 },
-  statValue: { fontSize: 20, fontWeight: '800', color: Colors.text },
-  statLabel: { fontSize: 12, color: Colors.textMuted },
+  // Pinned (not theme-driven): sit inside the fixed-color header banner, not the themed surface.
+  statValue: { fontSize: 20, fontWeight: '800', color: '#f1f5f9' },
+  statLabel: { fontSize: 12, color: '#94a3b8' },
   section: { marginBottom: 20 },
-  sectionTitle: { fontSize: 16, fontWeight: '700', color: Colors.text, marginBottom: 12 },
-  chartCard: { backgroundColor: Colors.surface, borderRadius: 20, padding: 12, overflow: 'hidden', borderWidth: 1, borderColor: Colors.border },
-  chartPlaceholder: { height: 180, backgroundColor: Colors.surface, borderRadius: 20, justifyContent: 'center', alignItems: 'center' },
+  sectionTitle: { fontSize: 16, fontWeight: '700', color: colors.text, marginBottom: 12 },
+  chartCard: { backgroundColor: colors.surface, borderRadius: 20, padding: 12, overflow: 'hidden', borderWidth: 1, borderColor: colors.border },
+  chartPlaceholder: { height: 180, backgroundColor: colors.surface, borderRadius: 20, justifyContent: 'center', alignItems: 'center' },
   chart: { borderRadius: 12, marginLeft: -8 },
-  formCard: { backgroundColor: Colors.surface, borderRadius: 20, padding: 20, borderWidth: 1, borderColor: Colors.border },
+  formCard: { backgroundColor: colors.surface, borderRadius: 20, padding: 20, borderWidth: 1, borderColor: colors.border },
   timeRow: { flexDirection: 'row', alignItems: 'center', gap: 12, marginBottom: 12 },
   timeField: { flex: 1 },
-  fieldLabel: { fontSize: 13, color: Colors.textMuted, fontWeight: '600', marginBottom: 8 },
-  timeInput: { flexDirection: 'row', alignItems: 'center', gap: 8, backgroundColor: Colors.background, borderRadius: 12, padding: 12, borderWidth: 1, borderColor: Colors.border },
-  timeText: { flex: 1, color: Colors.text, fontSize: 16, fontWeight: '700' },
-  durationPreview: { flexDirection: 'row', alignItems: 'center', gap: 6, backgroundColor: Colors.primary + '11', padding: 10, borderRadius: 10, marginBottom: 16 },
-  durationText: { fontSize: 13, color: Colors.primary, fontWeight: '600' },
+  fieldLabel: { fontSize: 13, color: colors.textMuted, fontWeight: '600', marginBottom: 8 },
+  timeInput: { flexDirection: 'row', alignItems: 'center', gap: 8, backgroundColor: colors.background, borderRadius: 12, padding: 12, borderWidth: 1, borderColor: colors.border },
+  timeText: { flex: 1, color: colors.text, fontSize: 16, fontWeight: '700' },
+  durationPreview: { flexDirection: 'row', alignItems: 'center', gap: 6, backgroundColor: colors.primary + '11', padding: 10, borderRadius: 10, marginBottom: 16 },
+  durationText: { fontSize: 13, color: colors.primary, fontWeight: '600' },
   qualitySection: { marginBottom: 16 },
   qualitySlider: { flexDirection: 'row', gap: 6, marginVertical: 8 },
-  qualityDot: { flex: 1, height: 32, borderRadius: 8, backgroundColor: Colors.surfaceLight },
+  qualityDot: { flex: 1, height: 32, borderRadius: 8, backgroundColor: colors.surfaceLight },
   qualityLabels: { flexDirection: 'row', justifyContent: 'space-between' },
-  qualityLabel: { fontSize: 11, color: Colors.textMuted },
+  qualityLabel: { fontSize: 11, color: colors.textMuted },
   fieldContainer: { marginBottom: 16 },
   inputRow: { flexDirection: 'row', gap: 8 },
-  countButton: { flex: 1, height: 40, justifyContent: 'center', alignItems: 'center', borderRadius: 10, backgroundColor: Colors.background, borderWidth: 1, borderColor: Colors.border },
-  countButtonActive: { backgroundColor: Colors.primary, borderColor: Colors.primary },
-  countButtonText: { color: Colors.textMuted, fontWeight: '600' },
+  countButton: { flex: 1, height: 40, justifyContent: 'center', alignItems: 'center', borderRadius: 10, backgroundColor: colors.background, borderWidth: 1, borderColor: colors.border },
+  countButtonActive: { backgroundColor: colors.primary, borderColor: colors.primary },
+  countButtonText: { color: colors.textMuted, fontWeight: '600' },
   countButtonTextActive: { color: '#fff' },
-  notesInput: { backgroundColor: Colors.background, borderRadius: 12, padding: 12, color: Colors.text, borderWidth: 1, borderColor: Colors.border, minHeight: 80 },
+  notesInput: { backgroundColor: colors.background, borderRadius: 12, padding: 12, color: colors.text, borderWidth: 1, borderColor: colors.border, minHeight: 80 },
   submitButtonWrapper: { borderRadius: 14, overflow: 'hidden', marginTop: 4 },
   submitButton: { height: 52, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 8 },
   submitText: { color: '#fff', fontSize: 16, fontWeight: '700' },
-  tipCard: { backgroundColor: Colors.surface, borderRadius: 14, padding: 14, marginBottom: 8, borderWidth: 1, borderColor: Colors.border },
+  tipCard: { backgroundColor: colors.surface, borderRadius: 14, padding: 14, marginBottom: 8, borderWidth: 1, borderColor: colors.border },
   tipHeader: { flexDirection: 'row', alignItems: 'center', gap: 10 },
-  tipIconWrapper: { width: 30, height: 30, borderRadius: 10, backgroundColor: Colors.warning + '22', justifyContent: 'center', alignItems: 'center' },
-  tipTitle: { flex: 1, fontSize: 14, fontWeight: '600', color: Colors.text },
-  tipContent: { fontSize: 13, color: Colors.textMuted, lineHeight: 20, marginTop: 10, paddingTop: 10, borderTopWidth: 1, borderTopColor: Colors.border },
+  tipIconWrapper: { width: 30, height: 30, borderRadius: 10, backgroundColor: colors.warning + '22', justifyContent: 'center', alignItems: 'center' },
+  tipTitle: { flex: 1, fontSize: 14, fontWeight: '600', color: colors.text },
+  tipContent: { fontSize: 13, color: colors.textMuted, lineHeight: 20, marginTop: 10, paddingTop: 10, borderTopWidth: 1, borderTopColor: colors.border },
 });
 
 export default SleepScreen;

@@ -38,10 +38,14 @@ dist/
 # ── Android ──────────────────────────────────────────────────────────────────
 mobile/android/.gradle/
 mobile/android/app/build/
+mobile/android/app/release/
+mobile/android/app/burnout-upload-key
 mobile/android/build/
 mobile/android/local.properties
 mobile/android/*.keystore
 mobile/android/app/*.keystore
+*.apk
+*.aab
 
 # ── IDE / OS ─────────────────────────────────────────────────────────────────
 .vscode/

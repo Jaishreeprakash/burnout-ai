@@ -4,7 +4,7 @@ import TabNavigator from './TabNavigator';
 import AnalyticsScreen from '../screens/analytics/AnalyticsScreen';
 import RecommendationsScreen from '../screens/main/RecommendationsScreen';
 import PhoneUsageScreen from '../screens/main/PhoneUsageScreen';
-import { Colors } from '../constants/colors';
+import { useTheme } from '../context/ThemeContext';
 
 export type AppStackParamList = {
   MainTabs: undefined;
@@ -16,11 +16,13 @@ export type AppStackParamList = {
 const Stack = createStackNavigator<AppStackParamList>();
 
 const AppNavigator: React.FC = () => {
+  const { colors } = useTheme();
+
   return (
     <Stack.Navigator
       screenOptions={{
         headerShown: false,
-        cardStyle: { backgroundColor: Colors.background },
+        cardStyle: { backgroundColor: colors.background },
         presentation: 'modal',
       }}
     >
@@ -34,8 +36,8 @@ const AppNavigator: React.FC = () => {
         component={AnalyticsScreen}
         options={{
           headerShown: true,
-          headerStyle: { backgroundColor: Colors.surface },
-          headerTintColor: Colors.text,
+          headerStyle: { backgroundColor: colors.surface },
+          headerTintColor: colors.text,
           headerTitle: 'Analytics',
           headerBackTitleVisible: false,
         }}
@@ -45,8 +47,8 @@ const AppNavigator: React.FC = () => {
         component={RecommendationsScreen}
         options={{
           headerShown: true,
-          headerStyle: { backgroundColor: Colors.surface },
-          headerTintColor: Colors.text,
+          headerStyle: { backgroundColor: colors.surface },
+          headerTintColor: colors.text,
           headerTitle: 'AI Recommendations',
           headerBackTitleVisible: false,
         }}
@@ -56,8 +58,8 @@ const AppNavigator: React.FC = () => {
         component={PhoneUsageScreen}
         options={{
           headerShown: true,
-          headerStyle: { backgroundColor: Colors.surface },
-          headerTintColor: Colors.text,
+          headerStyle: { backgroundColor: colors.surface },
+          headerTintColor: colors.text,
           headerTitle: 'Phone Usage',
           headerBackTitleVisible: false,
         }}

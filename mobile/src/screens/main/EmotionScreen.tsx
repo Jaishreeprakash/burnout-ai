@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import {
   View,
   Text,
@@ -11,6 +11,8 @@ import {
   ActivityIndicator,
   Animated,
   Dimensions,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -20,7 +22,8 @@ import * as Haptics from 'expo-haptics';
 import { emotionApi } from '../../services/api';
 import { EmotionRecord } from '../../types';
 import EmotionBar from '../../components/EmotionBar';
-import { Colors } from '../../constants/colors';
+import { ThemeColors } from '../../constants/colors';
+import { useTheme } from '../../context/ThemeContext';
 import { format } from 'date-fns';
 
 const { width } = Dimensions.get('window');
@@ -38,6 +41,8 @@ const EMOTION_EMOJIS = [
 
 const EmotionScreen: React.FC = () => {
   const insets = useSafeAreaInsets();
+  const { colors } = useTheme();
+  const styles = useMemo(() => createStyles(colors), [colors]);
   const [activeTab, setActiveTab] = useState<TabType>('camera');
   const [permission, requestPermission] = useCameraPermissions();
   const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -143,8 +148,13 @@ const EmotionScreen: React.FC = () => {
 
   return (
     <View style={[styles.root, { paddingTop: insets.top }]}>
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      >
       {/* Header */}
-      <LinearGradient colors={['#4c1d95', Colors.background]} style={styles.header}>
+      {/* Fixed (not theme-driven) decorative banner gradient, matching the auth screens' hero background. */}
+      <LinearGradient colors={['#4c1d95', '#0f172a']} style={styles.header}>
         <Text style={styles.headerTitle}>Emotion Check</Text>
         <Text style={styles.headerSubtitle}>Monitor your emotional wellness</Text>
       </LinearGradient>
@@ -163,7 +173,7 @@ const EmotionScreen: React.FC = () => {
             <MaterialCommunityIcons
               name={tab.icon as any}
               size={18}
-              color={activeTab === tab.key ? Colors.primary : Colors.textMuted}
+              color={activeTab === tab.key ? colors.primary : colors.textMuted}
             />
             <Text style={[styles.tabLabel, activeTab === tab.key && styles.tabLabelActive]}>
               {tab.label}
@@ -177,11 +187,11 @@ const EmotionScreen: React.FC = () => {
         <ScrollView contentContainerStyle={styles.tabContent} showsVerticalScrollIndicator={false}>
           {!permission ? (
             <View style={styles.permissionPlaceholder}>
-              <ActivityIndicator color={Colors.primary} />
+              <ActivityIndicator color={colors.primary} />
             </View>
           ) : !permission.granted ? (
             <View style={styles.permissionCard}>
-              <MaterialCommunityIcons name="camera-off" size={60} color={Colors.textMuted} />
+              <MaterialCommunityIcons name="camera-off" size={60} color={colors.textMuted} />
               <Text style={styles.permissionTitle}>Camera Access Required</Text>
               <Text style={styles.permissionText}>
                 We need camera access to analyze your facial expressions and detect emotional state.
@@ -311,13 +321,13 @@ const EmotionScreen: React.FC = () => {
             <Text style={styles.sectionTitle}>Stress Level: {stressLevel}/10</Text>
             <View style={styles.stressSlider}>
               {Array.from({ length: 10 }, (_, i) => i + 1).map((level) => {
-                const colors = ['#22c55e', '#22c55e', '#22c55e', '#f59e0b', '#f59e0b', '#f59e0b', '#f97316', '#f97316', '#ef4444', '#ef4444'];
+                const stressColors = ['#22c55e', '#22c55e', '#22c55e', '#f59e0b', '#f59e0b', '#f59e0b', '#f97316', '#f97316', '#ef4444', '#ef4444'];
                 return (
                   <TouchableOpacity
                     key={level}
                     style={[
                       styles.stressDot,
-                      { backgroundColor: level <= stressLevel ? colors[level - 1] : Colors.surfaceLight },
+                      { backgroundColor: level <= stressLevel ? stressColors[level - 1] : colors.surfaceLight },
                     ]}
                     onPress={() => { setStressLevel(level); Haptics.selectionAsync(); }}
                   />
@@ -338,7 +348,7 @@ const EmotionScreen: React.FC = () => {
               value={notes}
               onChangeText={setNotes}
               placeholder="What's on your mind? Describe your day..."
-              placeholderTextColor={Colors.textMuted}
+              placeholderTextColor={colors.textMuted}
               multiline
               numberOfLines={4}
               textAlignVertical="top"
@@ -373,7 +383,7 @@ const EmotionScreen: React.FC = () => {
           showsVerticalScrollIndicator={false}
           ListEmptyComponent={
             <View style={styles.emptyState}>
-              <MaterialCommunityIcons name="emoticon-outline" size={60} color={Colors.textMuted} />
+              <MaterialCommunityIcons name="emoticon-outline" size={60} color={colors.textMuted} />
               <Text style={styles.emptyText}>No emotion records yet</Text>
               <Text style={styles.emptySubtext}>Start by logging your current emotion</Text>
             </View>
@@ -403,86 +413,88 @@ const EmotionScreen: React.FC = () => {
           }}
         />
       )}
+      </KeyboardAvoidingView>
     </View>
   );
 };
 
-const styles = StyleSheet.create({
-  root: { flex: 1, backgroundColor: Colors.background },
+const createStyles = (colors: ThemeColors) => StyleSheet.create({
+  root: { flex: 1, backgroundColor: colors.background },
   header: { paddingHorizontal: 20, paddingVertical: 20, borderBottomLeftRadius: 20, borderBottomRightRadius: 20 },
-  headerTitle: { fontSize: 24, fontWeight: '800', color: Colors.text },
-  headerSubtitle: { fontSize: 13, color: Colors.textMuted, marginTop: 4 },
-  tabBar: { flexDirection: 'row', marginHorizontal: 20, marginTop: 16, backgroundColor: Colors.surface, borderRadius: 14, padding: 4, borderWidth: 1, borderColor: Colors.border },
+  // Pinned (not theme-driven): sit on the fixed-color end of the header gradient, not the themed surface.
+  headerTitle: { fontSize: 24, fontWeight: '800', color: '#f1f5f9' },
+  headerSubtitle: { fontSize: 13, color: '#94a3b8', marginTop: 4 },
+  tabBar: { flexDirection: 'row', marginHorizontal: 20, marginTop: 16, backgroundColor: colors.surface, borderRadius: 14, padding: 4, borderWidth: 1, borderColor: colors.border },
   tab: { flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 6, paddingVertical: 10, borderRadius: 10 },
-  tabActive: { backgroundColor: Colors.primary + '22' },
-  tabLabel: { fontSize: 13, color: Colors.textMuted, fontWeight: '600' },
-  tabLabelActive: { color: Colors.primary, fontWeight: '700' },
+  tabActive: { backgroundColor: colors.primary + '22' },
+  tabLabel: { fontSize: 13, color: colors.textMuted, fontWeight: '600' },
+  tabLabelActive: { color: colors.primary, fontWeight: '700' },
   tabContent: { padding: 20, paddingBottom: 40 },
   // Camera
   permissionPlaceholder: { height: 300, justifyContent: 'center', alignItems: 'center' },
   permissionCard: { alignItems: 'center', padding: 24, gap: 16 },
-  permissionTitle: { fontSize: 20, fontWeight: '700', color: Colors.text },
-  permissionText: { fontSize: 14, color: Colors.textMuted, textAlign: 'center', lineHeight: 22 },
+  permissionTitle: { fontSize: 20, fontWeight: '700', color: colors.text },
+  permissionText: { fontSize: 14, color: colors.textMuted, textAlign: 'center', lineHeight: 22 },
   permissionButton: { width: '100%', borderRadius: 14, overflow: 'hidden' },
   permissionButtonGrad: { height: 52, justifyContent: 'center', alignItems: 'center' },
   permissionButtonText: { color: '#fff', fontSize: 16, fontWeight: '700' },
   manualFallback: { paddingVertical: 8 },
-  manualFallbackText: { color: Colors.primary, fontSize: 15, fontWeight: '600' },
+  manualFallbackText: { color: colors.primary, fontSize: 15, fontWeight: '600' },
   cameraContainer: { borderRadius: 20, overflow: 'hidden', marginBottom: 16, height: 300 },
   camera: { flex: 1 },
   faceOverlay: { ...StyleSheet.absoluteFillObject, justifyContent: 'center', alignItems: 'center' },
   faceFrame: { width: 180, height: 220, position: 'relative' },
-  corner: { position: 'absolute', width: 24, height: 24, borderColor: Colors.primary, borderWidth: 3 },
+  corner: { position: 'absolute', width: 24, height: 24, borderColor: colors.primary, borderWidth: 3 },
   topLeft: { top: 0, left: 0, borderBottomWidth: 0, borderRightWidth: 0, borderTopLeftRadius: 8 },
   topRight: { top: 0, right: 0, borderBottomWidth: 0, borderLeftWidth: 0, borderTopRightRadius: 8 },
   bottomLeft: { bottom: 0, left: 0, borderTopWidth: 0, borderRightWidth: 0, borderBottomLeftRadius: 8 },
   bottomRight: { bottom: 0, right: 0, borderTopWidth: 0, borderLeftWidth: 0, borderBottomRightRadius: 8 },
-  scanLine: { position: 'absolute', left: 0, right: 0, height: 2, backgroundColor: Colors.primary + 'cc' },
+  scanLine: { position: 'absolute', left: 0, right: 0, height: 2, backgroundColor: colors.primary + 'cc' },
   cameraStatus: { position: 'absolute', bottom: 0, left: 0, right: 0, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', padding: 12, backgroundColor: 'rgba(0,0,0,0.5)', gap: 8 },
-  statusDot: { width: 8, height: 8, borderRadius: 4, backgroundColor: Colors.success },
+  statusDot: { width: 8, height: 8, borderRadius: 4, backgroundColor: colors.success },
   statusText: { color: '#fff', fontSize: 13 },
   analyzeButtonWrapper: { borderRadius: 14, overflow: 'hidden', marginBottom: 16 },
   analyzeButton: { height: 52, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 8 },
   analyzeButtonText: { color: '#fff', fontSize: 16, fontWeight: '700' },
-  resultsCard: { backgroundColor: Colors.surface, borderRadius: 20, padding: 20, borderWidth: 1, borderColor: Colors.border },
-  resultsTitle: { fontSize: 15, fontWeight: '700', color: Colors.text, marginBottom: 14 },
-  dominantEmotion: { flexDirection: 'row', alignItems: 'center', gap: 12, marginBottom: 16, backgroundColor: Colors.primary + '11', padding: 14, borderRadius: 14 },
+  resultsCard: { backgroundColor: colors.surface, borderRadius: 20, padding: 20, borderWidth: 1, borderColor: colors.border },
+  resultsTitle: { fontSize: 15, fontWeight: '700', color: colors.text, marginBottom: 14 },
+  dominantEmotion: { flexDirection: 'row', alignItems: 'center', gap: 12, marginBottom: 16, backgroundColor: colors.primary + '11', padding: 14, borderRadius: 14 },
   dominantEmoji: { fontSize: 40 },
-  dominantLabel: { fontSize: 20, fontWeight: '800', color: Colors.text },
-  dominantConfidence: { fontSize: 13, color: Colors.textMuted, marginTop: 2 },
+  dominantLabel: { fontSize: 20, fontWeight: '800', color: colors.text },
+  dominantConfidence: { fontSize: 13, color: colors.textMuted, marginTop: 2 },
   emotionBars: { gap: 4 },
   // Manual
-  manualTitle: { fontSize: 20, fontWeight: '700', color: Colors.text, marginBottom: 20 },
+  manualTitle: { fontSize: 20, fontWeight: '700', color: colors.text, marginBottom: 20 },
   emojiGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 12, marginBottom: 24 },
-  emojiButton: { width: (width - 72) / 3, aspectRatio: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: Colors.surface, borderRadius: 16, borderWidth: 1, borderColor: Colors.border },
-  emojiButtonActive: { borderColor: Colors.primary, backgroundColor: Colors.primary + '22' },
+  emojiButton: { width: (width - 72) / 3, aspectRatio: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: colors.surface, borderRadius: 16, borderWidth: 1, borderColor: colors.border },
+  emojiButtonActive: { borderColor: colors.primary, backgroundColor: colors.primary + '22' },
   emojiButtonEmoji: { fontSize: 32, marginBottom: 4 },
-  emojiButtonLabel: { fontSize: 12, color: Colors.textMuted, fontWeight: '600' },
-  emojiButtonLabelActive: { color: Colors.primary },
+  emojiButtonLabel: { fontSize: 12, color: colors.textMuted, fontWeight: '600' },
+  emojiButtonLabelActive: { color: colors.primary },
   section: { marginBottom: 20 },
-  sectionTitle: { fontSize: 15, fontWeight: '700', color: Colors.text, marginBottom: 12 },
+  sectionTitle: { fontSize: 15, fontWeight: '700', color: colors.text, marginBottom: 12 },
   stressSlider: { flexDirection: 'row', gap: 6 },
   stressDot: { flex: 1, height: 36, borderRadius: 8 },
   stressLabels: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 6 },
-  stressLabel: { fontSize: 11, color: Colors.textMuted },
-  notesInput: { backgroundColor: Colors.surface, borderRadius: 14, padding: 14, color: Colors.text, borderWidth: 1, borderColor: Colors.border, minHeight: 100 },
+  stressLabel: { fontSize: 11, color: colors.textMuted },
+  notesInput: { backgroundColor: colors.surface, borderRadius: 14, padding: 14, color: colors.text, borderWidth: 1, borderColor: colors.border, minHeight: 100 },
   submitButtonWrapper: { borderRadius: 14, overflow: 'hidden' },
   submitButton: { height: 52, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 8 },
   submitText: { color: '#fff', fontSize: 16, fontWeight: '700' },
   // History
   emptyState: { alignItems: 'center', padding: 40, gap: 12 },
-  emptyText: { fontSize: 18, fontWeight: '700', color: Colors.text },
-  emptySubtext: { fontSize: 14, color: Colors.textMuted },
-  historyCard: { flexDirection: 'row', alignItems: 'center', backgroundColor: Colors.surface, borderRadius: 16, padding: 14, marginBottom: 10, borderWidth: 1, borderColor: Colors.border, gap: 12 },
-  historyEmoji: { width: 52, height: 52, borderRadius: 16, backgroundColor: Colors.surfaceLight, justifyContent: 'center', alignItems: 'center' },
+  emptyText: { fontSize: 18, fontWeight: '700', color: colors.text },
+  emptySubtext: { fontSize: 14, color: colors.textMuted },
+  historyCard: { flexDirection: 'row', alignItems: 'center', backgroundColor: colors.surface, borderRadius: 16, padding: 14, marginBottom: 10, borderWidth: 1, borderColor: colors.border, gap: 12 },
+  historyEmoji: { width: 52, height: 52, borderRadius: 16, backgroundColor: colors.surfaceLight, justifyContent: 'center', alignItems: 'center' },
   historyEmojiText: { fontSize: 28 },
   historyContent: { flex: 1 },
-  historyEmotion: { fontSize: 16, fontWeight: '700', color: Colors.text },
-  historyMeta: { fontSize: 12, color: Colors.textMuted, marginTop: 2 },
-  historyConfidence: { fontSize: 12, color: Colors.primary, marginTop: 2, fontWeight: '600' },
+  historyEmotion: { fontSize: 16, fontWeight: '700', color: colors.text },
+  historyMeta: { fontSize: 12, color: colors.textMuted, marginTop: 2 },
+  historyConfidence: { fontSize: 12, color: colors.primary, marginTop: 2, fontWeight: '600' },
   historyStress: { alignItems: 'center' },
-  historyStressLabel: { fontSize: 10, color: Colors.textMuted },
-  historyStressValue: { fontSize: 16, fontWeight: '800', color: Colors.warning },
+  historyStressLabel: { fontSize: 10, color: colors.textMuted },
+  historyStressValue: { fontSize: 16, fontWeight: '800', color: colors.warning },
 });
 
 export default EmotionScreen;

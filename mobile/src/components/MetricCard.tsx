@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { Colors, getScoreColor } from '../constants/colors';
+import { ThemeColors, getScoreColor } from '../constants/colors';
+import { useTheme } from '../context/ThemeContext';
 
 interface MetricCardProps {
   title: string;
@@ -24,7 +25,9 @@ const MetricCard: React.FC<MetricCardProps> = ({
   onPress,
   width = 140,
 }) => {
-  const color = score !== undefined ? getScoreColor(score) : Colors.primary;
+  const { colors } = useTheme();
+  const styles = useMemo(() => createStyles(colors), [colors]);
+  const color = score !== undefined ? getScoreColor(score, colors) : colors.primary;
   const isPositive = change !== undefined && change >= 0;
 
   return (
@@ -38,13 +41,13 @@ const MetricCard: React.FC<MetricCardProps> = ({
           <MaterialCommunityIcons name={icon as any} size={18} color={color} />
         </View>
         {change !== undefined && (
-          <View style={[styles.changeBadge, { backgroundColor: isPositive ? Colors.success + '22' : Colors.danger + '22' }]}>
+          <View style={[styles.changeBadge, { backgroundColor: isPositive ? colors.success + '22' : colors.danger + '22' }]}>
             <MaterialCommunityIcons
               name={isPositive ? 'trending-up' : 'trending-down'}
               size={12}
-              color={isPositive ? Colors.success : Colors.danger}
+              color={isPositive ? colors.success : colors.danger}
             />
-            <Text style={[styles.changeText, { color: isPositive ? Colors.success : Colors.danger }]}>
+            <Text style={[styles.changeText, { color: isPositive ? colors.success : colors.danger }]}>
               {Math.abs(change)}%
             </Text>
           </View>
@@ -72,15 +75,15 @@ const MetricCard: React.FC<MetricCardProps> = ({
   );
 };
 
-const styles = StyleSheet.create({
+const createStyles = (colors: ThemeColors) => StyleSheet.create({
   card: {
-    backgroundColor: Colors.surface,
+    backgroundColor: colors.surface,
     borderRadius: 16,
     padding: 16,
     borderLeftWidth: 3,
     marginRight: 12,
     borderWidth: 1,
-    borderColor: Colors.border,
+    borderColor: colors.border,
   },
   header: {
     flexDirection: 'row',
@@ -120,13 +123,13 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 12,
-    color: Colors.textMuted,
+    color: colors.textMuted,
     fontWeight: '500',
     marginBottom: 8,
   },
   scoreBar: {
     height: 3,
-    backgroundColor: Colors.surfaceLight,
+    backgroundColor: colors.surfaceLight,
     borderRadius: 2,
     overflow: 'hidden',
   },

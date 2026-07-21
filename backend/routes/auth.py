@@ -65,6 +65,20 @@ def login(
     db: Session = Depends(get_db),
 ):
     """Login with email (as username field) and password, returns JWT token."""
+    # OAuth2PasswordRequestForm delivers raw form data with no Pydantic model
+    # behind it, so unlike every other endpoint these two fields never pass
+    # through schema validation. A NUL byte here crashes the DB query
+    # (psycopg2 rejects NUL in any bound parameter) and a password over 72
+    # bytes crashes bcrypt verification — both would otherwise be raw 500s.
+    # Treat malformed input the same as wrong credentials rather than leak
+    # which case it was.
+    if "\x00" in form_data.username or "\x00" in form_data.password or len(form_data.password.encode("utf-8")) > 72:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect email or password",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
     # OAuth2PasswordRequestForm uses `username` field — we treat it as email
     user = db.query(User).filter(User.email == form_data.username).first()
     if not user:

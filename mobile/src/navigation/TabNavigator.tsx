@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { View, StyleSheet, Platform } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -8,7 +8,8 @@ import SleepScreen from '../screens/main/SleepScreen';
 import EmotionScreen from '../screens/main/EmotionScreen';
 import ActivityScreen from '../screens/main/ActivityScreen';
 import ProfileScreen from '../screens/main/ProfileScreen';
-import { Colors } from '../constants/colors';
+import { ThemeColors } from '../constants/colors';
+import { useTheme } from '../context/ThemeContext';
 
 export type TabParamList = {
   Dashboard: undefined;
@@ -22,14 +23,16 @@ const Tab = createBottomTabNavigator<TabParamList>();
 
 const TabNavigator: React.FC = () => {
   const insets = useSafeAreaInsets();
+  const { colors } = useTheme();
+  const styles = useMemo(() => createStyles(colors), [colors]);
 
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
         headerShown: false,
         tabBarStyle: {
-          backgroundColor: Colors.surface,
-          borderTopColor: Colors.border,
+          backgroundColor: colors.surface,
+          borderTopColor: colors.border,
           borderTopWidth: 1,
           height: 60 + insets.bottom,
           paddingBottom: insets.bottom + 4,
@@ -37,13 +40,14 @@ const TabNavigator: React.FC = () => {
           elevation: 0,
           shadowOpacity: 0,
         },
-        tabBarActiveTintColor: Colors.primary,
-        tabBarInactiveTintColor: Colors.textDim,
+        tabBarActiveTintColor: colors.primary,
+        tabBarInactiveTintColor: colors.textDim,
         tabBarLabelStyle: {
           fontSize: 11,
           fontWeight: '600',
           marginTop: -2,
         },
+        tabBarAllowFontScaling: false,
         tabBarIcon: ({ color, focused, size }) => {
           const iconMap: Record<string, string> = {
             Dashboard: focused ? 'view-dashboard' : 'view-dashboard-outline',
@@ -57,11 +61,11 @@ const TabNavigator: React.FC = () => {
 
           if (route.name === 'Emotion') {
             return (
-              <View style={[styles.centerIcon, { backgroundColor: focused ? Colors.primary : Colors.surfaceLight }]}>
+              <View style={[styles.centerIcon, { backgroundColor: focused ? colors.primary : colors.surfaceLight }]}>
                 <MaterialCommunityIcons
                   name={iconName as any}
                   size={26}
-                  color={focused ? '#fff' : Colors.textMuted}
+                  color={focused ? '#fff' : colors.textMuted}
                 />
               </View>
             );
@@ -88,7 +92,7 @@ const TabNavigator: React.FC = () => {
   );
 };
 
-const styles = StyleSheet.create({
+const createStyles = (colors: ThemeColors) => StyleSheet.create({
   centerIcon: {
     width: 52,
     height: 52,
@@ -96,7 +100,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: -18,
-    shadowColor: Colors.primary,
+    shadowColor: colors.primary,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.4,
     shadowRadius: 8,

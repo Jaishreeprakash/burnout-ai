@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import {
   View,
   Text,
@@ -17,7 +17,8 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useAuth } from '../../context/AuthContext';
-import { Colors } from '../../constants/colors';
+import { ThemeColors } from '../../constants/colors';
+import { useTheme } from '../../context/ThemeContext';
 import { AuthStackParamList } from '../../navigation/AuthNavigator';
 
 type Props = {
@@ -29,6 +30,8 @@ const GENDERS = ['Male', 'Female', 'Non-binary', 'Prefer not to say'];
 const RegisterScreen: React.FC<Props> = ({ navigation }) => {
   const { register } = useAuth();
   const insets = useSafeAreaInsets();
+  const { colors } = useTheme();
+  const styles = useMemo(() => createStyles(colors), [colors]);
   const [step, setStep] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -124,8 +127,13 @@ const RegisterScreen: React.FC<Props> = ({ navigation }) => {
         >
           {/* Header */}
           <Animated.View style={{ opacity: fadeAnim }}>
-            <TouchableOpacity style={styles.backButton} onPress={() => step > 0 ? setStep(step - 1) : navigation.goBack()}>
-              <MaterialCommunityIcons name="arrow-left" size={24} color={Colors.text} />
+            <TouchableOpacity
+              style={styles.backButton}
+              onPress={() => step > 0 ? setStep(step - 1) : navigation.goBack()}
+              accessibilityLabel="Go back"
+              accessibilityRole="button"
+            >
+              <MaterialCommunityIcons name="arrow-left" size={24} color="#f1f5f9" />
             </TouchableOpacity>
 
             <Text style={styles.headerTitle}>Create Account</Text>
@@ -166,6 +174,8 @@ const RegisterScreen: React.FC<Props> = ({ navigation }) => {
                   onChangeText={setFullName}
                   placeholder="Alex Johnson"
                   error={errors.fullName}
+                  colors={colors}
+                  styles={styles}
                 />
                 <InputField
                   label="Username"
@@ -175,6 +185,8 @@ const RegisterScreen: React.FC<Props> = ({ navigation }) => {
                   placeholder="alexj28"
                   autoCapitalize="none"
                   error={errors.username}
+                  colors={colors}
+                  styles={styles}
                 />
                 <InputField
                   label="Email Address"
@@ -185,6 +197,8 @@ const RegisterScreen: React.FC<Props> = ({ navigation }) => {
                   keyboardType="email-address"
                   autoCapitalize="none"
                   error={errors.email}
+                  colors={colors}
+                  styles={styles}
                 />
               </>
             )}
@@ -195,21 +209,26 @@ const RegisterScreen: React.FC<Props> = ({ navigation }) => {
                   <Text style={styles.fieldLabel}>Password</Text>
                   <View style={[styles.inputWrapper, errors.password && styles.inputError]}>
                     <View style={styles.inputIcon}>
-                      <MaterialCommunityIcons name="lock-outline" size={20} color={Colors.textMuted} />
+                      <MaterialCommunityIcons name="lock-outline" size={20} color={colors.textMuted} />
                     </View>
                     <TextInput
                       style={[styles.input, { paddingRight: 50 }]}
                       placeholder="Min 8 characters"
-                      placeholderTextColor={Colors.textMuted}
+                      placeholderTextColor={colors.textMuted}
                       value={password}
                       onChangeText={setPassword}
                       secureTextEntry={!showPassword}
                     />
-                    <TouchableOpacity style={styles.eyeButton} onPress={() => setShowPassword(!showPassword)}>
+                    <TouchableOpacity
+                      style={styles.eyeButton}
+                      onPress={() => setShowPassword(!showPassword)}
+                      accessibilityLabel={showPassword ? 'Hide password' : 'Show password'}
+                      accessibilityRole="button"
+                    >
                       <MaterialCommunityIcons
                         name={showPassword ? 'eye-off-outline' : 'eye-outline'}
                         size={20}
-                        color={Colors.textMuted}
+                        color={colors.textMuted}
                       />
                     </TouchableOpacity>
                   </View>
@@ -224,6 +243,8 @@ const RegisterScreen: React.FC<Props> = ({ navigation }) => {
                   placeholder="Re-enter password"
                   secureTextEntry
                   error={errors.confirmPassword}
+                  colors={colors}
+                  styles={styles}
                 />
 
                 <View style={styles.passwordStrength}>
@@ -231,13 +252,13 @@ const RegisterScreen: React.FC<Props> = ({ navigation }) => {
                   <View style={styles.strengthBars}>
                     {[1, 2, 3, 4].map((level) => {
                       const strength = password.length >= level * 2 ? 1 : 0;
-                      const colors = ['#ef4444', '#f59e0b', '#22c55e', '#22c55e'];
+                      const strengthColors = ['#ef4444', '#f59e0b', '#22c55e', '#22c55e'];
                       return (
                         <View
                           key={level}
                           style={[
                             styles.strengthBar,
-                            { backgroundColor: strength ? colors[level - 1] : Colors.surfaceLight },
+                            { backgroundColor: strength ? strengthColors[level - 1] : colors.surfaceLight },
                           ]}
                         />
                       );
@@ -256,6 +277,8 @@ const RegisterScreen: React.FC<Props> = ({ navigation }) => {
                   onChangeText={setAge}
                   placeholder="28"
                   keyboardType="number-pad"
+                  colors={colors}
+                  styles={styles}
                 />
 
                 <View style={styles.fieldContainer}>
@@ -282,7 +305,7 @@ const RegisterScreen: React.FC<Props> = ({ navigation }) => {
                 </View>
 
                 <View style={styles.privacyNote}>
-                  <MaterialCommunityIcons name="shield-check" size={16} color={Colors.success} />
+                  <MaterialCommunityIcons name="shield-check" size={16} color={colors.success} />
                   <Text style={styles.privacyText}>Your data is encrypted and never shared.</Text>
                 </View>
               </>
@@ -338,21 +361,23 @@ interface InputFieldProps {
   autoCapitalize?: any;
   secureTextEntry?: boolean;
   error?: string;
+  colors: ThemeColors;
+  styles: ReturnType<typeof createStyles>;
 }
 
 const InputField: React.FC<InputFieldProps> = ({
-  label, icon, value, onChangeText, placeholder, keyboardType, autoCapitalize, secureTextEntry, error
+  label, icon, value, onChangeText, placeholder, keyboardType, autoCapitalize, secureTextEntry, error, colors, styles
 }) => (
   <View style={styles.fieldContainer}>
     <Text style={styles.fieldLabel}>{label}</Text>
     <View style={[styles.inputWrapper, error && styles.inputError]}>
       <View style={styles.inputIcon}>
-        <MaterialCommunityIcons name={icon as any} size={20} color={Colors.textMuted} />
+        <MaterialCommunityIcons name={icon as any} size={20} color={colors.textMuted} />
       </View>
       <TextInput
         style={styles.input}
         placeholder={placeholder}
-        placeholderTextColor={Colors.textMuted}
+        placeholderTextColor={colors.textMuted}
         value={value}
         onChangeText={onChangeText}
         keyboardType={keyboardType}
@@ -364,44 +389,46 @@ const InputField: React.FC<InputFieldProps> = ({
   </View>
 );
 
-const styles = StyleSheet.create({
-  root: { flex: 1, backgroundColor: Colors.background },
+const createStyles = (colors: ThemeColors) => StyleSheet.create({
+  root: { flex: 1, backgroundColor: colors.background },
   scrollContent: { flexGrow: 1, paddingHorizontal: 24 },
   backButton: { marginBottom: 16, width: 40, height: 40, justifyContent: 'center' },
-  headerTitle: { fontSize: 28, fontWeight: '800', color: Colors.text, marginBottom: 4 },
-  headerSubtitle: { fontSize: 14, color: Colors.textMuted, marginBottom: 20 },
-  progressTrack: { height: 4, backgroundColor: Colors.surfaceLight, borderRadius: 2, marginBottom: 16, overflow: 'hidden' },
-  progressFill: { height: '100%', backgroundColor: Colors.primary, borderRadius: 2 },
+  // headerTitle/headerSubtitle are pinned (not theme-driven): they sit on the fixed dark hero gradient, not the themed surface.
+  headerTitle: { fontSize: 28, fontWeight: '800', color: '#f1f5f9', marginBottom: 4 },
+  headerSubtitle: { fontSize: 14, color: '#94a3b8', marginBottom: 20 },
+  progressTrack: { height: 4, backgroundColor: colors.surfaceLight, borderRadius: 2, marginBottom: 16, overflow: 'hidden' },
+  progressFill: { height: '100%', backgroundColor: colors.primary, borderRadius: 2 },
   stepDots: { flexDirection: 'row', gap: 8, marginBottom: 24 },
-  stepDot: { width: 28, height: 28, borderRadius: 14, backgroundColor: Colors.surfaceLight, justifyContent: 'center', alignItems: 'center', borderWidth: 2, borderColor: Colors.border },
-  stepDotActive: { backgroundColor: Colors.primary, borderColor: Colors.primary },
-  stepDotCurrent: { borderColor: Colors.primaryLight, backgroundColor: Colors.primary + '80' },
-  formCard: { backgroundColor: Colors.surface, borderRadius: 24, padding: 24, borderWidth: 1, borderColor: Colors.border, marginBottom: 20 },
+  stepDot: { width: 28, height: 28, borderRadius: 14, backgroundColor: colors.surfaceLight, justifyContent: 'center', alignItems: 'center', borderWidth: 2, borderColor: colors.border },
+  stepDotActive: { backgroundColor: colors.primary, borderColor: colors.primary },
+  stepDotCurrent: { borderColor: colors.primaryLight, backgroundColor: colors.primary + '80' },
+  formCard: { backgroundColor: colors.surface, borderRadius: 24, padding: 24, borderWidth: 1, borderColor: colors.border, marginBottom: 20 },
   fieldContainer: { marginBottom: 16 },
-  fieldLabel: { fontSize: 13, color: Colors.textMuted, fontWeight: '600', marginBottom: 8 },
-  inputWrapper: { flexDirection: 'row', alignItems: 'center', backgroundColor: Colors.background, borderRadius: 14, borderWidth: 1, borderColor: Colors.border },
-  inputError: { borderColor: Colors.danger },
+  fieldLabel: { fontSize: 13, color: colors.textMuted, fontWeight: '600', marginBottom: 8 },
+  inputWrapper: { flexDirection: 'row', alignItems: 'center', backgroundColor: colors.background, borderRadius: 14, borderWidth: 1, borderColor: colors.border },
+  inputError: { borderColor: colors.danger },
   inputIcon: { paddingHorizontal: 14 },
-  input: { flex: 1, height: 50, color: Colors.text, fontSize: 15 },
+  input: { flex: 1, height: 50, color: colors.text, fontSize: 15 },
   eyeButton: { position: 'absolute', right: 14, height: 50, justifyContent: 'center' },
-  errorText: { color: Colors.danger, fontSize: 12, marginTop: 4 },
+  errorText: { color: colors.danger, fontSize: 12, marginTop: 4 },
   passwordStrength: { flexDirection: 'row', alignItems: 'center', gap: 10 },
-  strengthLabel: { fontSize: 12, color: Colors.textMuted },
+  strengthLabel: { fontSize: 12, color: colors.textMuted },
   strengthBars: { flexDirection: 'row', gap: 4, flex: 1 },
   strengthBar: { flex: 1, height: 4, borderRadius: 2 },
   genderGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-  genderOption: { paddingHorizontal: 14, paddingVertical: 8, borderRadius: 10, borderWidth: 1, borderColor: Colors.border, backgroundColor: Colors.background },
-  genderOptionActive: { borderColor: Colors.primary, backgroundColor: Colors.primary + '22' },
-  genderOptionText: { fontSize: 13, color: Colors.textMuted, fontWeight: '500' },
-  genderOptionTextActive: { color: Colors.primary, fontWeight: '700' },
-  privacyNote: { flexDirection: 'row', alignItems: 'center', gap: 8, backgroundColor: Colors.success + '11', padding: 12, borderRadius: 10 },
-  privacyText: { fontSize: 13, color: Colors.success, flex: 1 },
-  actionButtonWrapper: { marginTop: 8, borderRadius: 14, overflow: 'hidden', shadowColor: Colors.primary, shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.4, shadowRadius: 12, elevation: 8 },
+  genderOption: { paddingHorizontal: 14, paddingVertical: 8, borderRadius: 10, borderWidth: 1, borderColor: colors.border, backgroundColor: colors.background },
+  genderOptionActive: { borderColor: colors.primary, backgroundColor: colors.primary + '22' },
+  genderOptionText: { fontSize: 13, color: colors.textMuted, fontWeight: '500' },
+  genderOptionTextActive: { color: colors.primary, fontWeight: '700' },
+  privacyNote: { flexDirection: 'row', alignItems: 'center', gap: 8, backgroundColor: colors.success + '11', padding: 12, borderRadius: 10 },
+  privacyText: { fontSize: 13, color: colors.success, flex: 1 },
+  actionButtonWrapper: { marginTop: 8, borderRadius: 14, overflow: 'hidden', shadowColor: colors.primary, shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.4, shadowRadius: 12, elevation: 8 },
   actionButton: { height: 54, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 8 },
   actionButtonText: { color: '#fff', fontSize: 17, fontWeight: '700' },
   loginRow: { flexDirection: 'row', justifyContent: 'center' },
-  loginText: { color: Colors.textMuted, fontSize: 14 },
-  loginLink: { color: Colors.primary, fontSize: 14, fontWeight: '700' },
+  // Pinned (not theme-driven): sits on the fixed dark hero gradient, not the themed surface.
+  loginText: { color: '#94a3b8', fontSize: 14 },
+  loginLink: { color: colors.primary, fontSize: 14, fontWeight: '700' },
 });
 
 export default RegisterScreen;

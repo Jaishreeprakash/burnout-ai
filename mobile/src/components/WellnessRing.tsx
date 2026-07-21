@@ -1,8 +1,8 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useMemo } from 'react';
 import { View, Text, StyleSheet, Animated } from 'react-native';
 import Svg, { Circle, Defs, LinearGradient as SvgGradient, Stop } from 'react-native-svg';
-import { getScoreColor } from '../constants/colors';
-import { Colors } from '../constants/colors';
+import { ThemeColors, getScoreColor } from '../constants/colors';
+import { useTheme } from '../context/ThemeContext';
 
 interface WellnessRingProps {
   score: number;
@@ -17,11 +17,13 @@ const WellnessRing: React.FC<WellnessRingProps> = ({
   size = 90,
   showLabel = true,
 }) => {
+  const { colors } = useTheme();
+  const styles = useMemo(() => createStyles(colors), [colors]);
   const animatedProgress = useRef(new Animated.Value(0)).current;
   const strokeWidth = size * 0.1;
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
-  const color = getScoreColor(score);
+  const color = getScoreColor(score, colors);
 
   useEffect(() => {
     Animated.timing(animatedProgress, {
@@ -47,7 +49,7 @@ const WellnessRing: React.FC<WellnessRingProps> = ({
           cx={size / 2}
           cy={size / 2}
           r={radius}
-          stroke={Colors.surfaceLight}
+          stroke={colors.surfaceLight}
           strokeWidth={strokeWidth}
           fill="none"
         />
@@ -74,7 +76,7 @@ const WellnessRing: React.FC<WellnessRingProps> = ({
   );
 };
 
-const styles = StyleSheet.create({
+const createStyles = (colors: ThemeColors) => StyleSheet.create({
   container: {
     alignItems: 'center',
   },
@@ -84,18 +86,18 @@ const styles = StyleSheet.create({
   },
   scoreText: {
     fontWeight: '800',
-    color: Colors.text,
+    color: colors.text,
     lineHeight: undefined,
   },
   labelText: {
-    color: Colors.textMuted,
+    color: colors.textMuted,
     fontWeight: '600',
   },
   ringLabel: {
     fontSize: 12,
     fontWeight: '600',
     marginTop: 6,
-    color: Colors.textMuted,
+    color: colors.textMuted,
   },
 });
 

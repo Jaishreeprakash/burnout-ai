@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useMemo } from 'react';
 import {
   View,
   Text,
@@ -22,7 +22,8 @@ import BurnoutGauge from '../../components/BurnoutGauge';
 import WellnessRing from '../../components/WellnessRing';
 import MetricCard from '../../components/MetricCard';
 import RecommendationCard from '../../components/RecommendationCard';
-import { Colors, getRiskColor, getScoreColor } from '../../constants/colors';
+import { ThemeColors, getRiskColor, getScoreColor } from '../../constants/colors';
+import { useTheme } from '../../context/ThemeContext';
 import { AppStackParamList } from '../../navigation/AppNavigator';
 import { format } from 'date-fns';
 
@@ -34,6 +35,8 @@ const DashboardScreen: React.FC = () => {
   const { user } = useAuth();
   const { data, isLoading, isRefreshing, refresh } = useDashboard();
   const insets = useSafeAreaInsets();
+  const { colors } = useTheme();
+  const styles = useMemo(() => createStyles(colors), [colors]);
   const navigation = useNavigation<DashboardNav>();
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(20)).current;
@@ -57,29 +60,29 @@ const DashboardScreen: React.FC = () => {
   const firstName = user?.full_name?.split(' ')[0] || user?.username || 'there';
   const today = format(new Date(), 'EEEE, MMMM d');
   const burnout = data?.burnout_analysis;
-  const riskColor = burnout ? getRiskColor(burnout.risk_level) : Colors.primary;
+  const riskColor = burnout ? getRiskColor(burnout.risk_level, colors) : colors.primary;
 
   const chartConfig = {
-    backgroundGradientFrom: Colors.surface,
-    backgroundGradientTo: Colors.surface,
+    backgroundGradientFrom: colors.surface,
+    backgroundGradientTo: colors.surface,
     decimalPlaces: 0,
     color: (opacity = 1) => `rgba(99, 102, 241, ${opacity})`,
-    labelColor: () => Colors.textMuted,
-    propsForDots: { r: '4', strokeWidth: '2', stroke: Colors.primary },
-    propsForBackgroundLines: { stroke: Colors.border, strokeDasharray: '' },
+    labelColor: () => colors.textMuted,
+    propsForDots: { r: '4', strokeWidth: '2', stroke: colors.primary },
+    propsForBackgroundLines: { stroke: colors.border, strokeDasharray: '' },
   };
 
   const quickActions = [
-    { icon: 'moon-waning-crescent', label: 'Log Sleep', color: Colors.info, screen: 'Sleep' },
-    { icon: 'emoticon-happy-outline', label: 'Log Mood', color: Colors.success, screen: 'Emotion' },
-    { icon: 'lightning-bolt', label: 'Activity', color: Colors.warning, screen: 'Activity' },
-    { icon: 'camera-outline', label: 'Face Scan', color: Colors.primary, screen: 'Emotion' },
+    { icon: 'moon-waning-crescent', label: 'Log Sleep', color: colors.info, screen: 'Sleep' },
+    { icon: 'emoticon-happy-outline', label: 'Log Mood', color: colors.success, screen: 'Emotion' },
+    { icon: 'lightning-bolt', label: 'Activity', color: colors.warning, screen: 'Activity' },
+    { icon: 'camera-outline', label: 'Face Scan', color: colors.primary, screen: 'Emotion' },
   ];
 
   if (isLoading) {
     return (
       <View style={[styles.root, { paddingTop: insets.top }]}>
-        <SkeletonLoader />
+        <SkeletonLoader colors={colors} />
       </View>
     );
   }
@@ -94,7 +97,7 @@ const DashboardScreen: React.FC = () => {
           <RefreshControl
             refreshing={isRefreshing}
             onRefresh={() => { Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light); refresh(); }}
-            tintColor={Colors.primary}
+            tintColor={colors.primary}
           />
         }
       >
@@ -105,8 +108,8 @@ const DashboardScreen: React.FC = () => {
               <Text style={styles.greeting}>{getGreeting()}, {firstName} 👋</Text>
               <Text style={styles.date}>{today}</Text>
             </View>
-            <TouchableOpacity style={styles.notifButton}>
-              <MaterialCommunityIcons name="bell-outline" size={24} color={Colors.text} />
+            <TouchableOpacity style={styles.notifButton} accessibilityLabel="Notifications" accessibilityRole="button">
+              <MaterialCommunityIcons name="bell-outline" size={24} color={colors.text} />
               <View style={styles.notifDot} />
             </TouchableOpacity>
           </View>
@@ -196,10 +199,10 @@ const DashboardScreen: React.FC = () => {
                 <WellnessRing score={burnout?.wellness_score ?? 0} label="Wellness" size={110} />
               </View>
               <View style={styles.wellnessRight}>
-                <WellnessRingLegend score={burnout?.sleep_quality_score ?? 0} label="Sleep" />
-                <WellnessRingLegend score={burnout?.emotional_stability_index ?? 0} label="Mood" />
-                <WellnessRingLegend score={burnout?.activity_score ?? 0} label="Activity" />
-                <WellnessRingLegend score={burnout?.phone_usage_score ?? 0} label="Screen" />
+                <WellnessRingLegend score={burnout?.sleep_quality_score ?? 0} label="Sleep" colors={colors} styles={styles} />
+                <WellnessRingLegend score={burnout?.emotional_stability_index ?? 0} label="Mood" colors={colors} styles={styles} />
+                <WellnessRingLegend score={burnout?.activity_score ?? 0} label="Activity" colors={colors} styles={styles} />
+                <WellnessRingLegend score={burnout?.phone_usage_score ?? 0} label="Screen" colors={colors} styles={styles} />
               </View>
             </View>
           </View>
@@ -242,7 +245,7 @@ const DashboardScreen: React.FC = () => {
               </View>
               <View style={styles.recWrapper}>
                 <View style={styles.aiTag}>
-                  <MaterialCommunityIcons name="brain" size={14} color={Colors.primary} />
+                  <MaterialCommunityIcons name="brain" size={14} color={colors.primary} />
                   <Text style={styles.aiTagText}>AI Powered</Text>
                 </View>
                 <RecommendationCard recommendation={burnout.recommendations[0]} compact={false} />
@@ -281,8 +284,8 @@ const DashboardScreen: React.FC = () => {
   );
 };
 
-const WellnessRingLegend: React.FC<{ score: number; label: string }> = ({ score, label }) => {
-  const color = getScoreColor(score);
+const WellnessRingLegend: React.FC<{ score: number; label: string; colors: ThemeColors; styles: ReturnType<typeof createStyles> }> = ({ score, label, colors, styles }) => {
+  const color = getScoreColor(score, colors);
   return (
     <View style={styles.legendItem}>
       <View style={[styles.legendDot, { backgroundColor: color }]} />
@@ -292,7 +295,7 @@ const WellnessRingLegend: React.FC<{ score: number; label: string }> = ({ score,
   );
 };
 
-const SkeletonLoader: React.FC = () => {
+const SkeletonLoader: React.FC<{ colors: ThemeColors }> = ({ colors }) => {
   const shimmer = useRef(new Animated.Value(0)).current;
   useEffect(() => {
     Animated.loop(
@@ -308,50 +311,50 @@ const SkeletonLoader: React.FC = () => {
       {[200, 120, 80, 160, 100].map((h, i) => (
         <Animated.View
           key={i}
-          style={{ height: h, backgroundColor: Colors.surface, borderRadius: 16, opacity }}
+          style={{ height: h, backgroundColor: colors.surface, borderRadius: 16, opacity }}
         />
       ))}
     </View>
   );
 };
 
-const styles = StyleSheet.create({
-  root: { flex: 1, backgroundColor: Colors.background },
+const createStyles = (colors: ThemeColors) => StyleSheet.create({
+  root: { flex: 1, backgroundColor: colors.background },
   scroll: { flex: 1 },
   scrollContent: { paddingHorizontal: 20 },
   header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', paddingVertical: 20 },
-  greeting: { fontSize: 22, fontWeight: '800', color: Colors.text },
-  date: { fontSize: 13, color: Colors.textMuted, marginTop: 2 },
-  notifButton: { width: 42, height: 42, borderRadius: 14, backgroundColor: Colors.surface, justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: Colors.border },
-  notifDot: { position: 'absolute', top: 10, right: 10, width: 8, height: 8, borderRadius: 4, backgroundColor: Colors.danger, borderWidth: 1.5, borderColor: Colors.background },
-  burnoutSection: { backgroundColor: Colors.surface, borderRadius: 24, padding: 20, marginBottom: 16, borderWidth: 1, borderColor: Colors.border },
-  sectionTitle: { fontSize: 16, fontWeight: '700', color: Colors.text, marginBottom: 12 },
+  greeting: { fontSize: 22, fontWeight: '800', color: colors.text },
+  date: { fontSize: 13, color: colors.textMuted, marginTop: 2 },
+  notifButton: { width: 42, height: 42, borderRadius: 14, backgroundColor: colors.surface, justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: colors.border },
+  notifDot: { position: 'absolute', top: 10, right: 10, width: 8, height: 8, borderRadius: 4, backgroundColor: colors.danger, borderWidth: 1.5, borderColor: colors.background },
+  burnoutSection: { backgroundColor: colors.surface, borderRadius: 24, padding: 20, marginBottom: 16, borderWidth: 1, borderColor: colors.border },
+  sectionTitle: { fontSize: 16, fontWeight: '700', color: colors.text, marginBottom: 12 },
   gaugeContainer: { alignItems: 'center', marginVertical: 8 },
   riskBanner: { flexDirection: 'row', alignItems: 'center', gap: 8, padding: 12, borderRadius: 12, marginTop: 12 },
   riskBannerText: { fontSize: 13, fontWeight: '600', flex: 1 },
   metricsSection: { marginBottom: 16 },
   sectionHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 },
-  seeAll: { fontSize: 13, color: Colors.primary, fontWeight: '600' },
+  seeAll: { fontSize: 13, color: colors.primary, fontWeight: '600' },
   wellnessSection: { marginBottom: 16 },
-  wellnessCard: { backgroundColor: Colors.surface, borderRadius: 20, padding: 20, flexDirection: 'row', alignItems: 'center', borderWidth: 1, borderColor: Colors.border },
+  wellnessCard: { backgroundColor: colors.surface, borderRadius: 20, padding: 20, flexDirection: 'row', alignItems: 'center', borderWidth: 1, borderColor: colors.border },
   wellnessLeft: { marginRight: 24 },
   wellnessRight: { flex: 1, gap: 10 },
   legendItem: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   legendDot: { width: 8, height: 8, borderRadius: 4 },
-  legendLabel: { fontSize: 13, color: Colors.textMuted, flex: 1 },
+  legendLabel: { fontSize: 13, color: colors.textMuted, flex: 1 },
   legendScore: { fontSize: 13, fontWeight: '700' },
   chartSection: { marginBottom: 16 },
-  chartCard: { backgroundColor: Colors.surface, borderRadius: 20, padding: 12, borderWidth: 1, borderColor: Colors.border, overflow: 'hidden' },
+  chartCard: { backgroundColor: colors.surface, borderRadius: 20, padding: 12, borderWidth: 1, borderColor: colors.border, overflow: 'hidden' },
   chart: { borderRadius: 12, marginLeft: -10 },
   recSection: { marginBottom: 16 },
   recWrapper: { position: 'relative' },
   aiTag: { flexDirection: 'row', alignItems: 'center', gap: 4, marginBottom: 8 },
-  aiTagText: { fontSize: 12, color: Colors.primary, fontWeight: '700' },
+  aiTagText: { fontSize: 12, color: colors.primary, fontWeight: '700' },
   quickActionsSection: { marginBottom: 16 },
   quickActionsRow: { flexDirection: 'row', justifyContent: 'space-between' },
   quickAction: { alignItems: 'center', gap: 8 },
   quickActionIcon: { width: 60, height: 60, borderRadius: 20, justifyContent: 'center', alignItems: 'center' },
-  quickActionLabel: { fontSize: 11, color: Colors.textMuted, fontWeight: '600', textAlign: 'center' },
+  quickActionLabel: { fontSize: 11, color: colors.textMuted, fontWeight: '600', textAlign: 'center' },
 });
 
 export default DashboardScreen;

@@ -1,19 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Animated } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { Colors } from '../constants/colors';
+import { ThemeColors } from '../constants/colors';
+import { useTheme } from '../context/ThemeContext';
 import { Recommendation } from '../types';
 
 interface RecommendationCardProps {
   recommendation: Recommendation;
   compact?: boolean;
 }
-
-const PRIORITY_COLORS = {
-  high: Colors.danger,
-  medium: Colors.warning,
-  low: Colors.success,
-};
 
 const CATEGORY_ICONS: Record<string, string> = {
   sleep: 'moon-waning-crescent',
@@ -24,10 +19,13 @@ const CATEGORY_ICONS: Record<string, string> = {
 };
 
 const RecommendationCard: React.FC<RecommendationCardProps> = ({ recommendation, compact = false }) => {
+  const { colors } = useTheme();
+  const styles = useMemo(() => createStyles(colors), [colors]);
   const [expanded, setExpanded] = useState(false);
   const [checkedSteps, setCheckedSteps] = useState<Set<number>>(new Set());
 
-  const priorityColor = PRIORITY_COLORS[recommendation.priority];
+  const priorityColors = { high: colors.danger, medium: colors.warning, low: colors.success };
+  const priorityColor = priorityColors[recommendation.priority];
   const categoryIcon = CATEGORY_ICONS[recommendation.category] || 'lightbulb-on';
 
   const toggleStep = (index: number) => {
@@ -68,7 +66,7 @@ const RecommendationCard: React.FC<RecommendationCardProps> = ({ recommendation,
           <MaterialCommunityIcons
             name={expanded ? 'chevron-up' : 'chevron-down'}
             size={20}
-            color={Colors.textMuted}
+            color={colors.textMuted}
           />
         )}
       </View>
@@ -79,7 +77,7 @@ const RecommendationCard: React.FC<RecommendationCardProps> = ({ recommendation,
 
       {!compact && (
         <View style={styles.impactRow}>
-          <MaterialCommunityIcons name="lightning-bolt" size={14} color={Colors.warning} />
+          <MaterialCommunityIcons name="lightning-bolt" size={14} color={colors.warning} />
           <Text style={styles.impactText}>
             +{recommendation.estimated_impact} wellness points impact
           </Text>
@@ -98,7 +96,7 @@ const RecommendationCard: React.FC<RecommendationCardProps> = ({ recommendation,
             >
               <View style={[
                 styles.checkbox,
-                checkedSteps.has(index) && { backgroundColor: Colors.success, borderColor: Colors.success }
+                checkedSteps.has(index) && { backgroundColor: colors.success, borderColor: colors.success }
               ]}>
                 {checkedSteps.has(index) && (
                   <MaterialCommunityIcons name="check" size={12} color="#fff" />
@@ -118,15 +116,15 @@ const RecommendationCard: React.FC<RecommendationCardProps> = ({ recommendation,
   );
 };
 
-const styles = StyleSheet.create({
+const createStyles = (colors: ThemeColors) => StyleSheet.create({
   card: {
-    backgroundColor: Colors.surface,
+    backgroundColor: colors.surface,
     borderRadius: 16,
     padding: 16,
     marginBottom: 12,
     borderLeftWidth: 3,
     borderWidth: 1,
-    borderColor: Colors.border,
+    borderColor: colors.border,
   },
   header: {
     flexDirection: 'row',
@@ -161,7 +159,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 15,
     fontWeight: '700',
-    color: Colors.text,
+    color: colors.text,
     flex: 1,
   },
   priorityBadge: {
@@ -176,7 +174,7 @@ const styles = StyleSheet.create({
   },
   description: {
     fontSize: 13,
-    color: Colors.textMuted,
+    color: colors.textMuted,
     lineHeight: 20,
     marginBottom: 8,
   },
@@ -187,19 +185,19 @@ const styles = StyleSheet.create({
   },
   impactText: {
     fontSize: 12,
-    color: Colors.warning,
+    color: colors.warning,
     fontWeight: '600',
   },
   stepsContainer: {
     marginTop: 14,
     paddingTop: 14,
     borderTopWidth: 1,
-    borderTopColor: Colors.border,
+    borderTopColor: colors.border,
   },
   stepsTitle: {
     fontSize: 13,
     fontWeight: '700',
-    color: Colors.text,
+    color: colors.text,
     marginBottom: 10,
   },
   stepRow: {
@@ -213,14 +211,14 @@ const styles = StyleSheet.create({
     height: 20,
     borderRadius: 6,
     borderWidth: 2,
-    borderColor: Colors.border,
+    borderColor: colors.border,
     justifyContent: 'center',
     alignItems: 'center',
   },
   stepText: {
     flex: 1,
     fontSize: 13,
-    color: Colors.textMuted,
+    color: colors.textMuted,
     lineHeight: 18,
   },
   stepChecked: {

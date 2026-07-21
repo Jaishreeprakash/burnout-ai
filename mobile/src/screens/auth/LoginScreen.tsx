@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import {
   View,
   Text,
@@ -17,7 +17,8 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useAuth } from '../../context/AuthContext';
-import { Colors } from '../../constants/colors';
+import { ThemeColors } from '../../constants/colors';
+import { useTheme } from '../../context/ThemeContext';
 import { AuthStackParamList } from '../../navigation/AuthNavigator';
 
 type Props = {
@@ -27,6 +28,8 @@ type Props = {
 const LoginScreen: React.FC<Props> = ({ navigation }) => {
   const { login, demoLogin } = useAuth();
   const insets = useSafeAreaInsets();
+  const { colors } = useTheme();
+  const styles = useMemo(() => createStyles(colors), [colors]);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -117,12 +120,12 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
             {/* Username input */}
             <View style={styles.inputWrapper}>
               <View style={styles.inputIcon}>
-                <MaterialCommunityIcons name="account-outline" size={20} color={Colors.textMuted} />
+                <MaterialCommunityIcons name="account-outline" size={20} color={colors.textMuted} />
               </View>
               <TextInput
                 style={styles.input}
                 placeholder="Username"
-                placeholderTextColor={Colors.textMuted}
+                placeholderTextColor={colors.textMuted}
                 value={username}
                 onChangeText={setUsername}
                 autoCapitalize="none"
@@ -134,12 +137,12 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
             {/* Password input */}
             <View style={styles.inputWrapper}>
               <View style={styles.inputIcon}>
-                <MaterialCommunityIcons name="lock-outline" size={20} color={Colors.textMuted} />
+                <MaterialCommunityIcons name="lock-outline" size={20} color={colors.textMuted} />
               </View>
               <TextInput
                 style={[styles.input, { paddingRight: 50 }]}
                 placeholder="Password"
-                placeholderTextColor={Colors.textMuted}
+                placeholderTextColor={colors.textMuted}
                 value={password}
                 onChangeText={setPassword}
                 secureTextEntry={!showPassword}
@@ -149,11 +152,13 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
               <TouchableOpacity
                 style={styles.eyeButton}
                 onPress={() => setShowPassword(!showPassword)}
+                accessibilityLabel={showPassword ? 'Hide password' : 'Show password'}
+                accessibilityRole="button"
               >
                 <MaterialCommunityIcons
                   name={showPassword ? 'eye-off-outline' : 'eye-outline'}
                   size={20}
-                  color={Colors.textMuted}
+                  color={colors.textMuted}
                 />
               </TouchableOpacity>
             </View>
@@ -206,10 +211,10 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
               activeOpacity={0.8}
             >
               {isDemoLoading ? (
-                <ActivityIndicator color={Colors.primary} size="small" />
+                <ActivityIndicator color={colors.primary} size="small" />
               ) : (
                 <>
-                  <MaterialCommunityIcons name="play-circle-outline" size={20} color={Colors.primary} />
+                  <MaterialCommunityIcons name="play-circle-outline" size={20} color={colors.primary} />
                   <Text style={styles.demoButtonText}>Try Demo Mode</Text>
                 </>
               )}
@@ -234,10 +239,10 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
   );
 };
 
-const styles = StyleSheet.create({
+const createStyles = (colors: ThemeColors) => StyleSheet.create({
   root: {
     flex: 1,
-    backgroundColor: Colors.background,
+    backgroundColor: colors.background,
   },
   decorCircle: {
     position: 'absolute',
@@ -247,14 +252,14 @@ const styles = StyleSheet.create({
   decorCircle1: {
     width: 300,
     height: 300,
-    backgroundColor: Colors.primary,
+    backgroundColor: colors.primary,
     top: -80,
     right: -80,
   },
   decorCircle2: {
     width: 200,
     height: 200,
-    backgroundColor: Colors.primaryLight,
+    backgroundColor: colors.primaryLight,
     bottom: 100,
     left: -60,
   },
@@ -269,7 +274,7 @@ const styles = StyleSheet.create({
   },
   logoContainer: {
     marginBottom: 16,
-    shadowColor: Colors.primary,
+    shadowColor: colors.primary,
     shadowOffset: { width: 0, height: 8 },
     shadowOpacity: 0.5,
     shadowRadius: 20,
@@ -285,40 +290,42 @@ const styles = StyleSheet.create({
   appName: {
     fontSize: 36,
     fontWeight: '900',
-    color: Colors.text,
+    // Pinned (not theme-driven): sits on the fixed dark hero gradient above, not the themed surface.
+    color: '#f1f5f9',
     letterSpacing: 1,
     marginBottom: 6,
   },
   tagline: {
     fontSize: 15,
-    color: Colors.textMuted,
+    // Pinned (not theme-driven): sits on the fixed dark hero gradient above, not the themed surface.
+    color: '#94a3b8',
     textAlign: 'center',
   },
   formCard: {
-    backgroundColor: Colors.surface,
+    backgroundColor: colors.surface,
     borderRadius: 24,
     padding: 28,
     borderWidth: 1,
-    borderColor: Colors.border,
+    borderColor: colors.border,
   },
   formTitle: {
     fontSize: 24,
     fontWeight: '800',
-    color: Colors.text,
+    color: colors.text,
     marginBottom: 6,
   },
   formSubtitle: {
     fontSize: 14,
-    color: Colors.textMuted,
+    color: colors.textMuted,
     marginBottom: 28,
   },
   inputWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: Colors.background,
+    backgroundColor: colors.background,
     borderRadius: 14,
     borderWidth: 1,
-    borderColor: Colors.border,
+    borderColor: colors.border,
     marginBottom: 14,
   },
   inputIcon: {
@@ -327,7 +334,7 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     height: 52,
-    color: Colors.text,
+    color: colors.text,
     fontSize: 16,
   },
   eyeButton: {
@@ -342,7 +349,7 @@ const styles = StyleSheet.create({
     marginTop: -4,
   },
   forgotPasswordText: {
-    color: Colors.primary,
+    color: colors.primary,
     fontSize: 14,
     fontWeight: '600',
   },
@@ -350,7 +357,7 @@ const styles = StyleSheet.create({
     marginTop: 8,
     borderRadius: 14,
     overflow: 'hidden',
-    shadowColor: Colors.primary,
+    shadowColor: colors.primary,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.4,
     shadowRadius: 12,
@@ -377,10 +384,10 @@ const styles = StyleSheet.create({
   dividerLine: {
     flex: 1,
     height: 1,
-    backgroundColor: Colors.border,
+    backgroundColor: colors.border,
   },
   dividerText: {
-    color: Colors.textMuted,
+    color: colors.textMuted,
     fontSize: 13,
   },
   demoButton: {
@@ -390,12 +397,12 @@ const styles = StyleSheet.create({
     height: 52,
     borderRadius: 14,
     borderWidth: 1.5,
-    borderColor: Colors.primary,
+    borderColor: colors.primary,
     gap: 8,
     marginBottom: 20,
   },
   demoButtonText: {
-    color: Colors.primary,
+    color: colors.primary,
     fontSize: 16,
     fontWeight: '600',
   },
@@ -404,11 +411,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   registerText: {
-    color: Colors.textMuted,
+    color: colors.textMuted,
     fontSize: 14,
   },
   registerLink: {
-    color: Colors.primary,
+    color: colors.primary,
     fontSize: 14,
     fontWeight: '700',
   },
@@ -417,7 +424,8 @@ const styles = StyleSheet.create({
     marginTop: 32,
   },
   footerText: {
-    color: Colors.textDim,
+    // Pinned (not theme-driven): sits on the fixed dark hero gradient, not the themed surface.
+    color: '#64748b',
     fontSize: 12,
   },
 });

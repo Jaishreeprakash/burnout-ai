@@ -1,8 +1,11 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useMemo } from 'react';
 import { View, Text, StyleSheet, Animated } from 'react-native';
-import { Colors } from '../constants/colors';
+import { ThemeColors } from '../constants/colors';
+import { useTheme } from '../context/ThemeContext';
 
 const LoadingScreen: React.FC = () => {
+  const { colors } = useTheme();
+  const styles = useMemo(() => createStyles(colors), [colors]);
   const pulseAnim = useRef(new Animated.Value(0.6)).current;
   const rotateAnim = useRef(new Animated.Value(0)).current;
 
@@ -32,10 +35,10 @@ const LoadingScreen: React.FC = () => {
   );
 };
 
-const styles = StyleSheet.create({
+const createStyles = (colors: ThemeColors) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.background,
+    backgroundColor: colors.background,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -44,7 +47,7 @@ const styles = StyleSheet.create({
     height: 80,
     borderRadius: 40,
     borderWidth: 3,
-    borderColor: Colors.primary,
+    borderColor: colors.primary,
     borderTopColor: 'transparent',
     marginBottom: 24,
   },
@@ -56,19 +59,19 @@ const styles = StyleSheet.create({
     bottom: 10,
     borderRadius: 30,
     borderWidth: 2,
-    borderColor: Colors.primaryLight,
+    borderColor: colors.primaryLight,
     borderBottomColor: 'transparent',
   },
   logo: {
     fontSize: 28,
     fontWeight: '800',
-    color: Colors.text,
+    color: colors.text,
     letterSpacing: 1,
     marginBottom: 8,
   },
   sub: {
     fontSize: 14,
-    color: Colors.textMuted,
+    color: colors.textMuted,
   },
 });
 
