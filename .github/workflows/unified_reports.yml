@@ -102,7 +102,15 @@ jobs:
 
       - name: Run Real 100-VU / 60s Baseline Load Test
         run: |
-          python scripts/run_load_test.py --vus 100 --duration 60 --workers 4
+          # Match worker count to the runner's actual CPU count. A hardcoded
+          # number tuned on a many-core dev machine over-provisions workers
+          # on GitHub's standard 2-core runners, which doesn't parallelize
+          # sync route handlers further and just adds context-switch
+          # overhead — observed as a real regression (335 requests/72s,
+          # 89.5% errors with --workers 4 on a 2-core runner).
+          WORKERS=$(nproc)
+          echo "Runner has $WORKERS CPU core(s) — using that many uvicorn workers."
+          python scripts/run_load_test.py --vus 100 --duration 60 --workers "$WORKERS"
 
       - name: Upload API Load Test Report
         if: always()
