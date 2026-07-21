@@ -292,15 +292,29 @@ def run_browser_suite(browser, web_url, backend_url, rec):
             safe(rec, "UI/UX", "Sidebar", f"nav_link_{target.strip('/')}_works",
                  lambda label=label, target=target: sidebar_nav_click(label, target))
 
+        # One navigation per page, not one per assertion — repeatedly reloading
+        # (34 separate page loads across Dashboard/Sleep/Recommendations/
+        # Analytics/Chat/Profile) was accumulating browser/dev-server resource
+        # pressure that consistently tipped over ~40 navigations into a long
+        # Firefox session (confirmed across three real CI runs at different
+        # element-wait timeouts — timeout wasn't the variable that mattered).
+        pages_in_order = []
+        checks_by_page = {}
         for path, name, by, sel in PAGE_ELEMENT_CHECKS:
             if path in ("/login", "/register"):
                 continue
-            module = BASE_PATH_TITLES.get(path, path)
+            if path not in checks_by_page:
+                checks_by_page[path] = []
+                pages_in_order.append(path)
+            checks_by_page[path].append((name, by, sel))
 
-            def check(path=path, by=by, sel=sel):
-                nav_get(driver, f"{web_url}{path}")
-                return (bool(find(driver, by, sel)), "Element located")
-            safe(rec, "UI/UX", module, f"element_present_{name}", check)
+        for path in pages_in_order:
+            module = BASE_PATH_TITLES.get(path, path)
+            nav_get(driver, f"{web_url}{path}")
+            for name, by, sel in checks_by_page[path]:
+                def check(by=by, sel=sel):
+                    return (bool(find(driver, by, sel)), "Element located")
+                safe(rec, "UI/UX", module, f"element_present_{name}", check)
 
         for path in BASIC_PAGES:
             def basic_load(path=path):
@@ -362,13 +376,16 @@ def run_browser_suite(browser, web_url, backend_url, rec):
         safe(rec, "Functional", "Profile", "tab_switching_works", profile_tabs)
 
         # ---------------- Phase 5: responsive checks ----------------
+        # One navigation per page, then resize within that same loaded page —
+        # CSS media queries reflow live on resize, no reload needed. Cuts 33
+        # navigations down to 11, for the same reason as the Phase 3 change.
         for path in list(BASE_PATH_TITLES.keys()):
             if path in ("/login", "/register"):
                 continue
+            nav_get(driver, f"{web_url}{path}")
             for vp_name, w, h in VIEWPORTS:
-                def responsive_check(path=path, w=w, h=h, vp_name=vp_name):
+                def responsive_check(w=w, h=h, vp_name=vp_name):
                     driver.set_window_size(w, h)
-                    nav_get(driver, f"{web_url}{path}")
                     time.sleep(0.4)
                     body_text = driver.find_element("tag name", "body").text
                     return (len(body_text.strip()) > 0, f"Renders content at {w}x{h} ({vp_name})")
