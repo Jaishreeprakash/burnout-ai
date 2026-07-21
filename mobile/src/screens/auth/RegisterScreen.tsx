@@ -128,6 +128,7 @@ const RegisterScreen: React.FC<Props> = ({ navigation }) => {
           {/* Header */}
           <Animated.View style={{ opacity: fadeAnim }}>
             <TouchableOpacity
+              testID="register-back-button"
               style={styles.backButton}
               onPress={() => step > 0 ? setStep(step - 1) : navigation.goBack()}
               accessibilityLabel="Go back"
@@ -168,6 +169,7 @@ const RegisterScreen: React.FC<Props> = ({ navigation }) => {
             {step === 0 && (
               <>
                 <InputField
+                  testID="register-fullname-input"
                   label="Full Name"
                   icon="account-outline"
                   value={fullName}
@@ -178,6 +180,7 @@ const RegisterScreen: React.FC<Props> = ({ navigation }) => {
                   styles={styles}
                 />
                 <InputField
+                  testID="register-username-input"
                   label="Username"
                   icon="at"
                   value={username}
@@ -189,6 +192,7 @@ const RegisterScreen: React.FC<Props> = ({ navigation }) => {
                   styles={styles}
                 />
                 <InputField
+                  testID="register-email-input"
                   label="Email Address"
                   icon="email-outline"
                   value={email}
@@ -212,6 +216,7 @@ const RegisterScreen: React.FC<Props> = ({ navigation }) => {
                       <MaterialCommunityIcons name="lock-outline" size={20} color={colors.textMuted} />
                     </View>
                     <TextInput
+                      testID="register-password-input"
                       style={[styles.input, { paddingRight: 50 }]}
                       placeholder="Min 8 characters"
                       placeholderTextColor={colors.textMuted}
@@ -220,6 +225,7 @@ const RegisterScreen: React.FC<Props> = ({ navigation }) => {
                       secureTextEntry={!showPassword}
                     />
                     <TouchableOpacity
+                      testID="register-password-toggle"
                       style={styles.eyeButton}
                       onPress={() => setShowPassword(!showPassword)}
                       accessibilityLabel={showPassword ? 'Hide password' : 'Show password'}
@@ -236,6 +242,7 @@ const RegisterScreen: React.FC<Props> = ({ navigation }) => {
                 </View>
 
                 <InputField
+                  testID="register-confirm-password-input"
                   label="Confirm Password"
                   icon="lock-check-outline"
                   value={confirmPassword}
@@ -271,6 +278,7 @@ const RegisterScreen: React.FC<Props> = ({ navigation }) => {
             {step === 2 && (
               <>
                 <InputField
+                  testID="register-age-input"
                   label="Age (optional)"
                   icon="cake-variant-outline"
                   value={age}
@@ -287,6 +295,7 @@ const RegisterScreen: React.FC<Props> = ({ navigation }) => {
                     {GENDERS.map((g) => (
                       <TouchableOpacity
                         key={g}
+                        testID={`register-gender-option-${g.toLowerCase().replace(/[^a-z]+/g, '-')}`}
                         style={[
                           styles.genderOption,
                           gender === g && styles.genderOptionActive,
@@ -313,6 +322,7 @@ const RegisterScreen: React.FC<Props> = ({ navigation }) => {
 
             {/* Action Button */}
             <TouchableOpacity
+              testID={step < 2 ? 'register-continue-button' : 'register-submit-button'}
               onPress={step < 2 ? handleNext : handleRegister}
               disabled={isLoading}
               activeOpacity={0.85}
@@ -341,7 +351,7 @@ const RegisterScreen: React.FC<Props> = ({ navigation }) => {
           {/* Login link */}
           <View style={styles.loginRow}>
             <Text style={styles.loginText}>Already have an account? </Text>
-            <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+            <TouchableOpacity testID="register-login-link" onPress={() => navigation.navigate('Login')}>
               <Text style={styles.loginLink}>Sign in</Text>
             </TouchableOpacity>
           </View>
@@ -363,10 +373,11 @@ interface InputFieldProps {
   error?: string;
   colors: ThemeColors;
   styles: ReturnType<typeof createStyles>;
+  testID?: string;
 }
 
 const InputField: React.FC<InputFieldProps> = ({
-  label, icon, value, onChangeText, placeholder, keyboardType, autoCapitalize, secureTextEntry, error, colors, styles
+  label, icon, value, onChangeText, placeholder, keyboardType, autoCapitalize, secureTextEntry, error, colors, styles, testID
 }) => (
   <View style={styles.fieldContainer}>
     <Text style={styles.fieldLabel}>{label}</Text>
@@ -375,6 +386,7 @@ const InputField: React.FC<InputFieldProps> = ({
         <MaterialCommunityIcons name={icon as any} size={20} color={colors.textMuted} />
       </View>
       <TextInput
+        testID={testID}
         style={styles.input}
         placeholder={placeholder}
         placeholderTextColor={colors.textMuted}

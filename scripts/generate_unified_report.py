@@ -1,190 +1,176 @@
+"""
+Builds the Unified Test Verification Dashboard from the REAL suite output
+files produced by run_backend_suite.py, run_load_test.py,
+run_selenium_suite.py, and run_mobile_suite.py. Every number in this
+report is read from those suites' actual JSON results — nothing here is
+computed from a static replayed CSV.
+"""
+import json
 import os
 import sys
-import pandas as pd
 
-def generate_report(csv_path="QA_Test_Report_4400_final.csv", output_dir="reports"):
-    if not os.path.exists(csv_path):
-        print(f"Error: CSV file '{csv_path}' not found.")
-        sys.exit(1)
+
+def load(path):
+    if not os.path.exists(path):
+        return None
+    with open(path, encoding="utf-8") as f:
+        return json.load(f)
+
+
+def fmt_rows(rows, limit=100):
+    lines = []
+    for r in rows[:limit]:
+        obs = str(r.get("Observed Result (evidence)", "")).replace("|", "\\|")
+        tc = str(r.get("Test Case", "")).replace("|", "\\|")
+        badge = "✅" if r.get("Status") == "Pass" else "❌"
+        lines.append(
+            f"| {r.get('TestID','')} | {r.get('Category','')} | {r.get('Module / Page','')} | {tc} | "
+            f"{r.get('Method','')} | {r.get('Environment','')} | {badge} {r.get('Status','')} | {obs} |"
+        )
+    return lines
+
+
+def generate_report(reports_dir="reports", output_dir="reports"):
+    backend = load(os.path.join(reports_dir, "backend_security_results.json"))
+    load_test = load(os.path.join(reports_dir, "api_load_test_results.json"))
+    web = load(os.path.join(reports_dir, "web_e2e_results.json"))
+    mobile = load(os.path.join(reports_dir, "mobile_e2e_results.json"))
+
+    missing = [name for name, d in [("backend", backend), ("load_test", load_test),
+                                     ("web", web), ("mobile", mobile)] if d is None]
+    if missing:
+        print(f"Warning: missing suite result file(s) for: {', '.join(missing)}. "
+              f"Their section will be omitted from the dashboard.")
 
     os.makedirs(output_dir, exist_ok=True)
 
-    print(f"Reading QA Test Report from {csv_path}...")
-    df = pd.read_csv(csv_path)
-
-    total_rows = len(df)
-    print(f"Loaded {total_rows} test case records.")
-
-    # Assign Component Groups based on Environment and Category
-    def get_group(row):
-        env = str(row.get('Environment', ''))
-        cat = str(row.get('Category', ''))
-        if 'Mobile' in env or cat == 'Mobile-Specific':
-            return 'Mobile App E2E'
-        elif 'Web' in env or cat in ['UI/UX', 'Accessibility', 'Compatibility']:
-            return 'Website E2E'
-        elif cat == 'Security':
-            return 'Backend Security'
-        elif cat == 'Performance':
-            return 'API Load Testing'
-        else:
-            return 'Backend API Tests'
-
-    df['Group'] = df.apply(get_group, axis=1)
-
-    # Compute Summary statistics per group
-    groups_data = [
-        {
-            "key": "Website E2E",
-            "name": "Website E2E",
-            "suite": "HealthSense Web App – Full E2E Workflow",
-            "duration": "200s",
-        },
-        {
-            "key": "Mobile App E2E",
-            "name": "Mobile E2E",
-            "suite": "HealthSense AI – Full Appium E2E Automation",
-            "duration": "500.00 seconds",
-        },
-        {
-            "key": "Backend Security",
-            "name": "Backend Security",
-            "suite": "HealthSense AI — Security Vulnerability Report",
-            "duration": "N/A",
-        },
-        {
-            "key": "API Load Testing",
-            "name": "API Load Testing",
-            "suite": "HealthSense AI API Load Testing Report",
-            "duration": "120s",
-        },
-        {
-            "key": "Backend API Tests",
-            "name": "Backend API Tests",
-            "suite": "HealthSense AI — Backend API & DB Verification",
-            "duration": "34s",
-        },
-    ]
-
-    summary_rows = []
-    for g in groups_data:
-        sub_df = df[df['Group'] == g['key']]
-        tot = len(sub_df)
-        passed = len(sub_df[sub_df['Status'] == 'Pass'])
-        failed = tot - passed
-        pass_rate = f"{(passed / tot * 100):.1f}%" if tot > 0 else "100.0%"
-        summary_rows.append({
-            "component": g["name"],
-            "suite": g["suite"],
-            "total": f"{tot:,}",
-            "passed": f"✅ {passed:,}",
-            "failed": f"❌ {failed}",
-            "pass_rate": pass_rate,
-            "duration": g["duration"]
-        })
-
-    # Prepare markdown content
     md = []
     md.append("# 🧪 HealthSense AI Unified Test Verification Dashboard\n")
-    md.append("This dashboard presents a unified summary of E2E tests, security scans, and API load testing across all major components: Website, Mobile App, Backend, and APIs.\n")
+    md.append(
+        "This dashboard is generated from **real suite runs** — a live FastAPI backend, a real "
+        "concurrent load test, real Selenium browser sessions, and real static + Appium mobile checks. "
+        "No row here is replayed from a static fixture.\n"
+    )
     md.append("## 📊 Unified Summary Overview\n")
-    md.append("| Component | Test Suite / Report | Total Tests | Passed / Fixed | Failed / Open | Pass/Fix Rate | Duration |")
-    md.append("| :--- | :--- | :--- | :--- | :--- | :--- | :--- |")
-    for r in summary_rows:
-        md.append(f"| {r['component']} | {r['suite']} | {r['total']} | {r['passed']} | {r['failed']} | {r['pass_rate']} | {r['duration']} |")
-    
-    md.append("\n---\n")
-
-    # Section 1: Website E2E Details
-    web_df = df[df['Group'] == 'Website E2E']
-    md.append("## 🌐 Website E2E Test Verification Details\n")
-    md.append(f"<details>\n<summary>Click to view Website E2E Test Cases ({len(web_df):,} tests)</summary>\n")
-    md.append("| Test ID | Category | Module / Page | Test Case | Method | Environment | Status | Observed Result |")
-    md.append("| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |")
-    for _, row in web_df.head(100).iterrows(): # Show top 100 in details table for rendering speed
-        obs = str(row['Observed Result (evidence)']).replace('|', '\\|')
-        tc = str(row['Test Case']).replace('|', '\\|')
-        md.append(f"| {row['TestID']} | {row['Category']} | {row['Module / Page']} | {tc} | {row['Method']} | {row['Environment']} | ✅ {row['Status']} | {obs} |")
-    if len(web_df) > 100:
-        md.append(f"\n*... showing top 100 of {len(web_df):,} Website E2E test cases. See full report artifact for all rows.*")
-    md.append("\n</details>\n")
-    md.append("\n---\n")
-
-    # Section 2: Mobile E2E Details
-    mob_df = df[df['Group'] == 'Mobile App E2E']
-    md.append("## 📱 Mobile App E2E Test Verification Details\n")
-    md.append(f"<details>\n<summary>Click to view Mobile E2E Test Cases ({len(mob_df):,} tests)</summary>\n")
-    md.append("| Test ID | Category | Module / Page | Test Case | Method | Environment | Status | Observed Result |")
-    md.append("| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |")
-    for _, row in mob_df.iterrows():
-        obs = str(row['Observed Result (evidence)']).replace('|', '\\|')
-        tc = str(row['Test Case']).replace('|', '\\|')
-        md.append(f"| {row['TestID']} | {row['Category']} | {row['Module / Page']} | {tc} | {row['Method']} | {row['Environment']} | ✅ {row['Status']} | {obs} |")
-    md.append("\n</details>\n")
-    md.append("\n---\n")
-
-    # Section 3: Backend Security Details
-    sec_df = df[df['Group'] == 'Backend Security']
-    # Calculate severity counts
-    critical = 5
-    high = 6
-    medium = 7
-    low = len(sec_df) - (critical + high + medium)
-    md.append("## 🛡️ Backend Security Scan Details\n")
-    md.append(f"**Severity Breakdown:** 🔴 Critical: {critical} • 🟠 High: {high} • 🟡 Medium: {medium} • 🔵 Low: {low:,}\n")
-    md.append(f"<details>\n<summary>Click to view Backend Security Findings ({len(sec_df):,} findings)</summary>\n")
-    md.append("| Test ID | Module | Security Test Case | Environment | Status | Findings / Evidence |")
+    md.append("| Component | Test Suite | Total Tests | Passed | Failed | Pass Rate |")
     md.append("| :--- | :--- | :--- | :--- | :--- | :--- |")
-    for _, row in sec_df.head(100).iterrows():
-        obs = str(row['Observed Result (evidence)']).replace('|', '\\|')
-        tc = str(row['Test Case']).replace('|', '\\|')
-        md.append(f"| {row['TestID']} | {row['Module / Page']} | {tc} | {row['Environment']} | ✅ {row['Status']} | {obs} |")
-    if len(sec_df) > 100:
-        md.append(f"\n*... showing top 100 of {len(sec_df):,} Security findings. See full report artifact for all rows.*")
-    md.append("\n</details>\n")
+
+    def summary_row(name, suite_label, data):
+        if data is None:
+            md.append(f"| {name} | {suite_label} | — | — | — | *not run* |")
+            return
+        md.append(
+            f"| {name} | {suite_label} | {data['total']:,} | ✅ {data['passed']:,} | "
+            f"{'❌' if data['failed'] else '✅'} {data['failed']} | {data['pass_rate']:.1f}% |"
+        )
+
+    summary_row("Website E2E", "Real Selenium suite (Chrome + Firefox)", web)
+    summary_row("Mobile App E2E", "Real static analysis + live Appium", mobile)
+    summary_row("Backend & Security", "Real functional/security scenarios (live backend)", backend)
+    summary_row("API Load Testing", "Real 100-VU baseline load test", load_test)
+
     md.append("\n---\n")
 
-    # Section 4: API Load Testing Details
-    load_df = df[df['Group'] == 'API Load Testing']
-    md.append("## ⚡ API Load Testing Details\n")
-    md.append("**Test Configuration:** Concurrency: 100 VUs • Duration: 60s per scenario\n")
-    md.append(f"<details>\n<summary>Click to view API Load Testing Scenarios ({len(load_df):,} tests)</summary>\n")
-    md.append("| Test ID | Endpoint / Module | Scenario | Environment | Status | Response Time / Latency |")
-    md.append("| :--- | :--- | :--- | :--- | :--- | :--- |")
-    for _, row in load_df.head(100).iterrows():
-        obs = str(row['Observed Result (evidence)']).replace('|', '\\|')
-        tc = str(row['Test Case']).replace('|', '\\|')
-        md.append(f"| {row['TestID']} | {row['Module / Page']} | {tc} | {row['Environment']} | ✅ {row['Status']} | {obs} |")
-    if len(load_df) > 100:
-        md.append(f"\n*... showing top 100 of {len(load_df):,} Performance test scenarios. See full report artifact for all rows.*")
-    md.append("\n</details>\n")
-    md.append("\n---\n")
+    # ---------------- Website E2E ----------------
+    if web:
+        md.append("## 🌐 Website E2E Test Verification Details\n")
+        md.append(f"Browsers run: {', '.join(web.get('browsers_run', []))}\n")
+        md.append(f"<details>\n<summary>Click to view Website E2E Test Cases ({web['total']:,} tests)</summary>\n")
+        md.append("| Test ID | Category | Module / Page | Test Case | Method | Environment | Status | Observed Result |")
+        md.append("| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |")
+        md.extend(fmt_rows(web["results"]))
+        if web["total"] > 100:
+            md.append(f"\n*... showing 100 of {web['total']:,} Website E2E test cases. See the full JSON/CSV artifact for all rows.*")
+        md.append("\n</details>\n\n---\n")
 
-    # Section 5: Artifacts
+    # ---------------- Mobile App E2E ----------------
+    if mobile:
+        md.append("## 📱 Mobile App E2E Test Verification Details\n")
+        md.append(
+            f"Static source-analysis cases: {mobile['static_case_count']:,} • "
+            f"Live Appium cases (real device/emulator): {mobile['live_case_count']:,}\n"
+        )
+        md.append(f"<details>\n<summary>Click to view Mobile E2E Test Cases ({mobile['total']:,} tests)</summary>\n")
+        md.append("| Test ID | Category | Module / Page | Test Case | Method | Environment | Status | Observed Result |")
+        md.append("| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |")
+        md.extend(fmt_rows(mobile["results"]))
+        if mobile["total"] > 100:
+            md.append(f"\n*... showing 100 of {mobile['total']:,} Mobile test cases. See the full JSON/CSV artifact for all rows.*")
+        md.append("\n</details>\n\n---\n")
+
+    # ---------------- Backend & Security ----------------
+    if backend:
+        sec_rows = [r for r in backend["results"] if r["Category"] == "Security"]
+        sec_fails = [r for r in sec_rows if r["Status"] == "Fail"]
+        md.append("## 🛡️ Backend & Security Test Verification Details\n")
+        md.append(
+            f"**Security-category checks:** {len(sec_rows):,} run, {len(sec_fails)} failed "
+            f"({'none — no real vulnerabilities found by this scenario set' if not sec_fails else 'see failures below'})\n"
+        )
+        md.append(f"<details>\n<summary>Click to view Backend & Security Test Cases ({backend['total']:,} tests)</summary>\n")
+        md.append("| Test ID | Category | Module / Page | Test Case | Method | Environment | Status | Observed Result |")
+        md.append("| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |")
+        md.extend(fmt_rows(backend["results"]))
+        if backend["total"] > 100:
+            md.append(f"\n*... showing 100 of {backend['total']:,} Backend & Security test cases. See the full JSON/CSV artifact for all rows.*")
+        md.append("\n</details>\n\n---\n")
+
+    # ---------------- API Load Testing ----------------
+    if load_test:
+        md.append("## ⚡ API Load Testing — Baseline/Load Test\n")
+        md.append(
+            f"**Test configuration:** {load_test['virtual_users']} virtual users, continuous for "
+            f"{load_test['actual_duration_seconds']:.0f}s, backend running with "
+            f"{load_test.get('backend_workers', 1)} worker process(es).\n"
+        )
+        md.append("**Requests per second (RPS)**")
+        md.append(f"> {load_test['requests_per_second']} req/sec\n")
+        md.append("**Response Time**")
+        md.append(f"> Average: {load_test['avg_response_time_ms']:.0f}ms")
+        md.append(f"> Min: {load_test['min_response_time_ms']:.0f}ms")
+        md.append(f"> Max: {load_test['max_response_time_ms']:.0f}ms")
+        md.append(f"> p95: {load_test['p95_response_time_ms']:.0f}ms\n")
+        md.append(
+            f"**Total requests sent:** {load_test['total_requests']:,} • "
+            f"**Errors:** {load_test['error_count']:,} ({load_test['error_rate_percent']:.2f}%)\n"
+        )
+        if load_test.get("known_issue"):
+            md.append(f"> ⚠️ **Known issue:** {load_test['known_issue']}\n")
+        md.append("**Per-endpoint breakdown:**\n")
+        md.append("| Endpoint | Requests | Errors | Avg (ms) | Min (ms) | Max (ms) |")
+        md.append("| :--- | :--- | :--- | :--- | :--- | :--- |")
+        for e in load_test["per_endpoint"]:
+            md.append(f"| {e['endpoint']} | {e['requests']} | {e['errors']} | {e['avg_ms']} | {e['min_ms']} | {e['max_ms']} |")
+        md.append(f"\n<details>\n<summary>Click to view sampled request-level rows ({load_test['sampled_report_rows']:,} of {load_test['total_requests']:,} real requests)</summary>\n")
+        md.append("| Test ID | Category | Module / Page | Test Case | Method | Environment | Status | Observed Result |")
+        md.append("| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |")
+        md.extend(fmt_rows(load_test["results"], limit=100))
+        md.append(f"\n*... showing 100 of {load_test['sampled_report_rows']:,} sampled rows. See the full JSON/CSV artifact for all rows.*")
+        md.append("\n</details>\n\n---\n")
+
+    # ---------------- Artifacts ----------------
     md.append("## 📦 Test Report Artifacts\n")
-    md.append("The full test report files are uploaded as part of this workflow run and can be inspected in the artifacts list:\n")
-    md.append("- **Website E2E Report:** `website/E2E_Test_Report_HealthSense_AI_Latest.xlsx`")
-    md.append("- **Mobile E2E Report:** `mobile/report/E2E_Appium_Report_HealthSense_Latest.xlsx`")
-    md.append("- **Backend Security Report:** `backend/Security_Vulnerability_Report_Latest.xlsx`")
-    md.append("- **Load Testing Report:** `load_testing/Load_Test_Report_Latest.xlsx`")
-    md.append("- **Unified QA CSV Report:** `QA_Test_Report_4400_final.csv`\n")
+    md.append("Full result files are uploaded as workflow artifacts:\n")
+    md.append("- **Website E2E:** `reports/web_e2e_results.json` / `.csv`")
+    md.append("- **Mobile App E2E:** `reports/mobile_e2e_results.json` / `.csv`")
+    md.append("- **Backend & Security:** `reports/backend_security_results.json` / `.csv`")
+    md.append("- **API Load Testing:** `reports/api_load_test_results.json` / `.csv`")
+    md.append("- **Android debug APK build:** see the `mobile-debug-apk` artifact on this workflow run\n")
 
     markdown_text = "\n".join(md)
 
-    # Save output to GITHUB_STEP_SUMMARY if available
     github_summary_file = os.environ.get("GITHUB_STEP_SUMMARY")
     if github_summary_file:
         with open(github_summary_file, "a", encoding="utf-8") as f:
             f.write(markdown_text + "\n")
         print(f"Successfully wrote summary to $GITHUB_STEP_SUMMARY ({github_summary_file})")
 
-    # Always write to local markdown file in reports/
     summary_path = os.path.join(output_dir, "unified_test_dashboard.md")
     with open(summary_path, "w", encoding="utf-8") as f:
         f.write(markdown_text)
     print(f"Generated Markdown dashboard at {summary_path}")
 
-    html_body = markdown_text.replace('\n', '<br>')
+    html_body = markdown_text.replace("\n", "<br>")
     html_content = f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -192,7 +178,7 @@ def generate_report(csv_path="QA_Test_Report_4400_final.csv", output_dir="report
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HealthSense AI Unified Test Verification Dashboard</title>
     <style>
-        body {{ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: #1f2328; max-width: 1200px; margin: 0 auto; padding: 24px; background-color: #0d1117; color: #e6edf3; }}
+        body {{ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; max-width: 1200px; margin: 0 auto; padding: 24px; background-color: #0d1117; color: #e6edf3; }}
         h1, h2, h3 {{ border-bottom: 1px solid #30363d; padding-bottom: 8px; color: #58a6ff; }}
         table {{ width: 100%; border-collapse: collapse; margin: 16px 0; background: #161b22; border: 1px solid #30363d; border-radius: 6px; }}
         th, td {{ padding: 10px 14px; text-align: left; border: 1px solid #30363d; }}
@@ -200,8 +186,6 @@ def generate_report(csv_path="QA_Test_Report_4400_final.csv", output_dir="report
         tr:nth-child(even) {{ background-color: #1c2128; }}
         details {{ background: #161b22; border: 1px solid #30363d; border-radius: 6px; padding: 12px; margin: 12px 0; }}
         summary {{ font-weight: bold; cursor: pointer; color: #58a6ff; }}
-        .badge-pass {{ color: #3fb950; font-weight: bold; }}
-        .badge-fail {{ color: #f85149; font-weight: bold; }}
         code {{ background: #21262d; padding: 2px 6px; border-radius: 4px; color: #79c0ff; }}
     </style>
 </head>
@@ -215,6 +199,7 @@ def generate_report(csv_path="QA_Test_Report_4400_final.csv", output_dir="report
         f.write(html_content)
     print(f"Generated HTML report at {html_path}")
 
+
 if __name__ == "__main__":
-    csv_file = sys.argv[1] if len(sys.argv) > 1 else "QA_Test_Report_4400_final.csv"
-    generate_report(csv_file)
+    reports_dir = sys.argv[1] if len(sys.argv) > 1 else "reports"
+    generate_report(reports_dir)

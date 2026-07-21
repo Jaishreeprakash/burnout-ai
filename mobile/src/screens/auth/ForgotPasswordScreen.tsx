@@ -114,6 +114,7 @@ const ForgotPasswordScreen: React.FC<Props> = ({ navigation }) => {
           {/* Header Section */}
           <Animated.View style={[styles.headerSection, { opacity: fadeAnim }]}>
             <TouchableOpacity
+              testID="forgot-password-back-button"
               onPress={() => navigation.goBack()}
               style={styles.backButton}
               activeOpacity={0.8}
@@ -147,6 +148,7 @@ const ForgotPasswordScreen: React.FC<Props> = ({ navigation }) => {
                 <MaterialCommunityIcons name="account-outline" size={20} color={colors.textMuted} />
               </View>
               <TextInput
+                testID="forgot-password-email-input"
                 style={styles.input}
                 placeholder="Username or Email"
                 placeholderTextColor={colors.textMuted}
@@ -164,6 +166,7 @@ const ForgotPasswordScreen: React.FC<Props> = ({ navigation }) => {
                 <MaterialCommunityIcons name="lock-outline" size={20} color={colors.textMuted} />
               </View>
               <TextInput
+                testID="forgot-password-new-password-input"
                 style={[styles.input, { paddingRight: 50 }]}
                 placeholder="New Password"
                 placeholderTextColor={colors.textMuted}
@@ -173,6 +176,7 @@ const ForgotPasswordScreen: React.FC<Props> = ({ navigation }) => {
                 returnKeyType="next"
               />
               <TouchableOpacity
+                testID="forgot-password-new-password-toggle"
                 style={styles.eyeButton}
                 onPress={() => setShowPassword(!showPassword)}
                 accessibilityLabel={showPassword ? 'Hide password' : 'Show password'}
@@ -192,6 +196,7 @@ const ForgotPasswordScreen: React.FC<Props> = ({ navigation }) => {
                 <MaterialCommunityIcons name="lock-check-outline" size={20} color={colors.textMuted} />
               </View>
               <TextInput
+                testID="forgot-password-confirm-password-input"
                 style={[styles.input, { paddingRight: 50 }]}
                 placeholder="Confirm New Password"
                 placeholderTextColor={colors.textMuted}
@@ -202,6 +207,7 @@ const ForgotPasswordScreen: React.FC<Props> = ({ navigation }) => {
                 onSubmitEditing={handleResetPassword}
               />
               <TouchableOpacity
+                testID="forgot-password-confirm-password-toggle"
                 style={styles.eyeButton}
                 onPress={() => setShowConfirmPassword(!showConfirmPassword)}
                 accessibilityLabel={showConfirmPassword ? 'Hide password' : 'Show password'}
@@ -217,6 +223,7 @@ const ForgotPasswordScreen: React.FC<Props> = ({ navigation }) => {
 
             {/* Reset Button */}
             <TouchableOpacity
+              testID="forgot-password-submit-button"
               onPress={handleResetPassword}
               disabled={isLoading}
               activeOpacity={0.85}
@@ -241,6 +248,7 @@ const ForgotPasswordScreen: React.FC<Props> = ({ navigation }) => {
 
             {/* Back to Login link */}
             <TouchableOpacity
+              testID="forgot-password-back-to-login-link"
               onPress={() => navigation.navigate('Login')}
               style={styles.backToLoginRow}
             >

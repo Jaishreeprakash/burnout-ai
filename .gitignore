@@ -55,6 +55,10 @@ Thumbs.db
 *.swp
 *.swo
 
+# ── Generated per-suite test result data (regenerated fresh each CI run) ─────
+reports/*_results.json
+reports/*_results.csv
+
 # ── Logs ─────────────────────────────────────────────────────────────────────
 *.log
 npm-debug.log*

@@ -276,7 +276,7 @@ const ProfileScreen: React.FC = () => {
         ))}
 
         {/* Logout Button */}
-        <TouchableOpacity style={styles.logoutButton} onPress={handleLogout} activeOpacity={0.8}>
+        <TouchableOpacity testID="profile-logout-button" style={styles.logoutButton} onPress={handleLogout} activeOpacity={0.8}>
           <MaterialCommunityIcons name="logout" size={20} color={colors.danger} />
           <Text style={styles.logoutText}>Sign Out</Text>
         </TouchableOpacity>

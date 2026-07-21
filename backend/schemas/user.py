@@ -47,6 +47,6 @@ class TokenData(BaseModel):
 
 class ResetPasswordRequest(BaseModel):
     email: str
-    new_password: str
+    new_password: str = Field(max_length=72)  # bcrypt's real hashing limit
 
     _no_nul = field_validator("email", "new_password", mode="before")(reject_nul_bytes)

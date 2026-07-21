@@ -123,6 +123,7 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
                 <MaterialCommunityIcons name="account-outline" size={20} color={colors.textMuted} />
               </View>
               <TextInput
+                testID="login-username-input"
                 style={styles.input}
                 placeholder="Username"
                 placeholderTextColor={colors.textMuted}
@@ -140,6 +141,7 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
                 <MaterialCommunityIcons name="lock-outline" size={20} color={colors.textMuted} />
               </View>
               <TextInput
+                testID="login-password-input"
                 style={[styles.input, { paddingRight: 50 }]}
                 placeholder="Password"
                 placeholderTextColor={colors.textMuted}
@@ -150,6 +152,7 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
                 onSubmitEditing={handleLogin}
               />
               <TouchableOpacity
+                testID="login-password-toggle"
                 style={styles.eyeButton}
                 onPress={() => setShowPassword(!showPassword)}
                 accessibilityLabel={showPassword ? 'Hide password' : 'Show password'}
@@ -165,6 +168,7 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
 
             {/* Forgot Password Link */}
             <TouchableOpacity
+              testID="login-forgot-password-link"
               onPress={() => navigation.navigate('ForgotPassword')}
               style={styles.forgotPasswordWrapper}
               activeOpacity={0.8}
@@ -174,6 +178,7 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
 
             {/* Login Button */}
             <TouchableOpacity
+              testID="login-submit-button"
               onPress={handleLogin}
               disabled={isLoading}
               activeOpacity={0.85}
@@ -205,6 +210,7 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
 
             {/* Demo Button */}
             <TouchableOpacity
+              testID="login-demo-button"
               style={styles.demoButton}
               onPress={handleDemoLogin}
               disabled={isDemoLoading}
@@ -223,7 +229,7 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
             {/* Register Link */}
             <View style={styles.registerRow}>
               <Text style={styles.registerText}>Don't have an account? </Text>
-              <TouchableOpacity onPress={() => navigation.navigate('Register')}>
+              <TouchableOpacity testID="login-register-link" onPress={() => navigation.navigate('Register')}>
                 <Text style={styles.registerLink}>Sign up</Text>
               </TouchableOpacity>
             </View>
