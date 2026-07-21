@@ -15,7 +15,11 @@ import {
   ResetPasswordRequest,
 } from '../types';
 
-const API_BASE_URL = 'https://burnout-backend-l438.onrender.com/api/v1';
+// EXPO_PUBLIC_-prefixed vars are inlined at bundle time by Expo (SDK 49+),
+// including for native release/debug builds, not just `expo start`. CI sets
+// EXPO_PUBLIC_API_URL to point the Appium/emulator build at a real local
+// backend instead of the deployed one.
+const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || 'https://burnout-backend-l438.onrender.com/api/v1';
 
 const api: AxiosInstance = axios.create({
   baseURL: API_BASE_URL,

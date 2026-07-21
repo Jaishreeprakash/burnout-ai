@@ -67,7 +67,10 @@ def perform_call(client, base_url, scenario, valid_token, secret, algorithm, see
     url = f"{base_url}{path}"
     name = scenario["name"]
     headers = {}
-    kwargs = {"timeout": 15.0}
+    # 35s: the backend's own OpenAI call caps at 30s (services/openai_service.py),
+    # so the client timeout must exceed that or we'd falsely flag a slow-but-real
+    # GPT response as a client-side error before the server even replies.
+    kwargs = {"timeout": 35.0}
 
     # ---- Auth header setup ----
     if name == "missing_auth_token":
@@ -227,7 +230,12 @@ def evaluate(scenario, status, elapsed_ms, body_snippet, error):
 
 
 def run(base_url, no_spawn, output_dir):
-    proc, started_here = ensure_server(base_url, no_spawn)
+    # This suite deliberately inherits whatever OPENAI_API_KEY is already set
+    # (a real key in CI/local .env, or unset/blank) rather than forcing it
+    # empty, so the /chat and /recommendations scenarios exercise the real
+    # GPT-4o-mini integration when a key is available. The load test and
+    # web/mobile E2E suites keep OpenAI forced off — see backend_lifecycle.py.
+    proc, started_here = ensure_server(base_url, no_spawn, openai_api_key=None)
 
     secret, algorithm = get_secret()
     scenarios = build_scenarios()

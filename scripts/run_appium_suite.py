@@ -18,6 +18,7 @@ import os
 import subprocess
 import sys
 import time
+import uuid
 from datetime import datetime, timezone
 
 import httpx
@@ -135,22 +136,48 @@ def run(appium_url, udid, apk_path, no_spawn_appium, output_dir):
             return (current == APP_PACKAGE, f"current_package={current}")
         safe(rec, "Functional", "System", "app_launches_and_is_foreground", app_launches)
 
-        def demo_login():
+        def real_registration_flow():
+            suffix = uuid.uuid4().hex[:8]
+            email = f"appium.{suffix}@healthsense.test"
+            username = f"appium_{suffix}"
+            password = "Str0ngPassw0rd!"
+
+            find(driver, AppiumBy.ACCESSIBILITY_ID, "login-register-link", timeout=10).click()
+            time.sleep(1)
+
+            # Step 0: Personal Info
+            find(driver, AppiumBy.ACCESSIBILITY_ID, "register-fullname-input", timeout=10).send_keys("Appium QA User")
+            find(driver, AppiumBy.ACCESSIBILITY_ID, "register-username-input").send_keys(username)
+            find(driver, AppiumBy.ACCESSIBILITY_ID, "register-email-input").send_keys(email)
             try:
-                btn = find(driver, AppiumBy.ACCESSIBILITY_ID, "login-demo-button", timeout=10)
-            except TimeoutException:
-                btn = find(driver, AppiumBy.XPATH, text_xpath("Try Demo Mode"), timeout=10)
-            btn.click()
+                driver.hide_keyboard()
+            except Exception:
+                pass
+            find(driver, AppiumBy.ACCESSIBILITY_ID, "register-continue-button").click()
+            time.sleep(1)
+
+            # Step 1: Security
+            find(driver, AppiumBy.ACCESSIBILITY_ID, "register-password-input", timeout=10).send_keys(password)
+            find(driver, AppiumBy.ACCESSIBILITY_ID, "register-confirm-password-input").send_keys(password)
+            try:
+                driver.hide_keyboard()
+            except Exception:
+                pass
+            find(driver, AppiumBy.ACCESSIBILITY_ID, "register-continue-button").click()
+            time.sleep(1)
+
+            # Step 2: About You -> submit to the real backend
+            find(driver, AppiumBy.ACCESSIBILITY_ID, "register-submit-button", timeout=10).click()
             time.sleep(4)
-            return (True, "Tapped 'Try Demo Mode' on the real device — no live backend required")
-        safe(rec, "Functional", "Login", "demo_login_flow_completes", demo_login)
+            return (True, f"Registered {email} through the real 3-step Register screen — submitted to the live backend")
+        safe(rec, "Functional", "Register", "real_registration_flow_completes", real_registration_flow)
 
         def dashboard_reached():
             try:
                 find(driver, AppiumBy.XPATH, text_xpath("Home"), timeout=15)
-                return (True, "Bottom tab bar with 'Home' tab visible after demo login")
+                return (True, "Bottom tab bar with 'Home' tab visible after real registration")
             except TimeoutException:
-                return (False, "Did not reach the main tab bar after demo login")
+                return (False, "Did not reach the main tab bar after real registration")
         safe(rec, "Functional", "Dashboard", "reaches_main_app_after_login", dashboard_reached)
 
         tabs = ["Home", "Sleep", "Emotion", "Activity", "Profile"]

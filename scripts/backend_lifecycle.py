@@ -26,11 +26,18 @@ def wait_for_health(base_url, timeout=45):
     return False
 
 
-def spawn_server(base_url, db_filename="backend_ci_test.db", workers=1):
+def spawn_server(base_url, db_filename="backend_ci_test.db", workers=1, openai_api_key=""):
     port = base_url.rsplit(":", 1)[-1]
     env = os.environ.copy()
     env["DATABASE_URL"] = f"sqlite:///./{db_filename}"
-    env["OPENAI_API_KEY"] = ""  # deterministic smart-engine fallback, no upstream network calls
+    if openai_api_key is not None:
+        # "" forces the deterministic smart-engine fallback (no upstream network
+        # calls) — used by suites that aren't specifically testing the OpenAI
+        # integration (load test, web/mobile E2E). Passing None instead inherits
+        # whatever OPENAI_API_KEY is already in the environment (a real secret in
+        # CI, or whatever's in backend/.env locally), for suites that want to
+        # exercise the real GPT-4o-mini path.
+        env["OPENAI_API_KEY"] = openai_api_key
     db_path = os.path.join(BACKEND_DIR, db_filename)
     if os.path.exists(db_path):
         os.remove(db_path)
@@ -49,11 +56,12 @@ def spawn_server(base_url, db_filename="backend_ci_test.db", workers=1):
     return proc
 
 
-def ensure_server(base_url, no_spawn, db_filename="backend_ci_test.db", workers=1):
+def ensure_server(base_url, no_spawn, db_filename="backend_ci_test.db", workers=1, openai_api_key=""):
     """Returns (proc_or_None, started_here_bool). Exits the process on failure."""
     if not no_spawn and not wait_for_health(base_url, timeout=1.5):
-        print(f"No backend detected at {base_url} — starting uvicorn locally (SQLite, OpenAI disabled, {workers} worker(s))...")
-        proc = spawn_server(base_url, db_filename, workers=workers)
+        ai_desc = "OpenAI disabled" if openai_api_key == "" else "OpenAI enabled" if openai_api_key else "OpenAI inherited from environment"
+        print(f"No backend detected at {base_url} — starting uvicorn locally (SQLite, {ai_desc}, {workers} worker(s))...")
+        proc = spawn_server(base_url, db_filename, workers=workers, openai_api_key=openai_api_key)
         if not wait_for_health(base_url, timeout=45):
             proc.terminate()
             print("Backend failed to start within 45s.")
