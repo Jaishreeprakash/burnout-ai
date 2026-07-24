@@ -68,6 +68,16 @@ def _get_recent_emotions(user_id: int, db: Session, days: int = 3) -> List[Emoti
     )
 
 
+def _has_records(user_id: int, db: Session) -> bool:
+    return (
+        db.query(SleepRecord).filter(SleepRecord.user_id == user_id).first() is not None or
+        db.query(PhoneUsageRecord).filter(PhoneUsageRecord.user_id == user_id).first() is not None or
+        db.query(EmotionRecord).filter(EmotionRecord.user_id == user_id).first() is not None or
+        db.query(ActivityRecord).filter(ActivityRecord.user_id == user_id).first() is not None or
+        db.query(TypingBehaviorRecord).filter(TypingBehaviorRecord.user_id == user_id).first() is not None
+    )
+
+
 def _build_analysis(user_id: int, db: Session) -> BurnoutAnalysis:
     sleep_rec = _get_latest_sleep(user_id, db)
     phone_rec = _get_latest_phone(user_id, db)
@@ -207,6 +217,37 @@ def get_burnout_analysis(
     db: Session = Depends(get_db),
 ):
     """Get full burnout analysis for the current user using their latest data."""
+    if not _has_records(current_user.id, db):
+        return BurnoutAnalysis(
+            burnout_score=0.0,
+            risk_level="low",
+            component_scores=ComponentScores(
+                sleep_score=0.0,
+                phone_overuse_score=0.0,
+                typing_distress_score=0.0,
+                activity_score=0.0,
+                emotion_score=0.0,
+            ),
+            analysis_date=datetime.now(timezone.utc),
+            sleep_analysis=None,
+            phone_analysis=None,
+            typing_analysis=None,
+            emotion_analysis=None,
+            activity_analysis=None,
+            wellness={
+                "overall_score": 0.0,
+                "stress_level": 0.0,
+                "mood_score": 0.0,
+                "productivity_score": 0.0,
+            },
+            recommendations=[],
+            wellness_score=0.0,
+            emotional_stability_index=0.0,
+            sleep_quality_score=0.0,
+            phone_usage_score=0.0,
+            activity_score=0.0,
+        )
+
     analysis = _build_analysis(current_user.id, db)
 
     # Persist the burnout record
@@ -253,6 +294,37 @@ def manual_assess(
     db: Session = Depends(get_db),
 ):
     """Manually trigger a burnout assessment and save the result."""
+    if not _has_records(current_user.id, db):
+        return BurnoutAnalysis(
+            burnout_score=0.0,
+            risk_level="low",
+            component_scores=ComponentScores(
+                sleep_score=0.0,
+                phone_overuse_score=0.0,
+                typing_distress_score=0.0,
+                activity_score=0.0,
+                emotion_score=0.0,
+            ),
+            analysis_date=datetime.now(timezone.utc),
+            sleep_analysis=None,
+            phone_analysis=None,
+            typing_analysis=None,
+            emotion_analysis=None,
+            activity_analysis=None,
+            wellness={
+                "overall_score": 0.0,
+                "stress_level": 0.0,
+                "mood_score": 0.0,
+                "productivity_score": 0.0,
+            },
+            recommendations=[],
+            wellness_score=0.0,
+            emotional_stability_index=0.0,
+            sleep_quality_score=0.0,
+            phone_usage_score=0.0,
+            activity_score=0.0,
+        )
+
     analysis = _build_analysis(current_user.id, db)
 
     record = BurnoutRecord(

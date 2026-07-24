@@ -11,6 +11,7 @@ from models.tracking import (
     EmotionRecord,
     PhoneUsageRecord,
     SleepRecord,
+    TypingBehaviorRecord,
     WellnessScore,
 )
 from schemas.tracking import DashboardData, DashboardTrendData, WellnessScoreResponse
@@ -41,6 +42,28 @@ def get_wellness_score(
     )
     if existing:
         return existing
+
+    # Check if the user has records
+    has_records = (
+        db.query(SleepRecord).filter(SleepRecord.user_id == current_user.id).first() is not None or
+        db.query(PhoneUsageRecord).filter(PhoneUsageRecord.user_id == current_user.id).first() is not None or
+        db.query(EmotionRecord).filter(EmotionRecord.user_id == current_user.id).first() is not None or
+        db.query(ActivityRecord).filter(ActivityRecord.user_id == current_user.id).first() is not None or
+        db.query(TypingBehaviorRecord).filter(TypingBehaviorRecord.user_id == current_user.id).first() is not None
+    )
+
+    if not has_records:
+        return WellnessScore(
+            id=0,
+            user_id=current_user.id,
+            date=datetime.now(timezone.utc),
+            overall_score=0.0,
+            stress_level=0.0,
+            mood_score=0.0,
+            productivity_score=0.0,
+            notes="No data available",
+            created_at=datetime.now(timezone.utc)
+        )
 
     # Compute from latest data
     latest_burnout = (
@@ -133,11 +156,65 @@ def get_dashboard(
         db.query(SleepRecord).filter(SleepRecord.user_id == current_user.id).first() is not None or
         db.query(PhoneUsageRecord).filter(PhoneUsageRecord.user_id == current_user.id).first() is not None or
         db.query(EmotionRecord).filter(EmotionRecord.user_id == current_user.id).first() is not None or
-        db.query(ActivityRecord).filter(ActivityRecord.user_id == current_user.id).first() is not None
+        db.query(ActivityRecord).filter(ActivityRecord.user_id == current_user.id).first() is not None or
+        db.query(TypingBehaviorRecord).filter(TypingBehaviorRecord.user_id == current_user.id).first() is not None
     )
 
     from routes.burnout import _build_analysis
     from schemas.tracking import ComponentScores, BurnoutAnalysis
+
+    if not has_records:
+        now = datetime.now(timezone.utc)
+        dates = []
+        for i in range(6, -1, -1):
+            day = now - timedelta(days=i)
+            dates.append(day.strftime("%a"))
+            
+        trend_data = DashboardTrendData(
+            dates=dates,
+            burnout_scores=[0.0] * 7,
+            wellness_scores=[0.0] * 7,
+            sleep_scores=[0.0] * 7,
+            emotion_scores=[0.0] * 7,
+        )
+
+        zero_analysis = BurnoutAnalysis(
+            burnout_score=0.0,
+            risk_level="low",
+            component_scores=ComponentScores(
+                sleep_score=0.0,
+                phone_overuse_score=0.0,
+                typing_distress_score=0.0,
+                activity_score=0.0,
+                emotion_score=0.0,
+            ),
+            analysis_date=datetime.now(timezone.utc),
+            sleep_analysis=None,
+            phone_analysis=None,
+            typing_analysis=None,
+            emotion_analysis=None,
+            activity_analysis=None,
+            wellness={
+                "overall_score": 0.0,
+                "stress_level": 0.0,
+                "mood_score": 0.0,
+                "productivity_score": 0.0,
+            },
+            recommendations=[],
+            wellness_score=0.0,
+            emotional_stability_index=0.0,
+            sleep_quality_score=0.0,
+            phone_usage_score=0.0,
+            activity_score=0.0,
+        )
+        return DashboardData(
+            burnout_analysis=zero_analysis,
+            recent_sleep=None,
+            recent_phone_usage=None,
+            recent_emotion=None,
+            recent_activity=None,
+            trend_data=trend_data,
+        )
 
     # Fetch latest individual records
     recent_sleep = db.query(SleepRecord).filter(SleepRecord.user_id == current_user.id).order_by(SleepRecord.date.desc()).first()
@@ -196,46 +273,6 @@ def get_dashboard(
         sleep_scores=sleep_scores,
         emotion_scores=emotion_scores,
     )
-
-    if not has_records:
-        # Zero state for brand new users
-        zero_analysis = BurnoutAnalysis(
-            burnout_score=0.0,
-            risk_level="low",
-            component_scores=ComponentScores(
-                sleep_score=0.0,
-                phone_overuse_score=0.0,
-                typing_distress_score=0.0,
-                activity_score=0.0,
-                emotion_score=0.0,
-            ),
-            analysis_date=datetime.now(timezone.utc),
-            sleep_analysis=None,
-            phone_analysis=None,
-            typing_analysis=None,
-            emotion_analysis=None,
-            activity_analysis=None,
-            wellness={
-                "overall_score": 0.0,
-                "stress_level": 0.0,
-                "mood_score": 0.0,
-                "productivity_score": 0.0,
-            },
-            recommendations=[],
-            wellness_score=0.0,
-            emotional_stability_index=0.0,
-            sleep_quality_score=0.0,
-            phone_usage_score=0.0,
-            activity_score=0.0,
-        )
-        return DashboardData(
-            burnout_analysis=zero_analysis,
-            recent_sleep=None,
-            recent_phone_usage=None,
-            recent_emotion=None,
-            recent_activity=None,
-            trend_data=trend_data,
-        )
 
     # Build real analysis if they have records
     analysis = _build_analysis(current_user.id, db)

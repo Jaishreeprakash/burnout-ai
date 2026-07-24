@@ -9,7 +9,7 @@ from sqlalchemy.orm import Session
 from database import get_db
 from models.user import User
 from models.tracking import (
-    ActivityRecord, BurnoutRecord, EmotionRecord, PhoneUsageRecord, SleepRecord,
+    ActivityRecord, BurnoutRecord, EmotionRecord, PhoneUsageRecord, SleepRecord, TypingBehaviorRecord,
 )
 from services.ai_service import AIService
 from services.recommendation_service import generate_recommendations, get_quick_tips
@@ -23,6 +23,16 @@ from utils.auth_utils import get_current_user
 
 router = APIRouter(prefix="/recommendations", tags=["Recommendations"])
 ai_service = AIService()
+
+
+def _has_records(user_id: int, db: Session) -> bool:
+    return (
+        db.query(SleepRecord).filter(SleepRecord.user_id == user_id).first() is not None or
+        db.query(PhoneUsageRecord).filter(PhoneUsageRecord.user_id == user_id).first() is not None or
+        db.query(EmotionRecord).filter(EmotionRecord.user_id == user_id).first() is not None or
+        db.query(ActivityRecord).filter(ActivityRecord.user_id == user_id).first() is not None or
+        db.query(TypingBehaviorRecord).filter(TypingBehaviorRecord.user_id == user_id).first() is not None
+    )
 
 
 # ── Data helpers ─────────────────────────────────────────────────────────────
@@ -153,6 +163,16 @@ def get_recommendations(
     db: Session = Depends(get_db),
 ):
     """Get GPT-powered personalized recommendations based on real user data."""
+    if not _has_records(current_user.id, db):
+        return {
+            "burnout_score":         0.0,
+            "risk_level":            "low",
+            "recommendations":       [],
+            "total_recommendations": 0,
+            "ai_source":             "rule-based",
+            "generated_at":          datetime.now(timezone.utc).isoformat(),
+        }
+
     burnout_score = _latest_burnout_score(current_user.id, db)
     risk_level    = _risk_label(burnout_score)
     recs          = _get_personalized_recommendations(current_user.id, db)
@@ -173,6 +193,14 @@ def get_quick_recommendations(
     db: Session = Depends(get_db),
 ):
     """3 quick GPT tips for the user's current burnout state."""
+    if not _has_records(current_user.id, db):
+        return {
+            "burnout_score": 0.0,
+            "risk_level": "low",
+            "tips": [],
+            "generated_at": datetime.now(timezone.utc).isoformat()
+        }
+
     burnout_score = _latest_burnout_score(current_user.id, db)
     latest        = _build_latest_data(current_user.id, db)
     risk_level    = _risk_label(burnout_score)
@@ -202,6 +230,19 @@ def get_burnout_narrative(
     db: Session = Depends(get_db),
 ):
     """GPT narrative explaining the user's burnout state in plain language."""
+    if not _has_records(current_user.id, db):
+        return {
+            "summary": "No tracking data available yet.",
+            "main_cause": "You haven't logged any wellness indicators.",
+            "positive_note": "Welcome! Start logging your daily routines to get personalized stress analysis.",
+            "urgent_action": "Complete a quick check-in or log your sleep to begin.",
+            "motivation": "Consistent tracking helps identify stress triggers.",
+            "burnout_score": 0.0,
+            "risk_level": "low",
+            "trend": "stable",
+            "generated_at": datetime.now(timezone.utc).isoformat()
+        }
+
     burnout_score = _latest_burnout_score(current_user.id, db)
     latest        = _build_latest_data(current_user.id, db)
     risk_level    = _risk_label(burnout_score)
@@ -241,6 +282,17 @@ def get_emotion_insight(
     db: Session = Depends(get_db),
 ):
     """GPT insight into the user's recent emotional patterns."""
+    if not _has_records(current_user.id, db):
+        return {
+            "interpretation": "No emotional data logged yet.",
+            "underlying_cause": "Start logging your emotional state or record voice/facial check-ins.",
+            "coping_tip": "Check out the Emotion Analysis page to log your first entry.",
+            "affirmation": "Tracking your emotional state regularly is a great habit to build.",
+            "dominant_emotion": "neutral",
+            "valence_pct": 0.0,
+            "generated_at": datetime.now(timezone.utc).isoformat()
+        }
+
     latest = _build_latest_data(current_user.id, db)
     summary = latest["emotion_summary"]
 

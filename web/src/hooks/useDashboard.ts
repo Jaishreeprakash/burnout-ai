@@ -344,6 +344,7 @@ export const useDashboard = () => {
         quickStats,
       });
     } catch (err) {
+      console.error('Failed to load dashboard data. Error:', err);
       setError('Failed to load dashboard data. Is the backend running?');
     } finally {
       setIsLoading(false);
