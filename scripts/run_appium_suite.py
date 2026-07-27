@@ -117,6 +117,19 @@ def text_xpath(text):
     return f'//*[@text="{text}" or contains(@text,"{text}")]'
 
 
+def confirm_sign_out_dialog(driver, timeout=8):
+    """ProfileScreen.handleLogout() shows a native Alert.alert('Sign Out',
+    'Are you sure...', [Cancel, Sign Out]) confirmation before it actually
+    calls logout() -- tapping profile-logout-button alone only opens this
+    dialog. On Android, RN maps a 2-button Alert to [negative, positive]
+    system buttons, so the destructive 'Sign Out' choice (second/last entry)
+    is the dialog's standard positive button, android:id/button1 -- using
+    the resource-id (not text) avoids any ambiguity with the screen's own
+    'Sign Out' button label underneath the dialog."""
+    find(driver, AppiumBy.ID, "android:id/button1", timeout=timeout).click()
+    time.sleep(0.5)
+
+
 def run(appium_url, udid, apk_path, no_spawn_appium, output_dir):
     proc = None
     if not no_spawn_appium and not wait_for_appium(appium_url, timeout=1.5):
@@ -277,9 +290,10 @@ def run(appium_url, udid, apk_path, no_spawn_appium, output_dir):
             find(driver, AppiumBy.XPATH, text_xpath("Profile"), timeout=10).click()
             time.sleep(1.5)
             find_by_testid(driver, "profile-logout-button", timeout=10).click()
+            confirm_sign_out_dialog(driver)
             time.sleep(2)
             find_by_testid(driver, "login-username-input", timeout=10)
-            return (True, "profile-logout-button cleared the session and the real Login screen reappeared")
+            return (True, "profile-logout-button + the real Sign Out confirmation dialog cleared the session and the real Login screen reappeared")
         safe(rec, "Functional", "Profile", "logout_flow_returns_to_login_screen", logout_flow_returns_to_login_screen)
 
         def login_username_input_present():
@@ -438,9 +452,10 @@ def run(appium_url, udid, apk_path, no_spawn_appium, output_dir):
             find(driver, AppiumBy.XPATH, text_xpath("Profile"), timeout=10).click()
             time.sleep(1.5)
             find_by_testid(driver, "profile-logout-button", timeout=10).click()
+            confirm_sign_out_dialog(driver)
             time.sleep(2)
             find_by_testid(driver, "login-username-input", timeout=10)
-            return (True, "Logged out again; the real Login screen reappeared")
+            return (True, "Logged out again (confirming the real Sign Out dialog); the real Login screen reappeared")
         safe(rec, "Functional", "Profile", "logout_after_second_registration", logout_after_second_registration)
 
         def demo_login_button_signs_in_without_backend():
@@ -487,7 +502,14 @@ def run(appium_url, udid, apk_path, no_spawn_appium, output_dir):
         safe(rec, "UI/UX", "Sleep", "sleep_tab_shows_header_after_tap", sleep_tab_shows_header_after_tap)
 
         def sleep_screen_log_button_present():
-            find(driver, AppiumBy.XPATH, text_xpath("Save Sleep Record"), timeout=10)
+            # SleepScreen renders a react-native-chart-kit/react-native-svg bar
+            # chart above this button; on the CI emulator's software-rendered
+            # (swiftshader) GPU that chart measurably delays the rest of the
+            # ScrollView's layout commit, so this needs more headroom than a
+            # plain-text check elsewhere on the same screen (confirmed: the
+            # "Sleep Tracker" header check right before this one, which sits
+            # above the chart, doesn't need it).
+            find(driver, AppiumBy.XPATH, text_xpath("Save Sleep Record"), timeout=25)
             return (True, "SleepScreen's real 'Save Sleep Record' submit button is present")
         safe(rec, "Functional", "Sleep", "sleep_screen_log_button_present", sleep_screen_log_button_present)
 
@@ -535,6 +557,7 @@ def run(appium_url, udid, apk_path, no_spawn_appium, output_dir):
             find(driver, AppiumBy.XPATH, text_xpath("Profile"), timeout=10).click()
             time.sleep(1.5)
             find_by_testid(driver, "profile-logout-button", timeout=10).click()
+            confirm_sign_out_dialog(driver)
             time.sleep(2)
             find_by_testid(driver, "login-username-input", timeout=10).send_keys("does_not_exist_appium")
             find_by_testid(driver, "login-password-input", timeout=10).send_keys("WrongPassword123!")
