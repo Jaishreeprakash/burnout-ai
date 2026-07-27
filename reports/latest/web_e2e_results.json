@@ -4,10 +4,10 @@
     "chrome",
     "firefox"
   ],
-  "total": 219,
-  "passed": 119,
-  "failed": 100,
-  "pass_rate": 54.34,
+  "total": 400,
+  "passed": 170,
+  "failed": 230,
+  "pass_rate": 42.5,
   "results": [
     {
       "TestID": "WEB-CH-00001",
@@ -18,7 +18,7 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Element located",
-      "Executed At": "2026-07-24T18:59:15.709Z"
+      "Executed At": "2026-07-27T04:45:13.384Z"
     },
     {
       "TestID": "WEB-CH-00002",
@@ -29,7 +29,7 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Element located",
-      "Executed At": "2026-07-24T18:59:15.718Z"
+      "Executed At": "2026-07-27T04:45:13.392Z"
     },
     {
       "TestID": "WEB-CH-00003",
@@ -40,7 +40,7 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Element located",
-      "Executed At": "2026-07-24T18:59:15.774Z"
+      "Executed At": "2026-07-27T04:45:13.430Z"
     },
     {
       "TestID": "WEB-CH-00004",
@@ -51,7 +51,7 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Element located",
-      "Executed At": "2026-07-24T18:59:15.825Z"
+      "Executed At": "2026-07-27T04:45:13.450Z"
     },
     {
       "TestID": "WEB-CH-00005",
@@ -62,10 +62,32 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Element located",
-      "Executed At": "2026-07-24T18:59:15.834Z"
+      "Executed At": "2026-07-27T04:45:13.458Z"
     },
     {
       "TestID": "WEB-CH-00006",
+      "Category": "UI/UX",
+      "Module / Page": "Login",
+      "Test Case": "element_present_forgot_password_button",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Pass",
+      "Observed Result (evidence)": "Element located",
+      "Executed At": "2026-07-27T04:45:13.467Z"
+    },
+    {
+      "TestID": "WEB-CH-00007",
+      "Category": "UI/UX",
+      "Module / Page": "Login",
+      "Test Case": "element_present_ai_analysis_feature_label",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Pass",
+      "Observed Result (evidence)": "Element located",
+      "Executed At": "2026-07-27T04:45:13.474Z"
+    },
+    {
+      "TestID": "WEB-CH-00008",
       "Category": "Functional",
       "Module / Page": "Login",
       "Test Case": "empty_submit_blocked",
@@ -73,10 +95,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Form did not navigate away on empty submit",
-      "Executed At": "2026-07-24T18:59:16.904Z"
+      "Executed At": "2026-07-27T04:45:14.222Z"
     },
     {
-      "TestID": "WEB-CH-00007",
+      "TestID": "WEB-CH-00009",
       "Category": "Security",
       "Module / Page": "Login",
       "Test Case": "wrong_credentials_rejected",
@@ -84,10 +106,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "No error banner appeared after invalid login",
-      "Executed At": "2026-07-24T18:59:25.485Z"
+      "Executed At": "2026-07-27T04:45:22.838Z"
     },
     {
-      "TestID": "WEB-CH-00008",
+      "TestID": "WEB-CH-00010",
       "Category": "Security",
       "Module / Page": "Login",
       "Test Case": "sql_injection_input_no_crash",
@@ -95,10 +117,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Page still renders content after SQLi-style login attempt",
-      "Executed At": "2026-07-24T18:59:27.447Z"
+      "Executed At": "2026-07-27T04:45:24.593Z"
     },
     {
-      "TestID": "WEB-CH-00009",
+      "TestID": "WEB-CH-00011",
       "Category": "Functional",
       "Module / Page": "Login",
       "Test Case": "password_show_hide_toggle",
@@ -106,10 +128,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "type changed password -> text",
-      "Executed At": "2026-07-24T18:59:27.713Z"
+      "Executed At": "2026-07-27T04:45:24.801Z"
     },
     {
-      "TestID": "WEB-CH-00010",
+      "TestID": "WEB-CH-00012",
       "Category": "UI/UX",
       "Module / Page": "Login",
       "Test Case": "register_link_navigates",
@@ -117,10 +139,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Landed on https://jaishreeprakash.github.io/burnout-ai/register",
-      "Executed At": "2026-07-24T18:59:27.897Z"
+      "Executed At": "2026-07-27T04:45:24.988Z"
     },
     {
-      "TestID": "WEB-CH-00011",
+      "TestID": "WEB-CH-00013",
       "Category": "UI/UX",
       "Module / Page": "Register",
       "Test Case": "element_present_full_name_input",
@@ -128,10 +150,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Element located",
-      "Executed At": "2026-07-24T18:59:27.987Z"
+      "Executed At": "2026-07-27T04:45:25.085Z"
     },
     {
-      "TestID": "WEB-CH-00012",
+      "TestID": "WEB-CH-00014",
       "Category": "UI/UX",
       "Module / Page": "Register",
       "Test Case": "element_present_username_input",
@@ -139,10 +161,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Element located",
-      "Executed At": "2026-07-24T18:59:27.995Z"
+      "Executed At": "2026-07-27T04:45:25.093Z"
     },
     {
-      "TestID": "WEB-CH-00013",
+      "TestID": "WEB-CH-00015",
       "Category": "UI/UX",
       "Module / Page": "Register",
       "Test Case": "element_present_email_input",
@@ -150,10 +172,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Element located",
-      "Executed At": "2026-07-24T18:59:28.009Z"
+      "Executed At": "2026-07-27T04:45:25.104Z"
     },
     {
-      "TestID": "WEB-CH-00014",
+      "TestID": "WEB-CH-00016",
       "Category": "UI/UX",
       "Module / Page": "Register",
       "Test Case": "element_present_age_input",
@@ -161,10 +183,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Element located",
-      "Executed At": "2026-07-24T18:59:28.019Z"
+      "Executed At": "2026-07-27T04:45:25.116Z"
     },
     {
-      "TestID": "WEB-CH-00015",
+      "TestID": "WEB-CH-00017",
       "Category": "UI/UX",
       "Module / Page": "Register",
       "Test Case": "element_present_gender_select",
@@ -172,10 +194,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Element located",
-      "Executed At": "2026-07-24T18:59:28.031Z"
+      "Executed At": "2026-07-27T04:45:25.126Z"
     },
     {
-      "TestID": "WEB-CH-00016",
+      "TestID": "WEB-CH-00018",
       "Category": "UI/UX",
       "Module / Page": "Register",
       "Test Case": "element_present_password_input",
@@ -183,10 +205,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Element located",
-      "Executed At": "2026-07-24T18:59:28.038Z"
+      "Executed At": "2026-07-27T04:45:25.134Z"
     },
     {
-      "TestID": "WEB-CH-00017",
+      "TestID": "WEB-CH-00019",
       "Category": "UI/UX",
       "Module / Page": "Register",
       "Test Case": "element_present_confirm_password_input",
@@ -194,10 +216,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Element located",
-      "Executed At": "2026-07-24T18:59:28.046Z"
+      "Executed At": "2026-07-27T04:45:25.143Z"
     },
     {
-      "TestID": "WEB-CH-00018",
+      "TestID": "WEB-CH-00020",
       "Category": "UI/UX",
       "Module / Page": "Register",
       "Test Case": "element_present_submit_button",
@@ -205,10 +227,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Element located",
-      "Executed At": "2026-07-24T18:59:28.052Z"
+      "Executed At": "2026-07-27T04:45:25.151Z"
     },
     {
-      "TestID": "WEB-CH-00019",
+      "TestID": "WEB-CH-00021",
       "Category": "UI/UX",
       "Module / Page": "Register",
       "Test Case": "element_present_login_link",
@@ -216,10 +238,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Element located",
-      "Executed At": "2026-07-24T18:59:28.061Z"
+      "Executed At": "2026-07-27T04:45:25.163Z"
     },
     {
-      "TestID": "WEB-CH-00020",
+      "TestID": "WEB-CH-00022",
       "Category": "Functional",
       "Module / Page": "Register",
       "Test Case": "short_password_blocked",
@@ -227,10 +249,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Weak password correctly blocked client-side submit",
-      "Executed At": "2026-07-24T18:59:29.296Z"
+      "Executed At": "2026-07-27T04:45:26.338Z"
     },
     {
-      "TestID": "WEB-CH-00021",
+      "TestID": "WEB-CH-00023",
       "Category": "Functional",
       "Module / Page": "Register",
       "Test Case": "password_mismatch_blocked",
@@ -238,10 +260,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Password mismatch correctly blocked client-side submit",
-      "Executed At": "2026-07-24T18:59:30.597Z"
+      "Executed At": "2026-07-27T04:45:27.545Z"
     },
     {
-      "TestID": "WEB-CH-00022",
+      "TestID": "WEB-CH-00024",
       "Category": "Security",
       "Module / Page": "Register",
       "Test Case": "xss_input_no_crash",
@@ -249,10 +271,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Page renders normally with XSS-style full_name input (no script executed/crash)",
-      "Executed At": "2026-07-24T18:59:31.310Z"
+      "Executed At": "2026-07-27T04:45:28.229Z"
     },
     {
-      "TestID": "WEB-CH-00023",
+      "TestID": "WEB-CH-00025",
       "Category": "UI/UX",
       "Module / Page": "Register",
       "Test Case": "login_link_navigates",
@@ -260,21 +282,109 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Landed on https://jaishreeprakash.github.io/burnout-ai/login",
-      "Executed At": "2026-07-24T18:59:31.446Z"
+      "Executed At": "2026-07-27T04:45:28.346Z"
     },
     {
-      "TestID": "WEB-CH-00024",
+      "TestID": "WEB-CH-00026",
+      "Category": "Functional",
+      "Module / Page": "Login",
+      "Test Case": "empty_submit_shows_required_errors",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Pass",
+      "Observed Result (evidence)": "react-hook-form required-field messages present: True",
+      "Executed At": "2026-07-27T04:45:28.764Z"
+    },
+    {
+      "TestID": "WEB-CH-00027",
+      "Category": "Functional",
+      "Module / Page": "Login",
+      "Test Case": "password_toggle_reverts_on_second_click",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Pass",
+      "Observed Result (evidence)": "type sequence password -> text -> password",
+      "Executed At": "2026-07-27T04:45:28.948Z"
+    },
+    {
+      "TestID": "WEB-CH-00028",
+      "Category": "Functional",
+      "Module / Page": "Register",
+      "Test Case": "empty_submit_shows_required_errors",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Pass",
+      "Observed Result (evidence)": "react-hook-form required-field messages present: True",
+      "Executed At": "2026-07-27T04:45:29.374Z"
+    },
+    {
+      "TestID": "WEB-CH-00029",
+      "Category": "Functional",
+      "Module / Page": "Register",
+      "Test Case": "invalid_email_format_blocked",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Invalid email format correctly blocked client-side submit",
+      "Executed At": "2026-07-27T04:45:30.285Z"
+    },
+    {
+      "TestID": "WEB-CH-00030",
+      "Category": "Functional",
+      "Module / Page": "Register",
+      "Test Case": "username_min_length_blocked",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Pass",
+      "Observed Result (evidence)": "Sub-minimum-length username correctly blocked client-side submit",
+      "Executed At": "2026-07-27T04:45:31.205Z"
+    },
+    {
+      "TestID": "WEB-CH-00031",
+      "Category": "Functional",
+      "Module / Page": "Register",
+      "Test Case": "username_invalid_chars_blocked",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Pass",
+      "Observed Result (evidence)": "Username with invalid characters correctly blocked client-side submit",
+      "Executed At": "2026-07-27T04:45:32.144Z"
+    },
+    {
+      "TestID": "WEB-CH-00032",
+      "Category": "Functional",
+      "Module / Page": "Register",
+      "Test Case": "age_out_of_range_blocked",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Below-minimum age correctly blocked client-side submit",
+      "Executed At": "2026-07-27T04:45:33.138Z"
+    },
+    {
+      "TestID": "WEB-CH-00033",
+      "Category": "Functional",
+      "Module / Page": "Register",
+      "Test Case": "gender_select_has_expected_options",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Pass",
+      "Observed Result (evidence)": "Gender select options: ['Prefer not to say', 'Male', 'Female', 'Non-binary', 'Other']",
+      "Executed At": "2026-07-27T04:45:33.241Z"
+    },
+    {
+      "TestID": "WEB-CH-00034",
       "Category": "Functional",
       "Module / Page": "Register",
       "Test Case": "real_registration_succeeds",
       "Method": "UI",
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Pass",
-      "Observed Result (evidence)": "Registered selenium.chrome.1fe1816b@healthsense.test and landed on https://jaishreeprakash.github.io/burnout-ai/dashboard",
-      "Executed At": "2026-07-24T18:59:37.520Z"
+      "Observed Result (evidence)": "Registered selenium.chrome.59855687@healthsense.test and landed on https://jaishreeprakash.github.io/burnout-ai/dashboard",
+      "Executed At": "2026-07-27T04:45:39.240Z"
     },
     {
-      "TestID": "WEB-CH-00025",
+      "TestID": "WEB-CH-00035",
       "Category": "Functional",
       "Module / Page": "Login",
       "Test Case": "real_login_succeeds",
@@ -282,10 +392,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Signed out then logged back in with real credentials, reached /dashboard",
-      "Executed At": "2026-07-24T18:59:41.845Z"
+      "Executed At": "2026-07-27T04:45:43.544Z"
     },
     {
-      "TestID": "WEB-CH-00026",
+      "TestID": "WEB-CH-00036",
       "Category": "UI/UX",
       "Module / Page": "Sidebar",
       "Test Case": "nav_link_dashboard_works",
@@ -293,10 +403,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Sidebar link 'Dashboard' navigated to https://jaishreeprakash.github.io/burnout-ai/dashboard",
-      "Executed At": "2026-07-24T18:59:42.008Z"
+      "Executed At": "2026-07-27T04:45:43.703Z"
     },
     {
-      "TestID": "WEB-CH-00027",
+      "TestID": "WEB-CH-00037",
       "Category": "UI/UX",
       "Module / Page": "Sidebar",
       "Test Case": "nav_link_sleep_works",
@@ -304,10 +414,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Sidebar link 'Sleep Tracker' navigated to https://jaishreeprakash.github.io/burnout-ai/sleep",
-      "Executed At": "2026-07-24T18:59:42.176Z"
+      "Executed At": "2026-07-27T04:45:43.837Z"
     },
     {
-      "TestID": "WEB-CH-00028",
+      "TestID": "WEB-CH-00038",
       "Category": "UI/UX",
       "Module / Page": "Sidebar",
       "Test Case": "nav_link_phone_works",
@@ -315,10 +425,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Sidebar link 'Phone Usage' navigated to https://jaishreeprakash.github.io/burnout-ai/phone",
-      "Executed At": "2026-07-24T18:59:42.311Z"
+      "Executed At": "2026-07-27T04:45:43.962Z"
     },
     {
-      "TestID": "WEB-CH-00029",
+      "TestID": "WEB-CH-00039",
       "Category": "UI/UX",
       "Module / Page": "Sidebar",
       "Test Case": "nav_link_emotions_works",
@@ -326,10 +436,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Sidebar link 'Emotion Analysis' navigated to https://jaishreeprakash.github.io/burnout-ai/emotions",
-      "Executed At": "2026-07-24T18:59:42.484Z"
+      "Executed At": "2026-07-27T04:45:44.096Z"
     },
     {
-      "TestID": "WEB-CH-00030",
+      "TestID": "WEB-CH-00040",
       "Category": "UI/UX",
       "Module / Page": "Sidebar",
       "Test Case": "nav_link_activity_works",
@@ -337,10 +447,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Sidebar link 'Activity Tracker' navigated to https://jaishreeprakash.github.io/burnout-ai/activity",
-      "Executed At": "2026-07-24T18:59:42.630Z"
+      "Executed At": "2026-07-27T04:45:44.224Z"
     },
     {
-      "TestID": "WEB-CH-00031",
+      "TestID": "WEB-CH-00041",
       "Category": "UI/UX",
       "Module / Page": "Sidebar",
       "Test Case": "nav_link_recommendations_works",
@@ -348,10 +458,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Sidebar link 'Recommendations' navigated to https://jaishreeprakash.github.io/burnout-ai/recommendations",
-      "Executed At": "2026-07-24T18:59:42.760Z"
+      "Executed At": "2026-07-27T04:45:44.351Z"
     },
     {
-      "TestID": "WEB-CH-00032",
+      "TestID": "WEB-CH-00042",
       "Category": "UI/UX",
       "Module / Page": "Sidebar",
       "Test Case": "nav_link_analytics_works",
@@ -359,10 +469,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Sidebar link 'Analytics' navigated to https://jaishreeprakash.github.io/burnout-ai/analytics",
-      "Executed At": "2026-07-24T18:59:42.895Z"
+      "Executed At": "2026-07-27T04:45:44.476Z"
     },
     {
-      "TestID": "WEB-CH-00033",
+      "TestID": "WEB-CH-00043",
       "Category": "UI/UX",
       "Module / Page": "Sidebar",
       "Test Case": "nav_link_chat_works",
@@ -370,10 +480,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Sidebar link 'AI Coach Chat' navigated to https://jaishreeprakash.github.io/burnout-ai/chat",
-      "Executed At": "2026-07-24T18:59:43.194Z"
+      "Executed At": "2026-07-27T04:45:44.677Z"
     },
     {
-      "TestID": "WEB-CH-00034",
+      "TestID": "WEB-CH-00044",
       "Category": "UI/UX",
       "Module / Page": "Sidebar",
       "Test Case": "nav_link_profile_works",
@@ -381,10 +491,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Sidebar link 'Profile' navigated to https://jaishreeprakash.github.io/burnout-ai/profile",
-      "Executed At": "2026-07-24T18:59:43.333Z"
+      "Executed At": "2026-07-27T04:45:44.809Z"
     },
     {
-      "TestID": "WEB-CH-00035",
+      "TestID": "WEB-CH-00045",
       "Category": "UI/UX",
       "Module / Page": "Dashboard",
       "Test Case": "element_present_refresh_button",
@@ -392,10 +502,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:00:03.769Z"
+      "Executed At": "2026-07-27T04:46:05.206Z"
     },
     {
-      "TestID": "WEB-CH-00036",
+      "TestID": "WEB-CH-00046",
       "Category": "UI/UX",
       "Module / Page": "Dashboard",
       "Test Case": "element_present_burnout_score_heading",
@@ -403,10 +513,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:00:24.147Z"
+      "Executed At": "2026-07-27T04:46:25.577Z"
     },
     {
-      "TestID": "WEB-CH-00037",
+      "TestID": "WEB-CH-00047",
       "Category": "UI/UX",
       "Module / Page": "Dashboard",
       "Test Case": "element_present_wellness_score_heading",
@@ -414,10 +524,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Element located",
-      "Executed At": "2026-07-24T19:00:24.155Z"
+      "Executed At": "2026-07-27T04:46:25.585Z"
     },
     {
-      "TestID": "WEB-CH-00038",
+      "TestID": "WEB-CH-00048",
       "Category": "UI/UX",
       "Module / Page": "Dashboard",
       "Test Case": "element_present_health_dimensions_heading",
@@ -425,10 +535,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:00:44.530Z"
+      "Executed At": "2026-07-27T04:46:45.939Z"
     },
     {
-      "TestID": "WEB-CH-00039",
+      "TestID": "WEB-CH-00049",
       "Category": "UI/UX",
       "Module / Page": "Dashboard",
       "Test Case": "element_present_emotional_stability_heading",
@@ -436,10 +546,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:01:04.914Z"
+      "Executed At": "2026-07-27T04:47:06.287Z"
     },
     {
-      "TestID": "WEB-CH-00040",
+      "TestID": "WEB-CH-00050",
       "Category": "UI/UX",
       "Module / Page": "Dashboard",
       "Test Case": "element_present_emotion_distribution_heading",
@@ -447,10 +557,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:01:25.296Z"
+      "Executed At": "2026-07-27T04:47:26.640Z"
     },
     {
-      "TestID": "WEB-CH-00041",
+      "TestID": "WEB-CH-00051",
       "Category": "UI/UX",
       "Module / Page": "Dashboard",
       "Test Case": "element_present_ai_recommendations_heading",
@@ -458,10 +568,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:01:45.670Z"
+      "Executed At": "2026-07-27T04:47:46.988Z"
     },
     {
-      "TestID": "WEB-CH-00042",
+      "TestID": "WEB-CH-00052",
       "Category": "UI/UX",
       "Module / Page": "Dashboard",
       "Test Case": "element_present_progress_comparison_heading",
@@ -469,10 +579,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:02:06.044Z"
+      "Executed At": "2026-07-27T04:48:07.338Z"
     },
     {
-      "TestID": "WEB-CH-00043",
+      "TestID": "WEB-CH-00053",
       "Category": "UI/UX",
       "Module / Page": "Dashboard",
       "Test Case": "element_present_quick_stats_heading",
@@ -480,10 +590,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:02:26.419Z"
+      "Executed At": "2026-07-27T04:48:27.692Z"
     },
     {
-      "TestID": "WEB-CH-00044",
+      "TestID": "WEB-CH-00054",
       "Category": "UI/UX",
       "Module / Page": "Dashboard",
       "Test Case": "element_present_view_all_link",
@@ -491,10 +601,32 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:02:46.802Z"
+      "Executed At": "2026-07-27T04:48:48.053Z"
     },
     {
-      "TestID": "WEB-CH-00045",
+      "TestID": "WEB-CH-00055",
+      "Category": "UI/UX",
+      "Module / Page": "Dashboard",
+      "Test Case": "element_present_header_open_menu_button",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T04:49:08.398Z"
+    },
+    {
+      "TestID": "WEB-CH-00056",
+      "Category": "UI/UX",
+      "Module / Page": "Dashboard",
+      "Test Case": "element_present_header_notifications_button",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T04:49:28.746Z"
+    },
+    {
+      "TestID": "WEB-CH-00057",
       "Category": "UI/UX",
       "Module / Page": "Sleep Tracker",
       "Test Case": "element_present_overview_tab",
@@ -502,10 +634,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:03:07.304Z"
+      "Executed At": "2026-07-27T04:49:49.169Z"
     },
     {
-      "TestID": "WEB-CH-00046",
+      "TestID": "WEB-CH-00058",
       "Category": "UI/UX",
       "Module / Page": "Sleep Tracker",
       "Test Case": "element_present_calendar_tab",
@@ -513,10 +645,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:03:27.684Z"
+      "Executed At": "2026-07-27T04:50:09.522Z"
     },
     {
-      "TestID": "WEB-CH-00047",
+      "TestID": "WEB-CH-00059",
       "Category": "UI/UX",
       "Module / Page": "Sleep Tracker",
       "Test Case": "element_present_log_tab",
@@ -524,10 +656,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:03:48.060Z"
+      "Executed At": "2026-07-27T04:50:29.869Z"
     },
     {
-      "TestID": "WEB-CH-00048",
+      "TestID": "WEB-CH-00060",
       "Category": "UI/UX",
       "Module / Page": "Sleep Tracker",
       "Test Case": "element_present_refresh_button",
@@ -535,10 +667,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:04:08.429Z"
+      "Executed At": "2026-07-27T04:50:50.214Z"
     },
     {
-      "TestID": "WEB-CH-00049",
+      "TestID": "WEB-CH-00061",
       "Category": "UI/UX",
       "Module / Page": "Sleep Tracker",
       "Test Case": "element_present_log_sleep_button",
@@ -546,10 +678,54 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:04:28.798Z"
+      "Executed At": "2026-07-27T04:51:10.561Z"
     },
     {
-      "TestID": "WEB-CH-00050",
+      "TestID": "WEB-CH-00062",
+      "Category": "UI/UX",
+      "Module / Page": "Sleep Tracker",
+      "Test Case": "element_present_header_open_menu_button",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T04:51:30.900Z"
+    },
+    {
+      "TestID": "WEB-CH-00063",
+      "Category": "UI/UX",
+      "Module / Page": "Sleep Tracker",
+      "Test Case": "element_present_header_notifications_button",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T04:51:51.247Z"
+    },
+    {
+      "TestID": "WEB-CH-00064",
+      "Category": "UI/UX",
+      "Module / Page": "Sleep Tracker",
+      "Test Case": "element_present_sleep_duration_heading",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T04:52:11.590Z"
+    },
+    {
+      "TestID": "WEB-CH-00065",
+      "Category": "UI/UX",
+      "Module / Page": "Sleep Tracker",
+      "Test Case": "element_present_sleep_quality_heading",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T04:52:31.932Z"
+    },
+    {
+      "TestID": "WEB-CH-00066",
       "Category": "UI/UX",
       "Module / Page": "Recommendations",
       "Test Case": "element_present_filter_all",
@@ -557,10 +733,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:04:49.255Z"
+      "Executed At": "2026-07-27T04:52:52.340Z"
     },
     {
-      "TestID": "WEB-CH-00051",
+      "TestID": "WEB-CH-00067",
       "Category": "UI/UX",
       "Module / Page": "Recommendations",
       "Test Case": "element_present_filter_sleep",
@@ -568,10 +744,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:05:09.627Z"
+      "Executed At": "2026-07-27T04:53:12.683Z"
     },
     {
-      "TestID": "WEB-CH-00052",
+      "TestID": "WEB-CH-00068",
       "Category": "UI/UX",
       "Module / Page": "Recommendations",
       "Test Case": "element_present_filter_phone",
@@ -579,10 +755,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:05:30.005Z"
+      "Executed At": "2026-07-27T04:53:33.028Z"
     },
     {
-      "TestID": "WEB-CH-00053",
+      "TestID": "WEB-CH-00069",
       "Category": "UI/UX",
       "Module / Page": "Recommendations",
       "Test Case": "element_present_filter_activity",
@@ -590,10 +766,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:05:50.372Z"
+      "Executed At": "2026-07-27T04:53:53.373Z"
     },
     {
-      "TestID": "WEB-CH-00054",
+      "TestID": "WEB-CH-00070",
       "Category": "UI/UX",
       "Module / Page": "Recommendations",
       "Test Case": "element_present_filter_mental_health",
@@ -601,10 +777,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:06:10.739Z"
+      "Executed At": "2026-07-27T04:54:13.719Z"
     },
     {
-      "TestID": "WEB-CH-00055",
+      "TestID": "WEB-CH-00071",
       "Category": "UI/UX",
       "Module / Page": "Recommendations",
       "Test Case": "element_present_filter_social",
@@ -612,10 +788,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:06:31.105Z"
+      "Executed At": "2026-07-27T04:54:34.065Z"
     },
     {
-      "TestID": "WEB-CH-00056",
+      "TestID": "WEB-CH-00072",
       "Category": "UI/UX",
       "Module / Page": "Recommendations",
       "Test Case": "element_present_filter_nutrition",
@@ -623,10 +799,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:06:51.482Z"
+      "Executed At": "2026-07-27T04:54:54.412Z"
     },
     {
-      "TestID": "WEB-CH-00057",
+      "TestID": "WEB-CH-00073",
       "Category": "UI/UX",
       "Module / Page": "Recommendations",
       "Test Case": "element_present_sort_toggle",
@@ -634,10 +810,54 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:07:11.848Z"
+      "Executed At": "2026-07-27T04:55:14.756Z"
     },
     {
-      "TestID": "WEB-CH-00058",
+      "TestID": "WEB-CH-00074",
+      "Category": "UI/UX",
+      "Module / Page": "Recommendations",
+      "Test Case": "element_present_header_open_menu_button",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T04:55:35.094Z"
+    },
+    {
+      "TestID": "WEB-CH-00075",
+      "Category": "UI/UX",
+      "Module / Page": "Recommendations",
+      "Test Case": "element_present_header_notifications_button",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T04:55:55.435Z"
+    },
+    {
+      "TestID": "WEB-CH-00076",
+      "Category": "UI/UX",
+      "Module / Page": "Recommendations",
+      "Test Case": "element_present_overall_progress_heading",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T04:56:15.784Z"
+    },
+    {
+      "TestID": "WEB-CH-00077",
+      "Category": "UI/UX",
+      "Module / Page": "Recommendations",
+      "Test Case": "element_present_high_priority_label",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T04:56:36.133Z"
+    },
+    {
+      "TestID": "WEB-CH-00078",
       "Category": "UI/UX",
       "Module / Page": "Analytics",
       "Test Case": "element_present_range_7d",
@@ -645,10 +865,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:07:32.297Z"
+      "Executed At": "2026-07-27T04:56:56.597Z"
     },
     {
-      "TestID": "WEB-CH-00059",
+      "TestID": "WEB-CH-00079",
       "Category": "UI/UX",
       "Module / Page": "Analytics",
       "Test Case": "element_present_range_30d",
@@ -656,10 +876,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:07:52.660Z"
+      "Executed At": "2026-07-27T04:57:16.955Z"
     },
     {
-      "TestID": "WEB-CH-00060",
+      "TestID": "WEB-CH-00080",
       "Category": "UI/UX",
       "Module / Page": "Analytics",
       "Test Case": "element_present_export_button",
@@ -667,10 +887,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:08:13.032Z"
+      "Executed At": "2026-07-27T04:57:37.302Z"
     },
     {
-      "TestID": "WEB-CH-00061",
+      "TestID": "WEB-CH-00081",
       "Category": "UI/UX",
       "Module / Page": "Analytics",
       "Test Case": "element_present_refresh_button",
@@ -678,10 +898,76 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:08:33.394Z"
+      "Executed At": "2026-07-27T04:57:57.649Z"
     },
     {
-      "TestID": "WEB-CH-00062",
+      "TestID": "WEB-CH-00082",
+      "Category": "UI/UX",
+      "Module / Page": "Analytics",
+      "Test Case": "element_present_header_open_menu_button",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T04:58:17.989Z"
+    },
+    {
+      "TestID": "WEB-CH-00083",
+      "Category": "UI/UX",
+      "Module / Page": "Analytics",
+      "Test Case": "element_present_header_notifications_button",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T04:58:38.332Z"
+    },
+    {
+      "TestID": "WEB-CH-00084",
+      "Category": "UI/UX",
+      "Module / Page": "Analytics",
+      "Test Case": "element_present_burnout_score_trend_heading",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T04:58:58.682Z"
+    },
+    {
+      "TestID": "WEB-CH-00085",
+      "Category": "UI/UX",
+      "Module / Page": "Analytics",
+      "Test Case": "element_present_all_metrics_overlay_heading",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T04:59:19.030Z"
+    },
+    {
+      "TestID": "WEB-CH-00086",
+      "Category": "UI/UX",
+      "Module / Page": "Analytics",
+      "Test Case": "element_present_burnout_records_region",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T04:59:39.382Z"
+    },
+    {
+      "TestID": "WEB-CH-00087",
+      "Category": "UI/UX",
+      "Module / Page": "Analytics",
+      "Test Case": "element_present_analytics_dashboard_label",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T04:59:59.746Z"
+    },
+    {
+      "TestID": "WEB-CH-00088",
       "Category": "UI/UX",
       "Module / Page": "Wellness Chat",
       "Test Case": "element_present_message_input",
@@ -689,10 +975,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:08:53.838Z"
+      "Executed At": "2026-07-27T05:00:20.164Z"
     },
     {
-      "TestID": "WEB-CH-00063",
+      "TestID": "WEB-CH-00089",
       "Category": "UI/UX",
       "Module / Page": "Wellness Chat",
       "Test Case": "element_present_send_button",
@@ -700,10 +986,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:09:14.197Z"
+      "Executed At": "2026-07-27T05:00:40.506Z"
     },
     {
-      "TestID": "WEB-CH-00064",
+      "TestID": "WEB-CH-00090",
       "Category": "UI/UX",
       "Module / Page": "Wellness Chat",
       "Test Case": "element_present_new_chat_button",
@@ -711,10 +997,54 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:09:34.570Z"
+      "Executed At": "2026-07-27T05:01:00.858Z"
     },
     {
-      "TestID": "WEB-CH-00065",
+      "TestID": "WEB-CH-00091",
+      "Category": "UI/UX",
+      "Module / Page": "Wellness Chat",
+      "Test Case": "element_present_header_open_menu_button",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T05:01:21.203Z"
+    },
+    {
+      "TestID": "WEB-CH-00092",
+      "Category": "UI/UX",
+      "Module / Page": "Wellness Chat",
+      "Test Case": "element_present_header_notifications_button",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T05:01:41.542Z"
+    },
+    {
+      "TestID": "WEB-CH-00093",
+      "Category": "UI/UX",
+      "Module / Page": "Wellness Chat",
+      "Test Case": "element_present_coach_heading",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T05:02:01.890Z"
+    },
+    {
+      "TestID": "WEB-CH-00094",
+      "Category": "UI/UX",
+      "Module / Page": "Wellness Chat",
+      "Test Case": "element_present_starter_prompt_button",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T05:02:22.239Z"
+    },
+    {
+      "TestID": "WEB-CH-00095",
       "Category": "UI/UX",
       "Module / Page": "Profile",
       "Test Case": "element_present_profile_tab",
@@ -722,10 +1052,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:09:55.126Z"
+      "Executed At": "2026-07-27T05:02:42.645Z"
     },
     {
-      "TestID": "WEB-CH-00066",
+      "TestID": "WEB-CH-00096",
       "Category": "UI/UX",
       "Module / Page": "Profile",
       "Test Case": "element_present_notifications_tab",
@@ -733,10 +1063,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:10:15.485Z"
+      "Executed At": "2026-07-27T05:03:02.998Z"
     },
     {
-      "TestID": "WEB-CH-00067",
+      "TestID": "WEB-CH-00097",
       "Category": "UI/UX",
       "Module / Page": "Profile",
       "Test Case": "element_present_privacy_tab",
@@ -744,10 +1074,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:10:35.855Z"
+      "Executed At": "2026-07-27T05:03:23.348Z"
     },
     {
-      "TestID": "WEB-CH-00068",
+      "TestID": "WEB-CH-00098",
       "Category": "UI/UX",
       "Module / Page": "Profile",
       "Test Case": "element_present_edit_button",
@@ -755,10 +1085,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:10:56.221Z"
+      "Executed At": "2026-07-27T05:03:43.695Z"
     },
     {
-      "TestID": "WEB-CH-00069",
+      "TestID": "WEB-CH-00099",
       "Category": "UI/UX",
       "Module / Page": "Profile",
       "Test Case": "element_present_sign_out_button",
@@ -766,10 +1096,296 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:11:16.587Z"
+      "Executed At": "2026-07-27T05:04:04.044Z"
     },
     {
-      "TestID": "WEB-CH-00070",
+      "TestID": "WEB-CH-00100",
+      "Category": "UI/UX",
+      "Module / Page": "Profile",
+      "Test Case": "element_present_header_open_menu_button",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T05:04:24.382Z"
+    },
+    {
+      "TestID": "WEB-CH-00101",
+      "Category": "UI/UX",
+      "Module / Page": "Profile",
+      "Test Case": "element_present_header_notifications_button",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T05:04:44.724Z"
+    },
+    {
+      "TestID": "WEB-CH-00102",
+      "Category": "UI/UX",
+      "Module / Page": "Profile",
+      "Test Case": "element_present_personal_information_heading",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T05:05:05.067Z"
+    },
+    {
+      "TestID": "WEB-CH-00103",
+      "Category": "UI/UX",
+      "Module / Page": "Phone Usage",
+      "Test Case": "element_present_header_open_menu_button",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T05:05:25.465Z"
+    },
+    {
+      "TestID": "WEB-CH-00104",
+      "Category": "UI/UX",
+      "Module / Page": "Phone Usage",
+      "Test Case": "element_present_header_notifications_button",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T05:05:45.808Z"
+    },
+    {
+      "TestID": "WEB-CH-00105",
+      "Category": "UI/UX",
+      "Module / Page": "Phone Usage",
+      "Test Case": "element_present_refresh_button",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T05:06:06.148Z"
+    },
+    {
+      "TestID": "WEB-CH-00106",
+      "Category": "UI/UX",
+      "Module / Page": "Phone Usage",
+      "Test Case": "element_present_log_usage_button",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T05:06:26.493Z"
+    },
+    {
+      "TestID": "WEB-CH-00107",
+      "Category": "UI/UX",
+      "Module / Page": "Phone Usage",
+      "Test Case": "element_present_app_usage_breakdown_heading",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T05:06:46.843Z"
+    },
+    {
+      "TestID": "WEB-CH-00108",
+      "Category": "UI/UX",
+      "Module / Page": "Phone Usage",
+      "Test Case": "element_present_screen_time_trend_heading",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T05:07:07.190Z"
+    },
+    {
+      "TestID": "WEB-CH-00109",
+      "Category": "UI/UX",
+      "Module / Page": "Phone Usage",
+      "Test Case": "element_present_late_night_pattern_heading",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T05:07:27.539Z"
+    },
+    {
+      "TestID": "WEB-CH-00110",
+      "Category": "UI/UX",
+      "Module / Page": "Emotion Analysis",
+      "Test Case": "element_present_header_open_menu_button",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T05:07:47.972Z"
+    },
+    {
+      "TestID": "WEB-CH-00111",
+      "Category": "UI/UX",
+      "Module / Page": "Emotion Analysis",
+      "Test Case": "element_present_header_notifications_button",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T05:08:08.311Z"
+    },
+    {
+      "TestID": "WEB-CH-00112",
+      "Category": "UI/UX",
+      "Module / Page": "Emotion Analysis",
+      "Test Case": "element_present_current_tab",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T05:08:28.660Z"
+    },
+    {
+      "TestID": "WEB-CH-00113",
+      "Category": "UI/UX",
+      "Module / Page": "Emotion Analysis",
+      "Test Case": "element_present_history_tab",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T05:08:49.010Z"
+    },
+    {
+      "TestID": "WEB-CH-00114",
+      "Category": "UI/UX",
+      "Module / Page": "Emotion Analysis",
+      "Test Case": "element_present_trends_tab",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T05:09:09.357Z"
+    },
+    {
+      "TestID": "WEB-CH-00115",
+      "Category": "UI/UX",
+      "Module / Page": "Emotion Analysis",
+      "Test Case": "element_present_emotion_detection_heading",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T05:09:29.704Z"
+    },
+    {
+      "TestID": "WEB-CH-00116",
+      "Category": "UI/UX",
+      "Module / Page": "Emotion Analysis",
+      "Test Case": "element_present_refresh_data_button",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T05:09:50.054Z"
+    },
+    {
+      "TestID": "WEB-CH-00117",
+      "Category": "UI/UX",
+      "Module / Page": "Emotion Analysis",
+      "Test Case": "element_present_log_happy_emotion_button",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T05:10:10.403Z"
+    },
+    {
+      "TestID": "WEB-CH-00118",
+      "Category": "UI/UX",
+      "Module / Page": "Activity Tracker",
+      "Test Case": "element_present_header_open_menu_button",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T05:10:30.795Z"
+    },
+    {
+      "TestID": "WEB-CH-00119",
+      "Category": "UI/UX",
+      "Module / Page": "Activity Tracker",
+      "Test Case": "element_present_header_notifications_button",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T05:10:51.134Z"
+    },
+    {
+      "TestID": "WEB-CH-00120",
+      "Category": "UI/UX",
+      "Module / Page": "Activity Tracker",
+      "Test Case": "element_present_refresh_button",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T05:11:11.473Z"
+    },
+    {
+      "TestID": "WEB-CH-00121",
+      "Category": "UI/UX",
+      "Module / Page": "Activity Tracker",
+      "Test Case": "element_present_log_activity_button",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T05:11:31.818Z"
+    },
+    {
+      "TestID": "WEB-CH-00122",
+      "Category": "UI/UX",
+      "Module / Page": "Activity Tracker",
+      "Test Case": "element_present_todays_progress_heading",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T05:11:52.165Z"
+    },
+    {
+      "TestID": "WEB-CH-00123",
+      "Category": "UI/UX",
+      "Module / Page": "Activity Tracker",
+      "Test Case": "element_present_activity_summary_heading",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T05:12:12.511Z"
+    },
+    {
+      "TestID": "WEB-CH-00124",
+      "Category": "UI/UX",
+      "Module / Page": "Activity Tracker",
+      "Test Case": "element_present_activity_heatmap_heading",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T05:12:32.862Z"
+    },
+    {
+      "TestID": "WEB-CH-00125",
+      "Category": "UI/UX",
+      "Module / Page": "Activity Tracker",
+      "Test Case": "element_present_activity_log_heading",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T05:12:53.209Z"
+    },
+    {
+      "TestID": "WEB-CH-00126",
       "Category": "Functional",
       "Module / Page": "Phone Usage",
       "Test Case": "page_loads_with_content",
@@ -777,10 +1393,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "287 chars rendered",
-      "Executed At": "2026-07-24T19:11:17.202Z"
+      "Executed At": "2026-07-27T05:12:53.774Z"
     },
     {
-      "TestID": "WEB-CH-00071",
+      "TestID": "WEB-CH-00127",
       "Category": "Functional",
       "Module / Page": "Emotion Analysis",
       "Test Case": "page_loads_with_content",
@@ -788,10 +1404,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "287 chars rendered",
-      "Executed At": "2026-07-24T19:11:17.797Z"
+      "Executed At": "2026-07-27T05:12:54.335Z"
     },
     {
-      "TestID": "WEB-CH-00072",
+      "TestID": "WEB-CH-00128",
       "Category": "Functional",
       "Module / Page": "Activity Tracker",
       "Test Case": "page_loads_with_content",
@@ -799,10 +1415,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "287 chars rendered",
-      "Executed At": "2026-07-24T19:11:18.406Z"
+      "Executed At": "2026-07-27T05:12:54.888Z"
     },
     {
-      "TestID": "WEB-CH-00073",
+      "TestID": "WEB-CH-00129",
       "Category": "Functional",
       "Module / Page": "Sleep Tracker",
       "Test Case": "tab_switching_works",
@@ -810,10 +1426,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:11:38.813Z"
+      "Executed At": "2026-07-27T05:13:15.274Z"
     },
     {
-      "TestID": "WEB-CH-00074",
+      "TestID": "WEB-CH-00130",
       "Category": "Functional",
       "Module / Page": "Sleep Tracker",
       "Test Case": "log_sleep_modal_open_cancel",
@@ -821,10 +1437,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:11:59.226Z"
+      "Executed At": "2026-07-27T05:13:35.660Z"
     },
     {
-      "TestID": "WEB-CH-00075",
+      "TestID": "WEB-CH-00131",
       "Category": "Functional",
       "Module / Page": "Recommendations",
       "Test Case": "category_filters_clickable",
@@ -832,10 +1448,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:12:19.636Z"
+      "Executed At": "2026-07-27T05:13:56.048Z"
     },
     {
-      "TestID": "WEB-CH-00076",
+      "TestID": "WEB-CH-00132",
       "Category": "Functional",
       "Module / Page": "Analytics",
       "Test Case": "range_toggle_works",
@@ -843,10 +1459,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:12:40.047Z"
+      "Executed At": "2026-07-27T05:14:16.440Z"
     },
     {
-      "TestID": "WEB-CH-00077",
+      "TestID": "WEB-CH-00133",
       "Category": "E2E",
       "Module / Page": "Wellness Chat",
       "Test Case": "send_message_gets_real_reply",
@@ -854,10 +1470,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:13:00.458Z"
+      "Executed At": "2026-07-27T05:14:36.829Z"
     },
     {
-      "TestID": "WEB-CH-00078",
+      "TestID": "WEB-CH-00134",
       "Category": "Functional",
       "Module / Page": "Profile",
       "Test Case": "tab_switching_works",
@@ -865,10 +1481,153 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:13:20.870Z"
+      "Executed At": "2026-07-27T05:14:57.220Z"
     },
     {
-      "TestID": "WEB-CH-00079",
+      "TestID": "WEB-CH-00135",
+      "Category": "Functional",
+      "Module / Page": "Phone Usage",
+      "Test Case": "log_usage_modal_open_cancel",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T05:15:17.614Z"
+    },
+    {
+      "TestID": "WEB-CH-00136",
+      "Category": "Functional",
+      "Module / Page": "Activity Tracker",
+      "Test Case": "log_activity_modal_open_cancel",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T05:15:38.003Z"
+    },
+    {
+      "TestID": "WEB-CH-00137",
+      "Category": "Functional",
+      "Module / Page": "Emotion Analysis",
+      "Test Case": "tab_switching_works",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T05:15:58.393Z"
+    },
+    {
+      "TestID": "WEB-CH-00138",
+      "Category": "UI/UX",
+      "Module / Page": "Sidebar",
+      "Test Case": "mobile_menu_open_close",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T05:16:18.826Z"
+    },
+    {
+      "TestID": "WEB-CH-00139",
+      "Category": "UI/UX",
+      "Module / Page": "Sidebar",
+      "Test Case": "collapse_expand_toggle_works",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T05:16:39.219Z"
+    },
+    {
+      "TestID": "WEB-CH-00140",
+      "Category": "Functional",
+      "Module / Page": "Header",
+      "Test Case": "notifications_dropdown_mark_all_read",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T05:16:59.605Z"
+    },
+    {
+      "TestID": "WEB-CH-00141",
+      "Category": "Functional",
+      "Module / Page": "Profile",
+      "Test Case": "edit_cancel_toggle_works",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T05:17:19.999Z"
+    },
+    {
+      "TestID": "WEB-CH-00142",
+      "Category": "UI/UX",
+      "Module / Page": "Profile",
+      "Test Case": "notifications_tab_shows_settings_heading",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T05:17:40.384Z"
+    },
+    {
+      "TestID": "WEB-CH-00143",
+      "Category": "UI/UX",
+      "Module / Page": "Profile",
+      "Test Case": "privacy_tab_shows_data_privacy_heading",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T05:18:00.826Z"
+    },
+    {
+      "TestID": "WEB-CH-00144",
+      "Category": "UI/UX",
+      "Module / Page": "Sleep Tracker",
+      "Test Case": "calendar_tab_shows_heading",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T05:18:21.224Z"
+    },
+    {
+      "TestID": "WEB-CH-00145",
+      "Category": "Functional",
+      "Module / Page": "Analytics",
+      "Test Case": "export_modal_open_close",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T05:18:41.612Z"
+    },
+    {
+      "TestID": "WEB-CH-00146",
+      "Category": "E2E",
+      "Module / Page": "Wellness Chat",
+      "Test Case": "starter_prompt_click_sends_message",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T05:19:02.002Z"
+    },
+    {
+      "TestID": "WEB-CH-00147",
+      "Category": "Compatibility",
+      "Module / Page": "Dashboard",
+      "Test Case": "responsive_mobile-small_320x568",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Pass",
+      "Observed Result (evidence)": "Renders content at 320x568 (mobile-small)",
+      "Executed At": "2026-07-27T05:19:02.483Z"
+    },
+    {
+      "TestID": "WEB-CH-00148",
       "Category": "Compatibility",
       "Module / Page": "Dashboard",
       "Test Case": "responsive_mobile_375x812",
@@ -876,10 +1635,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Renders content at 375x812 (mobile)",
-      "Executed At": "2026-07-24T19:13:21.384Z"
+      "Executed At": "2026-07-27T05:19:02.914Z"
     },
     {
-      "TestID": "WEB-CH-00080",
+      "TestID": "WEB-CH-00149",
       "Category": "Compatibility",
       "Module / Page": "Dashboard",
       "Test Case": "responsive_tablet_768x1024",
@@ -887,10 +1646,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Renders content at 768x1024 (tablet)",
-      "Executed At": "2026-07-24T19:13:21.819Z"
+      "Executed At": "2026-07-27T05:19:03.348Z"
     },
     {
-      "TestID": "WEB-CH-00081",
+      "TestID": "WEB-CH-00150",
       "Category": "Compatibility",
       "Module / Page": "Dashboard",
       "Test Case": "responsive_desktop_1440x900",
@@ -898,10 +1657,32 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Renders content at 1440x900 (desktop)",
-      "Executed At": "2026-07-24T19:13:22.256Z"
+      "Executed At": "2026-07-27T05:19:03.780Z"
     },
     {
-      "TestID": "WEB-CH-00082",
+      "TestID": "WEB-CH-00151",
+      "Category": "Compatibility",
+      "Module / Page": "Dashboard",
+      "Test Case": "responsive_desktop-large_1920x1080",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Pass",
+      "Observed Result (evidence)": "Renders content at 1920x1080 (desktop-large)",
+      "Executed At": "2026-07-27T05:19:04.212Z"
+    },
+    {
+      "TestID": "WEB-CH-00152",
+      "Category": "Compatibility",
+      "Module / Page": "Sleep Tracker",
+      "Test Case": "responsive_mobile-small_320x568",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Pass",
+      "Observed Result (evidence)": "Renders content at 320x568 (mobile-small)",
+      "Executed At": "2026-07-27T05:19:04.683Z"
+    },
+    {
+      "TestID": "WEB-CH-00153",
       "Category": "Compatibility",
       "Module / Page": "Sleep Tracker",
       "Test Case": "responsive_mobile_375x812",
@@ -909,10 +1690,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Renders content at 375x812 (mobile)",
-      "Executed At": "2026-07-24T19:13:22.732Z"
+      "Executed At": "2026-07-27T05:19:05.114Z"
     },
     {
-      "TestID": "WEB-CH-00083",
+      "TestID": "WEB-CH-00154",
       "Category": "Compatibility",
       "Module / Page": "Sleep Tracker",
       "Test Case": "responsive_tablet_768x1024",
@@ -920,10 +1701,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Renders content at 768x1024 (tablet)",
-      "Executed At": "2026-07-24T19:13:23.165Z"
+      "Executed At": "2026-07-27T05:19:05.546Z"
     },
     {
-      "TestID": "WEB-CH-00084",
+      "TestID": "WEB-CH-00155",
       "Category": "Compatibility",
       "Module / Page": "Sleep Tracker",
       "Test Case": "responsive_desktop_1440x900",
@@ -931,10 +1712,32 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Renders content at 1440x900 (desktop)",
-      "Executed At": "2026-07-24T19:13:23.599Z"
+      "Executed At": "2026-07-27T05:19:05.979Z"
     },
     {
-      "TestID": "WEB-CH-00085",
+      "TestID": "WEB-CH-00156",
+      "Category": "Compatibility",
+      "Module / Page": "Sleep Tracker",
+      "Test Case": "responsive_desktop-large_1920x1080",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Pass",
+      "Observed Result (evidence)": "Renders content at 1920x1080 (desktop-large)",
+      "Executed At": "2026-07-27T05:19:06.415Z"
+    },
+    {
+      "TestID": "WEB-CH-00157",
+      "Category": "Compatibility",
+      "Module / Page": "Phone Usage",
+      "Test Case": "responsive_mobile-small_320x568",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Pass",
+      "Observed Result (evidence)": "Renders content at 320x568 (mobile-small)",
+      "Executed At": "2026-07-27T05:19:06.886Z"
+    },
+    {
+      "TestID": "WEB-CH-00158",
       "Category": "Compatibility",
       "Module / Page": "Phone Usage",
       "Test Case": "responsive_mobile_375x812",
@@ -942,10 +1745,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Renders content at 375x812 (mobile)",
-      "Executed At": "2026-07-24T19:13:24.080Z"
+      "Executed At": "2026-07-27T05:19:07.318Z"
     },
     {
-      "TestID": "WEB-CH-00086",
+      "TestID": "WEB-CH-00159",
       "Category": "Compatibility",
       "Module / Page": "Phone Usage",
       "Test Case": "responsive_tablet_768x1024",
@@ -953,10 +1756,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Renders content at 768x1024 (tablet)",
-      "Executed At": "2026-07-24T19:13:24.514Z"
+      "Executed At": "2026-07-27T05:19:07.751Z"
     },
     {
-      "TestID": "WEB-CH-00087",
+      "TestID": "WEB-CH-00160",
       "Category": "Compatibility",
       "Module / Page": "Phone Usage",
       "Test Case": "responsive_desktop_1440x900",
@@ -964,10 +1767,32 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Renders content at 1440x900 (desktop)",
-      "Executed At": "2026-07-24T19:13:24.950Z"
+      "Executed At": "2026-07-27T05:19:08.185Z"
     },
     {
-      "TestID": "WEB-CH-00088",
+      "TestID": "WEB-CH-00161",
+      "Category": "Compatibility",
+      "Module / Page": "Phone Usage",
+      "Test Case": "responsive_desktop-large_1920x1080",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Pass",
+      "Observed Result (evidence)": "Renders content at 1920x1080 (desktop-large)",
+      "Executed At": "2026-07-27T05:19:08.617Z"
+    },
+    {
+      "TestID": "WEB-CH-00162",
+      "Category": "Compatibility",
+      "Module / Page": "Emotion Analysis",
+      "Test Case": "responsive_mobile-small_320x568",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Pass",
+      "Observed Result (evidence)": "Renders content at 320x568 (mobile-small)",
+      "Executed At": "2026-07-27T05:19:09.089Z"
+    },
+    {
+      "TestID": "WEB-CH-00163",
       "Category": "Compatibility",
       "Module / Page": "Emotion Analysis",
       "Test Case": "responsive_mobile_375x812",
@@ -975,10 +1800,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Renders content at 375x812 (mobile)",
-      "Executed At": "2026-07-24T19:13:25.431Z"
+      "Executed At": "2026-07-27T05:19:09.521Z"
     },
     {
-      "TestID": "WEB-CH-00089",
+      "TestID": "WEB-CH-00164",
       "Category": "Compatibility",
       "Module / Page": "Emotion Analysis",
       "Test Case": "responsive_tablet_768x1024",
@@ -986,10 +1811,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Renders content at 768x1024 (tablet)",
-      "Executed At": "2026-07-24T19:13:25.864Z"
+      "Executed At": "2026-07-27T05:19:09.954Z"
     },
     {
-      "TestID": "WEB-CH-00090",
+      "TestID": "WEB-CH-00165",
       "Category": "Compatibility",
       "Module / Page": "Emotion Analysis",
       "Test Case": "responsive_desktop_1440x900",
@@ -997,10 +1822,32 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Renders content at 1440x900 (desktop)",
-      "Executed At": "2026-07-24T19:13:26.297Z"
+      "Executed At": "2026-07-27T05:19:10.386Z"
     },
     {
-      "TestID": "WEB-CH-00091",
+      "TestID": "WEB-CH-00166",
+      "Category": "Compatibility",
+      "Module / Page": "Emotion Analysis",
+      "Test Case": "responsive_desktop-large_1920x1080",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Pass",
+      "Observed Result (evidence)": "Renders content at 1920x1080 (desktop-large)",
+      "Executed At": "2026-07-27T05:19:10.819Z"
+    },
+    {
+      "TestID": "WEB-CH-00167",
+      "Category": "Compatibility",
+      "Module / Page": "Activity Tracker",
+      "Test Case": "responsive_mobile-small_320x568",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Pass",
+      "Observed Result (evidence)": "Renders content at 320x568 (mobile-small)",
+      "Executed At": "2026-07-27T05:19:11.292Z"
+    },
+    {
+      "TestID": "WEB-CH-00168",
       "Category": "Compatibility",
       "Module / Page": "Activity Tracker",
       "Test Case": "responsive_mobile_375x812",
@@ -1008,10 +1855,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Renders content at 375x812 (mobile)",
-      "Executed At": "2026-07-24T19:13:26.773Z"
+      "Executed At": "2026-07-27T05:19:11.725Z"
     },
     {
-      "TestID": "WEB-CH-00092",
+      "TestID": "WEB-CH-00169",
       "Category": "Compatibility",
       "Module / Page": "Activity Tracker",
       "Test Case": "responsive_tablet_768x1024",
@@ -1019,10 +1866,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Renders content at 768x1024 (tablet)",
-      "Executed At": "2026-07-24T19:13:27.207Z"
+      "Executed At": "2026-07-27T05:19:12.155Z"
     },
     {
-      "TestID": "WEB-CH-00093",
+      "TestID": "WEB-CH-00170",
       "Category": "Compatibility",
       "Module / Page": "Activity Tracker",
       "Test Case": "responsive_desktop_1440x900",
@@ -1030,10 +1877,32 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Renders content at 1440x900 (desktop)",
-      "Executed At": "2026-07-24T19:13:27.641Z"
+      "Executed At": "2026-07-27T05:19:12.588Z"
     },
     {
-      "TestID": "WEB-CH-00094",
+      "TestID": "WEB-CH-00171",
+      "Category": "Compatibility",
+      "Module / Page": "Activity Tracker",
+      "Test Case": "responsive_desktop-large_1920x1080",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Pass",
+      "Observed Result (evidence)": "Renders content at 1920x1080 (desktop-large)",
+      "Executed At": "2026-07-27T05:19:13.021Z"
+    },
+    {
+      "TestID": "WEB-CH-00172",
+      "Category": "Compatibility",
+      "Module / Page": "Recommendations",
+      "Test Case": "responsive_mobile-small_320x568",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Pass",
+      "Observed Result (evidence)": "Renders content at 320x568 (mobile-small)",
+      "Executed At": "2026-07-27T05:19:13.492Z"
+    },
+    {
+      "TestID": "WEB-CH-00173",
       "Category": "Compatibility",
       "Module / Page": "Recommendations",
       "Test Case": "responsive_mobile_375x812",
@@ -1041,10 +1910,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Renders content at 375x812 (mobile)",
-      "Executed At": "2026-07-24T19:13:28.120Z"
+      "Executed At": "2026-07-27T05:19:13.923Z"
     },
     {
-      "TestID": "WEB-CH-00095",
+      "TestID": "WEB-CH-00174",
       "Category": "Compatibility",
       "Module / Page": "Recommendations",
       "Test Case": "responsive_tablet_768x1024",
@@ -1052,10 +1921,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Renders content at 768x1024 (tablet)",
-      "Executed At": "2026-07-24T19:13:28.554Z"
+      "Executed At": "2026-07-27T05:19:14.355Z"
     },
     {
-      "TestID": "WEB-CH-00096",
+      "TestID": "WEB-CH-00175",
       "Category": "Compatibility",
       "Module / Page": "Recommendations",
       "Test Case": "responsive_desktop_1440x900",
@@ -1063,10 +1932,32 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Renders content at 1440x900 (desktop)",
-      "Executed At": "2026-07-24T19:13:28.990Z"
+      "Executed At": "2026-07-27T05:19:14.787Z"
     },
     {
-      "TestID": "WEB-CH-00097",
+      "TestID": "WEB-CH-00176",
+      "Category": "Compatibility",
+      "Module / Page": "Recommendations",
+      "Test Case": "responsive_desktop-large_1920x1080",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Pass",
+      "Observed Result (evidence)": "Renders content at 1920x1080 (desktop-large)",
+      "Executed At": "2026-07-27T05:19:15.219Z"
+    },
+    {
+      "TestID": "WEB-CH-00177",
+      "Category": "Compatibility",
+      "Module / Page": "Analytics",
+      "Test Case": "responsive_mobile-small_320x568",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Pass",
+      "Observed Result (evidence)": "Renders content at 320x568 (mobile-small)",
+      "Executed At": "2026-07-27T05:19:15.692Z"
+    },
+    {
+      "TestID": "WEB-CH-00178",
       "Category": "Compatibility",
       "Module / Page": "Analytics",
       "Test Case": "responsive_mobile_375x812",
@@ -1074,10 +1965,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Renders content at 375x812 (mobile)",
-      "Executed At": "2026-07-24T19:13:29.461Z"
+      "Executed At": "2026-07-27T05:19:16.124Z"
     },
     {
-      "TestID": "WEB-CH-00098",
+      "TestID": "WEB-CH-00179",
       "Category": "Compatibility",
       "Module / Page": "Analytics",
       "Test Case": "responsive_tablet_768x1024",
@@ -1085,10 +1976,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Renders content at 768x1024 (tablet)",
-      "Executed At": "2026-07-24T19:13:29.897Z"
+      "Executed At": "2026-07-27T05:19:16.556Z"
     },
     {
-      "TestID": "WEB-CH-00099",
+      "TestID": "WEB-CH-00180",
       "Category": "Compatibility",
       "Module / Page": "Analytics",
       "Test Case": "responsive_desktop_1440x900",
@@ -1096,10 +1987,32 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Renders content at 1440x900 (desktop)",
-      "Executed At": "2026-07-24T19:13:30.330Z"
+      "Executed At": "2026-07-27T05:19:16.988Z"
     },
     {
-      "TestID": "WEB-CH-00100",
+      "TestID": "WEB-CH-00181",
+      "Category": "Compatibility",
+      "Module / Page": "Analytics",
+      "Test Case": "responsive_desktop-large_1920x1080",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Pass",
+      "Observed Result (evidence)": "Renders content at 1920x1080 (desktop-large)",
+      "Executed At": "2026-07-27T05:19:17.421Z"
+    },
+    {
+      "TestID": "WEB-CH-00182",
+      "Category": "Compatibility",
+      "Module / Page": "Wellness Chat",
+      "Test Case": "responsive_mobile-small_320x568",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Pass",
+      "Observed Result (evidence)": "Renders content at 320x568 (mobile-small)",
+      "Executed At": "2026-07-27T05:19:17.894Z"
+    },
+    {
+      "TestID": "WEB-CH-00183",
       "Category": "Compatibility",
       "Module / Page": "Wellness Chat",
       "Test Case": "responsive_mobile_375x812",
@@ -1107,10 +2020,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Renders content at 375x812 (mobile)",
-      "Executed At": "2026-07-24T19:13:30.808Z"
+      "Executed At": "2026-07-27T05:19:18.328Z"
     },
     {
-      "TestID": "WEB-CH-00101",
+      "TestID": "WEB-CH-00184",
       "Category": "Compatibility",
       "Module / Page": "Wellness Chat",
       "Test Case": "responsive_tablet_768x1024",
@@ -1118,10 +2031,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Renders content at 768x1024 (tablet)",
-      "Executed At": "2026-07-24T19:13:31.241Z"
+      "Executed At": "2026-07-27T05:19:18.760Z"
     },
     {
-      "TestID": "WEB-CH-00102",
+      "TestID": "WEB-CH-00185",
       "Category": "Compatibility",
       "Module / Page": "Wellness Chat",
       "Test Case": "responsive_desktop_1440x900",
@@ -1129,10 +2042,32 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Renders content at 1440x900 (desktop)",
-      "Executed At": "2026-07-24T19:13:31.673Z"
+      "Executed At": "2026-07-27T05:19:19.192Z"
     },
     {
-      "TestID": "WEB-CH-00103",
+      "TestID": "WEB-CH-00186",
+      "Category": "Compatibility",
+      "Module / Page": "Wellness Chat",
+      "Test Case": "responsive_desktop-large_1920x1080",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Pass",
+      "Observed Result (evidence)": "Renders content at 1920x1080 (desktop-large)",
+      "Executed At": "2026-07-27T05:19:19.624Z"
+    },
+    {
+      "TestID": "WEB-CH-00187",
+      "Category": "Compatibility",
+      "Module / Page": "Profile",
+      "Test Case": "responsive_mobile-small_320x568",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Pass",
+      "Observed Result (evidence)": "Renders content at 320x568 (mobile-small)",
+      "Executed At": "2026-07-27T05:19:20.095Z"
+    },
+    {
+      "TestID": "WEB-CH-00188",
       "Category": "Compatibility",
       "Module / Page": "Profile",
       "Test Case": "responsive_mobile_375x812",
@@ -1140,10 +2075,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Renders content at 375x812 (mobile)",
-      "Executed At": "2026-07-24T19:13:32.153Z"
+      "Executed At": "2026-07-27T05:19:20.529Z"
     },
     {
-      "TestID": "WEB-CH-00104",
+      "TestID": "WEB-CH-00189",
       "Category": "Compatibility",
       "Module / Page": "Profile",
       "Test Case": "responsive_tablet_768x1024",
@@ -1151,10 +2086,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Renders content at 768x1024 (tablet)",
-      "Executed At": "2026-07-24T19:13:32.587Z"
+      "Executed At": "2026-07-27T05:19:20.962Z"
     },
     {
-      "TestID": "WEB-CH-00105",
+      "TestID": "WEB-CH-00190",
       "Category": "Compatibility",
       "Module / Page": "Profile",
       "Test Case": "responsive_desktop_1440x900",
@@ -1162,10 +2097,21 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Renders content at 1440x900 (desktop)",
-      "Executed At": "2026-07-24T19:13:33.022Z"
+      "Executed At": "2026-07-27T05:19:21.397Z"
     },
     {
-      "TestID": "WEB-CH-00106",
+      "TestID": "WEB-CH-00191",
+      "Category": "Compatibility",
+      "Module / Page": "Profile",
+      "Test Case": "responsive_desktop-large_1920x1080",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Pass",
+      "Observed Result (evidence)": "Renders content at 1920x1080 (desktop-large)",
+      "Executed At": "2026-07-27T05:19:21.831Z"
+    },
+    {
+      "TestID": "WEB-CH-00192",
       "Category": "Accessibility",
       "Module / Page": "Dashboard",
       "Test Case": "no_severe_console_errors",
@@ -1173,10 +2119,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "1 severe console errors: https://jaishreeprakash.github.io/burnout-ai/dashboard - Failed to load resource: the server responded with a status of 404 ()",
-      "Executed At": "2026-07-24T19:13:33.570Z"
+      "Executed At": "2026-07-27T05:19:22.394Z"
     },
     {
-      "TestID": "WEB-CH-00107",
+      "TestID": "WEB-CH-00193",
       "Category": "Accessibility",
       "Module / Page": "Sleep Tracker",
       "Test Case": "no_severe_console_errors",
@@ -1184,10 +2130,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "1 severe console errors: https://jaishreeprakash.github.io/burnout-ai/sleep - Failed to load resource: the server responded with a status of 404 ()",
-      "Executed At": "2026-07-24T19:13:34.113Z"
+      "Executed At": "2026-07-27T05:19:22.932Z"
     },
     {
-      "TestID": "WEB-CH-00108",
+      "TestID": "WEB-CH-00194",
       "Category": "Accessibility",
       "Module / Page": "Phone Usage",
       "Test Case": "no_severe_console_errors",
@@ -1195,10 +2141,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "1 severe console errors: https://jaishreeprakash.github.io/burnout-ai/phone - Failed to load resource: the server responded with a status of 404 ()",
-      "Executed At": "2026-07-24T19:13:34.656Z"
+      "Executed At": "2026-07-27T05:19:23.472Z"
     },
     {
-      "TestID": "WEB-CH-00109",
+      "TestID": "WEB-CH-00195",
       "Category": "Accessibility",
       "Module / Page": "Emotion Analysis",
       "Test Case": "no_severe_console_errors",
@@ -1206,10 +2152,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "1 severe console errors: https://jaishreeprakash.github.io/burnout-ai/emotions - Failed to load resource: the server responded with a status of 404 ()",
-      "Executed At": "2026-07-24T19:13:35.198Z"
+      "Executed At": "2026-07-27T05:19:24.013Z"
     },
     {
-      "TestID": "WEB-CH-00110",
+      "TestID": "WEB-CH-00196",
       "Category": "Accessibility",
       "Module / Page": "Activity Tracker",
       "Test Case": "no_severe_console_errors",
@@ -1217,10 +2163,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "1 severe console errors: https://jaishreeprakash.github.io/burnout-ai/activity - Failed to load resource: the server responded with a status of 404 ()",
-      "Executed At": "2026-07-24T19:13:35.741Z"
+      "Executed At": "2026-07-27T05:19:24.554Z"
     },
     {
-      "TestID": "WEB-CH-00111",
+      "TestID": "WEB-CH-00197",
       "Category": "Accessibility",
       "Module / Page": "Recommendations",
       "Test Case": "no_severe_console_errors",
@@ -1228,10 +2174,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "1 severe console errors: https://jaishreeprakash.github.io/burnout-ai/recommendations - Failed to load resource: the server responded with a status of 404 ()",
-      "Executed At": "2026-07-24T19:13:36.287Z"
+      "Executed At": "2026-07-27T05:19:25.096Z"
     },
     {
-      "TestID": "WEB-CH-00112",
+      "TestID": "WEB-CH-00198",
       "Category": "Accessibility",
       "Module / Page": "Analytics",
       "Test Case": "no_severe_console_errors",
@@ -1239,10 +2185,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "1 severe console errors: https://jaishreeprakash.github.io/burnout-ai/analytics - Failed to load resource: the server responded with a status of 404 ()",
-      "Executed At": "2026-07-24T19:13:36.831Z"
+      "Executed At": "2026-07-27T05:19:25.635Z"
     },
     {
-      "TestID": "WEB-CH-00113",
+      "TestID": "WEB-CH-00199",
       "Category": "Accessibility",
       "Module / Page": "Wellness Chat",
       "Test Case": "no_severe_console_errors",
@@ -1250,10 +2196,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "1 severe console errors: https://jaishreeprakash.github.io/burnout-ai/chat - Failed to load resource: the server responded with a status of 404 ()",
-      "Executed At": "2026-07-24T19:13:37.374Z"
+      "Executed At": "2026-07-27T05:19:26.172Z"
     },
     {
-      "TestID": "WEB-CH-00114",
+      "TestID": "WEB-CH-00200",
       "Category": "Accessibility",
       "Module / Page": "Profile",
       "Test Case": "no_severe_console_errors",
@@ -1261,7 +2207,106 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "1 severe console errors: https://jaishreeprakash.github.io/burnout-ai/profile - Failed to load resource: the server responded with a status of 404 ()",
-      "Executed At": "2026-07-24T19:13:37.916Z"
+      "Executed At": "2026-07-27T05:19:26.710Z"
+    },
+    {
+      "TestID": "WEB-CH-00201",
+      "Category": "Accessibility",
+      "Module / Page": "Dashboard",
+      "Test Case": "no_severe_console_errors_after_spa_nav",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T05:19:47.118Z"
+    },
+    {
+      "TestID": "WEB-CH-00202",
+      "Category": "Accessibility",
+      "Module / Page": "Sleep Tracker",
+      "Test Case": "no_severe_console_errors_after_spa_nav",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T05:20:07.479Z"
+    },
+    {
+      "TestID": "WEB-CH-00203",
+      "Category": "Accessibility",
+      "Module / Page": "Phone Usage",
+      "Test Case": "no_severe_console_errors_after_spa_nav",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T05:20:27.838Z"
+    },
+    {
+      "TestID": "WEB-CH-00204",
+      "Category": "Accessibility",
+      "Module / Page": "Emotion Analysis",
+      "Test Case": "no_severe_console_errors_after_spa_nav",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T05:20:48.199Z"
+    },
+    {
+      "TestID": "WEB-CH-00205",
+      "Category": "Accessibility",
+      "Module / Page": "Activity Tracker",
+      "Test Case": "no_severe_console_errors_after_spa_nav",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T05:21:08.557Z"
+    },
+    {
+      "TestID": "WEB-CH-00206",
+      "Category": "Accessibility",
+      "Module / Page": "Recommendations",
+      "Test Case": "no_severe_console_errors_after_spa_nav",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T05:21:28.917Z"
+    },
+    {
+      "TestID": "WEB-CH-00207",
+      "Category": "Accessibility",
+      "Module / Page": "Analytics",
+      "Test Case": "no_severe_console_errors_after_spa_nav",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T05:21:49.279Z"
+    },
+    {
+      "TestID": "WEB-CH-00208",
+      "Category": "Accessibility",
+      "Module / Page": "Wellness Chat",
+      "Test Case": "no_severe_console_errors_after_spa_nav",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T05:22:09.640Z"
+    },
+    {
+      "TestID": "WEB-CH-00209",
+      "Category": "Accessibility",
+      "Module / Page": "Profile",
+      "Test Case": "no_severe_console_errors_after_spa_nav",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 chrome real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T05:22:29.997Z"
     },
     {
       "TestID": "WEB-FI-00001",
@@ -1272,7 +2317,7 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Element located",
-      "Executed At": "2026-07-24T19:28:01.352Z"
+      "Executed At": "2026-07-27T06:03:15.340Z"
     },
     {
       "TestID": "WEB-FI-00002",
@@ -1283,7 +2328,7 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Element located",
-      "Executed At": "2026-07-24T19:28:01.364Z"
+      "Executed At": "2026-07-27T06:03:15.346Z"
     },
     {
       "TestID": "WEB-FI-00003",
@@ -1294,7 +2339,7 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Element located",
-      "Executed At": "2026-07-24T19:28:01.387Z"
+      "Executed At": "2026-07-27T06:03:15.352Z"
     },
     {
       "TestID": "WEB-FI-00004",
@@ -1305,7 +2350,7 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Element located",
-      "Executed At": "2026-07-24T19:28:01.588Z"
+      "Executed At": "2026-07-27T06:03:15.428Z"
     },
     {
       "TestID": "WEB-FI-00005",
@@ -1316,10 +2361,32 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Element located",
-      "Executed At": "2026-07-24T19:28:01.617Z"
+      "Executed At": "2026-07-27T06:03:15.605Z"
     },
     {
       "TestID": "WEB-FI-00006",
+      "Category": "UI/UX",
+      "Module / Page": "Login",
+      "Test Case": "element_present_forgot_password_button",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
+      "Status": "Pass",
+      "Observed Result (evidence)": "Element located",
+      "Executed At": "2026-07-27T06:03:15.646Z"
+    },
+    {
+      "TestID": "WEB-FI-00007",
+      "Category": "UI/UX",
+      "Module / Page": "Login",
+      "Test Case": "element_present_ai_analysis_feature_label",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
+      "Status": "Pass",
+      "Observed Result (evidence)": "Element located",
+      "Executed At": "2026-07-27T06:03:15.649Z"
+    },
+    {
+      "TestID": "WEB-FI-00008",
       "Category": "Functional",
       "Module / Page": "Login",
       "Test Case": "empty_submit_blocked",
@@ -1327,10 +2394,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Form did not navigate away on empty submit",
-      "Executed At": "2026-07-24T19:28:02.635Z"
+      "Executed At": "2026-07-27T06:03:16.733Z"
     },
     {
-      "TestID": "WEB-FI-00007",
+      "TestID": "WEB-FI-00009",
       "Category": "Security",
       "Module / Page": "Login",
       "Test Case": "wrong_credentials_rejected",
@@ -1338,10 +2405,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "No error banner appeared after invalid login",
-      "Executed At": "2026-07-24T19:28:11.206Z"
+      "Executed At": "2026-07-27T06:03:25.272Z"
     },
     {
-      "TestID": "WEB-FI-00008",
+      "TestID": "WEB-FI-00010",
       "Category": "Security",
       "Module / Page": "Login",
       "Test Case": "sql_injection_input_no_crash",
@@ -1349,10 +2416,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Page still renders content after SQLi-style login attempt",
-      "Executed At": "2026-07-24T19:28:13.163Z"
+      "Executed At": "2026-07-27T06:03:27.216Z"
     },
     {
-      "TestID": "WEB-FI-00009",
+      "TestID": "WEB-FI-00011",
       "Category": "Functional",
       "Module / Page": "Login",
       "Test Case": "password_show_hide_toggle",
@@ -1360,10 +2427,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "type changed password -> text",
-      "Executed At": "2026-07-24T19:28:13.604Z"
+      "Executed At": "2026-07-27T06:03:27.609Z"
     },
     {
-      "TestID": "WEB-FI-00010",
+      "TestID": "WEB-FI-00012",
       "Category": "UI/UX",
       "Module / Page": "Login",
       "Test Case": "register_link_navigates",
@@ -1371,10 +2438,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Landed on https://jaishreeprakash.github.io/burnout-ai/register",
-      "Executed At": "2026-07-24T19:28:13.986Z"
+      "Executed At": "2026-07-27T06:03:28.065Z"
     },
     {
-      "TestID": "WEB-FI-00011",
+      "TestID": "WEB-FI-00013",
       "Category": "UI/UX",
       "Module / Page": "Register",
       "Test Case": "element_present_full_name_input",
@@ -1382,10 +2449,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Element located",
-      "Executed At": "2026-07-24T19:28:14.136Z"
+      "Executed At": "2026-07-27T06:03:28.214Z"
     },
     {
-      "TestID": "WEB-FI-00012",
+      "TestID": "WEB-FI-00014",
       "Category": "UI/UX",
       "Module / Page": "Register",
       "Test Case": "element_present_username_input",
@@ -1393,10 +2460,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Element located",
-      "Executed At": "2026-07-24T19:28:14.138Z"
+      "Executed At": "2026-07-27T06:03:28.216Z"
     },
     {
-      "TestID": "WEB-FI-00013",
+      "TestID": "WEB-FI-00015",
       "Category": "UI/UX",
       "Module / Page": "Register",
       "Test Case": "element_present_email_input",
@@ -1404,10 +2471,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Element located",
-      "Executed At": "2026-07-24T19:28:14.140Z"
+      "Executed At": "2026-07-27T06:03:28.219Z"
     },
     {
-      "TestID": "WEB-FI-00014",
+      "TestID": "WEB-FI-00016",
       "Category": "UI/UX",
       "Module / Page": "Register",
       "Test Case": "element_present_age_input",
@@ -1415,10 +2482,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Element located",
-      "Executed At": "2026-07-24T19:28:14.142Z"
+      "Executed At": "2026-07-27T06:03:28.224Z"
     },
     {
-      "TestID": "WEB-FI-00015",
+      "TestID": "WEB-FI-00017",
       "Category": "UI/UX",
       "Module / Page": "Register",
       "Test Case": "element_present_gender_select",
@@ -1426,10 +2493,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Element located",
-      "Executed At": "2026-07-24T19:28:14.149Z"
+      "Executed At": "2026-07-27T06:03:28.225Z"
     },
     {
-      "TestID": "WEB-FI-00016",
+      "TestID": "WEB-FI-00018",
       "Category": "UI/UX",
       "Module / Page": "Register",
       "Test Case": "element_present_password_input",
@@ -1437,10 +2504,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Element located",
-      "Executed At": "2026-07-24T19:28:14.154Z"
+      "Executed At": "2026-07-27T06:03:28.232Z"
     },
     {
-      "TestID": "WEB-FI-00017",
+      "TestID": "WEB-FI-00019",
       "Category": "UI/UX",
       "Module / Page": "Register",
       "Test Case": "element_present_confirm_password_input",
@@ -1448,10 +2515,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Element located",
-      "Executed At": "2026-07-24T19:28:14.157Z"
+      "Executed At": "2026-07-27T06:03:28.235Z"
     },
     {
-      "TestID": "WEB-FI-00018",
+      "TestID": "WEB-FI-00020",
       "Category": "UI/UX",
       "Module / Page": "Register",
       "Test Case": "element_present_submit_button",
@@ -1459,10 +2526,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Element located",
-      "Executed At": "2026-07-24T19:28:14.159Z"
+      "Executed At": "2026-07-27T06:03:28.237Z"
     },
     {
-      "TestID": "WEB-FI-00019",
+      "TestID": "WEB-FI-00021",
       "Category": "UI/UX",
       "Module / Page": "Register",
       "Test Case": "element_present_login_link",
@@ -1470,10 +2537,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Element located",
-      "Executed At": "2026-07-24T19:28:14.303Z"
+      "Executed At": "2026-07-27T06:03:28.397Z"
     },
     {
-      "TestID": "WEB-FI-00020",
+      "TestID": "WEB-FI-00022",
       "Category": "Functional",
       "Module / Page": "Register",
       "Test Case": "short_password_blocked",
@@ -1481,10 +2548,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Weak password correctly blocked client-side submit",
-      "Executed At": "2026-07-24T19:28:15.602Z"
+      "Executed At": "2026-07-27T06:03:29.658Z"
     },
     {
-      "TestID": "WEB-FI-00021",
+      "TestID": "WEB-FI-00023",
       "Category": "Functional",
       "Module / Page": "Register",
       "Test Case": "password_mismatch_blocked",
@@ -1492,10 +2559,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Password mismatch correctly blocked client-side submit",
-      "Executed At": "2026-07-24T19:28:16.887Z"
+      "Executed At": "2026-07-27T06:03:30.920Z"
     },
     {
-      "TestID": "WEB-FI-00022",
+      "TestID": "WEB-FI-00024",
       "Category": "Security",
       "Module / Page": "Register",
       "Test Case": "xss_input_no_crash",
@@ -1503,10 +2570,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Page renders normally with XSS-style full_name input (no script executed/crash)",
-      "Executed At": "2026-07-24T19:28:17.645Z"
+      "Executed At": "2026-07-27T06:03:31.662Z"
     },
     {
-      "TestID": "WEB-FI-00023",
+      "TestID": "WEB-FI-00025",
       "Category": "UI/UX",
       "Module / Page": "Register",
       "Test Case": "login_link_navigates",
@@ -1514,32 +2581,120 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Landed on https://jaishreeprakash.github.io/burnout-ai/login",
-      "Executed At": "2026-07-24T19:28:18.010Z"
+      "Executed At": "2026-07-27T06:03:32.009Z"
     },
     {
-      "TestID": "WEB-FI-00024",
+      "TestID": "WEB-FI-00026",
+      "Category": "Functional",
+      "Module / Page": "Login",
+      "Test Case": "empty_submit_shows_required_errors",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
+      "Status": "Pass",
+      "Observed Result (evidence)": "react-hook-form required-field messages present: True",
+      "Executed At": "2026-07-27T06:03:32.656Z"
+    },
+    {
+      "TestID": "WEB-FI-00027",
+      "Category": "Functional",
+      "Module / Page": "Login",
+      "Test Case": "password_toggle_reverts_on_second_click",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
+      "Status": "Pass",
+      "Observed Result (evidence)": "type sequence password -> text -> password",
+      "Executed At": "2026-07-27T06:03:33.031Z"
+    },
+    {
+      "TestID": "WEB-FI-00028",
+      "Category": "Functional",
+      "Module / Page": "Register",
+      "Test Case": "empty_submit_shows_required_errors",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
+      "Status": "Pass",
+      "Observed Result (evidence)": "react-hook-form required-field messages present: True",
+      "Executed At": "2026-07-27T06:03:33.681Z"
+    },
+    {
+      "TestID": "WEB-FI-00029",
+      "Category": "Functional",
+      "Module / Page": "Register",
+      "Test Case": "invalid_email_format_blocked",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Invalid email format correctly blocked client-side submit",
+      "Executed At": "2026-07-27T06:03:34.678Z"
+    },
+    {
+      "TestID": "WEB-FI-00030",
+      "Category": "Functional",
+      "Module / Page": "Register",
+      "Test Case": "username_min_length_blocked",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
+      "Status": "Pass",
+      "Observed Result (evidence)": "Sub-minimum-length username correctly blocked client-side submit",
+      "Executed At": "2026-07-27T06:03:35.659Z"
+    },
+    {
+      "TestID": "WEB-FI-00031",
+      "Category": "Functional",
+      "Module / Page": "Register",
+      "Test Case": "username_invalid_chars_blocked",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
+      "Status": "Pass",
+      "Observed Result (evidence)": "Username with invalid characters correctly blocked client-side submit",
+      "Executed At": "2026-07-27T06:03:36.653Z"
+    },
+    {
+      "TestID": "WEB-FI-00032",
+      "Category": "Functional",
+      "Module / Page": "Register",
+      "Test Case": "age_out_of_range_blocked",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Below-minimum age correctly blocked client-side submit",
+      "Executed At": "2026-07-27T06:03:37.648Z"
+    },
+    {
+      "TestID": "WEB-FI-00033",
+      "Category": "Functional",
+      "Module / Page": "Register",
+      "Test Case": "gender_select_has_expected_options",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
+      "Status": "Pass",
+      "Observed Result (evidence)": "Gender select options: ['Prefer not to say', 'Male', 'Female', 'Non-binary', 'Other']",
+      "Executed At": "2026-07-27T06:03:37.987Z"
+    },
+    {
+      "TestID": "WEB-FI-00034",
       "Category": "Functional",
       "Module / Page": "Register",
       "Test Case": "real_registration_succeeds",
       "Method": "UI",
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Pass",
-      "Observed Result (evidence)": "Registered selenium.firefox.37f27936@healthsense.test and landed on https://jaishreeprakash.github.io/burnout-ai/dashboard",
-      "Executed At": "2026-07-24T19:28:24.050Z"
+      "Observed Result (evidence)": "Registered selenium.firefox.10e5444c@healthsense.test and landed on https://jaishreeprakash.github.io/burnout-ai/dashboard",
+      "Executed At": "2026-07-27T06:03:44.035Z"
     },
     {
-      "TestID": "WEB-FI-00025",
+      "TestID": "WEB-FI-00035",
       "Category": "Functional",
       "Module / Page": "Login",
       "Test Case": "real_login_succeeds",
       "Method": "UI",
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
-      "Status": "Pass",
-      "Observed Result (evidence)": "Signed out then logged back in with real credentials, reached /dashboard",
-      "Executed At": "2026-07-24T19:28:27.347Z"
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T06:03:56.337Z"
     },
     {
-      "TestID": "WEB-FI-00026",
+      "TestID": "WEB-FI-00036",
       "Category": "UI/UX",
       "Module / Page": "Sidebar",
       "Test Case": "nav_link_dashboard_works",
@@ -1547,10 +2702,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:28:47.928Z"
+      "Executed At": "2026-07-27T06:04:16.794Z"
     },
     {
-      "TestID": "WEB-FI-00027",
+      "TestID": "WEB-FI-00037",
       "Category": "UI/UX",
       "Module / Page": "Sidebar",
       "Test Case": "nav_link_sleep_works",
@@ -1558,10 +2713,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:29:08.491Z"
+      "Executed At": "2026-07-27T06:04:37.287Z"
     },
     {
-      "TestID": "WEB-FI-00028",
+      "TestID": "WEB-FI-00038",
       "Category": "UI/UX",
       "Module / Page": "Sidebar",
       "Test Case": "nav_link_phone_works",
@@ -1569,10 +2724,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:29:29.023Z"
+      "Executed At": "2026-07-27T06:04:57.781Z"
     },
     {
-      "TestID": "WEB-FI-00029",
+      "TestID": "WEB-FI-00039",
       "Category": "UI/UX",
       "Module / Page": "Sidebar",
       "Test Case": "nav_link_emotions_works",
@@ -1580,10 +2735,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:29:49.547Z"
+      "Executed At": "2026-07-27T06:05:18.282Z"
     },
     {
-      "TestID": "WEB-FI-00030",
+      "TestID": "WEB-FI-00040",
       "Category": "UI/UX",
       "Module / Page": "Sidebar",
       "Test Case": "nav_link_activity_works",
@@ -1591,10 +2746,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:30:10.071Z"
+      "Executed At": "2026-07-27T06:05:38.785Z"
     },
     {
-      "TestID": "WEB-FI-00031",
+      "TestID": "WEB-FI-00041",
       "Category": "UI/UX",
       "Module / Page": "Sidebar",
       "Test Case": "nav_link_recommendations_works",
@@ -1602,10 +2757,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:30:30.616Z"
+      "Executed At": "2026-07-27T06:05:59.285Z"
     },
     {
-      "TestID": "WEB-FI-00032",
+      "TestID": "WEB-FI-00042",
       "Category": "UI/UX",
       "Module / Page": "Sidebar",
       "Test Case": "nav_link_analytics_works",
@@ -1613,10 +2768,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:30:51.142Z"
+      "Executed At": "2026-07-27T06:06:19.770Z"
     },
     {
-      "TestID": "WEB-FI-00033",
+      "TestID": "WEB-FI-00043",
       "Category": "UI/UX",
       "Module / Page": "Sidebar",
       "Test Case": "nav_link_chat_works",
@@ -1624,10 +2779,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:31:11.673Z"
+      "Executed At": "2026-07-27T06:06:40.276Z"
     },
     {
-      "TestID": "WEB-FI-00034",
+      "TestID": "WEB-FI-00044",
       "Category": "UI/UX",
       "Module / Page": "Sidebar",
       "Test Case": "nav_link_profile_works",
@@ -1635,10 +2790,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:31:32.215Z"
+      "Executed At": "2026-07-27T06:07:00.770Z"
     },
     {
-      "TestID": "WEB-FI-00035",
+      "TestID": "WEB-FI-00045",
       "Category": "UI/UX",
       "Module / Page": "Dashboard",
       "Test Case": "element_present_refresh_button",
@@ -1646,10 +2801,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:31:52.507Z"
+      "Executed At": "2026-07-27T06:07:21.049Z"
     },
     {
-      "TestID": "WEB-FI-00036",
+      "TestID": "WEB-FI-00046",
       "Category": "UI/UX",
       "Module / Page": "Dashboard",
       "Test Case": "element_present_burnout_score_heading",
@@ -1657,10 +2812,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:32:12.646Z"
+      "Executed At": "2026-07-27T06:07:41.188Z"
     },
     {
-      "TestID": "WEB-FI-00037",
+      "TestID": "WEB-FI-00047",
       "Category": "UI/UX",
       "Module / Page": "Dashboard",
       "Test Case": "element_present_wellness_score_heading",
@@ -1668,10 +2823,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Element located",
-      "Executed At": "2026-07-24T19:32:12.649Z"
+      "Executed At": "2026-07-27T06:07:41.190Z"
     },
     {
-      "TestID": "WEB-FI-00038",
+      "TestID": "WEB-FI-00048",
       "Category": "UI/UX",
       "Module / Page": "Dashboard",
       "Test Case": "element_present_health_dimensions_heading",
@@ -1679,10 +2834,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:32:32.793Z"
+      "Executed At": "2026-07-27T06:08:01.321Z"
     },
     {
-      "TestID": "WEB-FI-00039",
+      "TestID": "WEB-FI-00049",
       "Category": "UI/UX",
       "Module / Page": "Dashboard",
       "Test Case": "element_present_emotional_stability_heading",
@@ -1690,10 +2845,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:32:52.930Z"
+      "Executed At": "2026-07-27T06:08:21.458Z"
     },
     {
-      "TestID": "WEB-FI-00040",
+      "TestID": "WEB-FI-00050",
       "Category": "UI/UX",
       "Module / Page": "Dashboard",
       "Test Case": "element_present_emotion_distribution_heading",
@@ -1701,10 +2856,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:33:13.079Z"
+      "Executed At": "2026-07-27T06:08:41.594Z"
     },
     {
-      "TestID": "WEB-FI-00041",
+      "TestID": "WEB-FI-00051",
       "Category": "UI/UX",
       "Module / Page": "Dashboard",
       "Test Case": "element_present_ai_recommendations_heading",
@@ -1712,10 +2867,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:33:33.226Z"
+      "Executed At": "2026-07-27T06:09:01.725Z"
     },
     {
-      "TestID": "WEB-FI-00042",
+      "TestID": "WEB-FI-00052",
       "Category": "UI/UX",
       "Module / Page": "Dashboard",
       "Test Case": "element_present_progress_comparison_heading",
@@ -1723,10 +2878,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:33:53.362Z"
+      "Executed At": "2026-07-27T06:09:21.855Z"
     },
     {
-      "TestID": "WEB-FI-00043",
+      "TestID": "WEB-FI-00053",
       "Category": "UI/UX",
       "Module / Page": "Dashboard",
       "Test Case": "element_present_quick_stats_heading",
@@ -1734,10 +2889,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:34:13.500Z"
+      "Executed At": "2026-07-27T06:09:41.980Z"
     },
     {
-      "TestID": "WEB-FI-00044",
+      "TestID": "WEB-FI-00054",
       "Category": "UI/UX",
       "Module / Page": "Dashboard",
       "Test Case": "element_present_view_all_link",
@@ -1745,10 +2900,32 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:34:33.861Z"
+      "Executed At": "2026-07-27T06:10:02.331Z"
     },
     {
-      "TestID": "WEB-FI-00045",
+      "TestID": "WEB-FI-00055",
+      "Category": "UI/UX",
+      "Module / Page": "Dashboard",
+      "Test Case": "element_present_header_open_menu_button",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T06:10:22.462Z"
+    },
+    {
+      "TestID": "WEB-FI-00056",
+      "Category": "UI/UX",
+      "Module / Page": "Dashboard",
+      "Test Case": "element_present_header_notifications_button",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T06:10:42.588Z"
+    },
+    {
+      "TestID": "WEB-FI-00057",
       "Category": "UI/UX",
       "Module / Page": "Sleep Tracker",
       "Test Case": "element_present_overview_tab",
@@ -1756,10 +2933,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:34:54.201Z"
+      "Executed At": "2026-07-27T06:11:02.874Z"
     },
     {
-      "TestID": "WEB-FI-00046",
+      "TestID": "WEB-FI-00058",
       "Category": "UI/UX",
       "Module / Page": "Sleep Tracker",
       "Test Case": "element_present_calendar_tab",
@@ -1767,10 +2944,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:35:14.337Z"
+      "Executed At": "2026-07-27T06:11:23.004Z"
     },
     {
-      "TestID": "WEB-FI-00047",
+      "TestID": "WEB-FI-00059",
       "Category": "UI/UX",
       "Module / Page": "Sleep Tracker",
       "Test Case": "element_present_log_tab",
@@ -1778,10 +2955,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:35:34.471Z"
+      "Executed At": "2026-07-27T06:11:43.133Z"
     },
     {
-      "TestID": "WEB-FI-00048",
+      "TestID": "WEB-FI-00060",
       "Category": "UI/UX",
       "Module / Page": "Sleep Tracker",
       "Test Case": "element_present_refresh_button",
@@ -1789,10 +2966,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:35:54.608Z"
+      "Executed At": "2026-07-27T06:12:03.263Z"
     },
     {
-      "TestID": "WEB-FI-00049",
+      "TestID": "WEB-FI-00061",
       "Category": "UI/UX",
       "Module / Page": "Sleep Tracker",
       "Test Case": "element_present_log_sleep_button",
@@ -1800,10 +2977,54 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:36:14.744Z"
+      "Executed At": "2026-07-27T06:12:23.391Z"
     },
     {
-      "TestID": "WEB-FI-00050",
+      "TestID": "WEB-FI-00062",
+      "Category": "UI/UX",
+      "Module / Page": "Sleep Tracker",
+      "Test Case": "element_present_header_open_menu_button",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T06:12:43.519Z"
+    },
+    {
+      "TestID": "WEB-FI-00063",
+      "Category": "UI/UX",
+      "Module / Page": "Sleep Tracker",
+      "Test Case": "element_present_header_notifications_button",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T06:13:03.645Z"
+    },
+    {
+      "TestID": "WEB-FI-00064",
+      "Category": "UI/UX",
+      "Module / Page": "Sleep Tracker",
+      "Test Case": "element_present_sleep_duration_heading",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T06:13:23.775Z"
+    },
+    {
+      "TestID": "WEB-FI-00065",
+      "Category": "UI/UX",
+      "Module / Page": "Sleep Tracker",
+      "Test Case": "element_present_sleep_quality_heading",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T06:13:43.903Z"
+    },
+    {
+      "TestID": "WEB-FI-00066",
       "Category": "UI/UX",
       "Module / Page": "Recommendations",
       "Test Case": "element_present_filter_all",
@@ -1811,10 +3032,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:36:35.035Z"
+      "Executed At": "2026-07-27T06:14:04.226Z"
     },
     {
-      "TestID": "WEB-FI-00051",
+      "TestID": "WEB-FI-00067",
       "Category": "UI/UX",
       "Module / Page": "Recommendations",
       "Test Case": "element_present_filter_sleep",
@@ -1822,10 +3043,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:36:55.170Z"
+      "Executed At": "2026-07-27T06:14:24.353Z"
     },
     {
-      "TestID": "WEB-FI-00052",
+      "TestID": "WEB-FI-00068",
       "Category": "UI/UX",
       "Module / Page": "Recommendations",
       "Test Case": "element_present_filter_phone",
@@ -1833,10 +3054,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:37:15.306Z"
+      "Executed At": "2026-07-27T06:14:44.481Z"
     },
     {
-      "TestID": "WEB-FI-00053",
+      "TestID": "WEB-FI-00069",
       "Category": "UI/UX",
       "Module / Page": "Recommendations",
       "Test Case": "element_present_filter_activity",
@@ -1844,10 +3065,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:37:35.443Z"
+      "Executed At": "2026-07-27T06:15:04.611Z"
     },
     {
-      "TestID": "WEB-FI-00054",
+      "TestID": "WEB-FI-00070",
       "Category": "UI/UX",
       "Module / Page": "Recommendations",
       "Test Case": "element_present_filter_mental_health",
@@ -1855,10 +3076,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:37:55.577Z"
+      "Executed At": "2026-07-27T06:15:24.740Z"
     },
     {
-      "TestID": "WEB-FI-00055",
+      "TestID": "WEB-FI-00071",
       "Category": "UI/UX",
       "Module / Page": "Recommendations",
       "Test Case": "element_present_filter_social",
@@ -1866,10 +3087,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:38:15.714Z"
+      "Executed At": "2026-07-27T06:15:44.866Z"
     },
     {
-      "TestID": "WEB-FI-00056",
+      "TestID": "WEB-FI-00072",
       "Category": "UI/UX",
       "Module / Page": "Recommendations",
       "Test Case": "element_present_filter_nutrition",
@@ -1877,10 +3098,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:38:35.850Z"
+      "Executed At": "2026-07-27T06:16:04.995Z"
     },
     {
-      "TestID": "WEB-FI-00057",
+      "TestID": "WEB-FI-00073",
       "Category": "UI/UX",
       "Module / Page": "Recommendations",
       "Test Case": "element_present_sort_toggle",
@@ -1888,10 +3109,54 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:38:55.986Z"
+      "Executed At": "2026-07-27T06:16:25.122Z"
     },
     {
-      "TestID": "WEB-FI-00058",
+      "TestID": "WEB-FI-00074",
+      "Category": "UI/UX",
+      "Module / Page": "Recommendations",
+      "Test Case": "element_present_header_open_menu_button",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T06:16:45.246Z"
+    },
+    {
+      "TestID": "WEB-FI-00075",
+      "Category": "UI/UX",
+      "Module / Page": "Recommendations",
+      "Test Case": "element_present_header_notifications_button",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T06:17:05.373Z"
+    },
+    {
+      "TestID": "WEB-FI-00076",
+      "Category": "UI/UX",
+      "Module / Page": "Recommendations",
+      "Test Case": "element_present_overall_progress_heading",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T06:17:25.501Z"
+    },
+    {
+      "TestID": "WEB-FI-00077",
+      "Category": "UI/UX",
+      "Module / Page": "Recommendations",
+      "Test Case": "element_present_high_priority_label",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T06:17:45.629Z"
+    },
+    {
+      "TestID": "WEB-FI-00078",
       "Category": "UI/UX",
       "Module / Page": "Analytics",
       "Test Case": "element_present_range_7d",
@@ -1899,10 +3164,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:39:16.315Z"
+      "Executed At": "2026-07-27T06:18:05.919Z"
     },
     {
-      "TestID": "WEB-FI-00059",
+      "TestID": "WEB-FI-00079",
       "Category": "UI/UX",
       "Module / Page": "Analytics",
       "Test Case": "element_present_range_30d",
@@ -1910,10 +3175,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:39:36.453Z"
+      "Executed At": "2026-07-27T06:18:26.049Z"
     },
     {
-      "TestID": "WEB-FI-00060",
+      "TestID": "WEB-FI-00080",
       "Category": "UI/UX",
       "Module / Page": "Analytics",
       "Test Case": "element_present_export_button",
@@ -1921,10 +3186,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:39:56.589Z"
+      "Executed At": "2026-07-27T06:18:46.179Z"
     },
     {
-      "TestID": "WEB-FI-00061",
+      "TestID": "WEB-FI-00081",
       "Category": "UI/UX",
       "Module / Page": "Analytics",
       "Test Case": "element_present_refresh_button",
@@ -1932,10 +3197,76 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:40:16.733Z"
+      "Executed At": "2026-07-27T06:19:06.317Z"
     },
     {
-      "TestID": "WEB-FI-00062",
+      "TestID": "WEB-FI-00082",
+      "Category": "UI/UX",
+      "Module / Page": "Analytics",
+      "Test Case": "element_present_header_open_menu_button",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T06:19:26.445Z"
+    },
+    {
+      "TestID": "WEB-FI-00083",
+      "Category": "UI/UX",
+      "Module / Page": "Analytics",
+      "Test Case": "element_present_header_notifications_button",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T06:19:46.573Z"
+    },
+    {
+      "TestID": "WEB-FI-00084",
+      "Category": "UI/UX",
+      "Module / Page": "Analytics",
+      "Test Case": "element_present_burnout_score_trend_heading",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T06:20:06.702Z"
+    },
+    {
+      "TestID": "WEB-FI-00085",
+      "Category": "UI/UX",
+      "Module / Page": "Analytics",
+      "Test Case": "element_present_all_metrics_overlay_heading",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T06:20:26.833Z"
+    },
+    {
+      "TestID": "WEB-FI-00086",
+      "Category": "UI/UX",
+      "Module / Page": "Analytics",
+      "Test Case": "element_present_burnout_records_region",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T06:20:46.960Z"
+    },
+    {
+      "TestID": "WEB-FI-00087",
+      "Category": "UI/UX",
+      "Module / Page": "Analytics",
+      "Test Case": "element_present_analytics_dashboard_label",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T06:21:07.089Z"
+    },
+    {
+      "TestID": "WEB-FI-00088",
       "Category": "UI/UX",
       "Module / Page": "Wellness Chat",
       "Test Case": "element_present_message_input",
@@ -1943,10 +3274,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:40:37.036Z"
+      "Executed At": "2026-07-27T06:21:27.380Z"
     },
     {
-      "TestID": "WEB-FI-00063",
+      "TestID": "WEB-FI-00089",
       "Category": "UI/UX",
       "Module / Page": "Wellness Chat",
       "Test Case": "element_present_send_button",
@@ -1954,10 +3285,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:40:57.171Z"
+      "Executed At": "2026-07-27T06:21:47.506Z"
     },
     {
-      "TestID": "WEB-FI-00064",
+      "TestID": "WEB-FI-00090",
       "Category": "UI/UX",
       "Module / Page": "Wellness Chat",
       "Test Case": "element_present_new_chat_button",
@@ -1965,10 +3296,54 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:41:17.307Z"
+      "Executed At": "2026-07-27T06:22:07.634Z"
     },
     {
-      "TestID": "WEB-FI-00065",
+      "TestID": "WEB-FI-00091",
+      "Category": "UI/UX",
+      "Module / Page": "Wellness Chat",
+      "Test Case": "element_present_header_open_menu_button",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T06:22:27.764Z"
+    },
+    {
+      "TestID": "WEB-FI-00092",
+      "Category": "UI/UX",
+      "Module / Page": "Wellness Chat",
+      "Test Case": "element_present_header_notifications_button",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T06:22:47.890Z"
+    },
+    {
+      "TestID": "WEB-FI-00093",
+      "Category": "UI/UX",
+      "Module / Page": "Wellness Chat",
+      "Test Case": "element_present_coach_heading",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T06:23:08.020Z"
+    },
+    {
+      "TestID": "WEB-FI-00094",
+      "Category": "UI/UX",
+      "Module / Page": "Wellness Chat",
+      "Test Case": "element_present_starter_prompt_button",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T06:23:28.151Z"
+    },
+    {
+      "TestID": "WEB-FI-00095",
       "Category": "UI/UX",
       "Module / Page": "Profile",
       "Test Case": "element_present_profile_tab",
@@ -1976,10 +3351,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:41:37.607Z"
+      "Executed At": "2026-07-27T06:23:48.427Z"
     },
     {
-      "TestID": "WEB-FI-00066",
+      "TestID": "WEB-FI-00096",
       "Category": "UI/UX",
       "Module / Page": "Profile",
       "Test Case": "element_present_notifications_tab",
@@ -1987,10 +3362,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:41:57.741Z"
+      "Executed At": "2026-07-27T06:24:08.554Z"
     },
     {
-      "TestID": "WEB-FI-00067",
+      "TestID": "WEB-FI-00097",
       "Category": "UI/UX",
       "Module / Page": "Profile",
       "Test Case": "element_present_privacy_tab",
@@ -1998,10 +3373,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:42:17.879Z"
+      "Executed At": "2026-07-27T06:24:28.682Z"
     },
     {
-      "TestID": "WEB-FI-00068",
+      "TestID": "WEB-FI-00098",
       "Category": "UI/UX",
       "Module / Page": "Profile",
       "Test Case": "element_present_edit_button",
@@ -2009,10 +3384,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:42:38.016Z"
+      "Executed At": "2026-07-27T06:24:48.812Z"
     },
     {
-      "TestID": "WEB-FI-00069",
+      "TestID": "WEB-FI-00099",
       "Category": "UI/UX",
       "Module / Page": "Profile",
       "Test Case": "element_present_sign_out_button",
@@ -2020,10 +3395,296 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:42:58.152Z"
+      "Executed At": "2026-07-27T06:25:08.940Z"
     },
     {
-      "TestID": "WEB-FI-00070",
+      "TestID": "WEB-FI-00100",
+      "Category": "UI/UX",
+      "Module / Page": "Profile",
+      "Test Case": "element_present_header_open_menu_button",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T06:25:29.067Z"
+    },
+    {
+      "TestID": "WEB-FI-00101",
+      "Category": "UI/UX",
+      "Module / Page": "Profile",
+      "Test Case": "element_present_header_notifications_button",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T06:25:49.193Z"
+    },
+    {
+      "TestID": "WEB-FI-00102",
+      "Category": "UI/UX",
+      "Module / Page": "Profile",
+      "Test Case": "element_present_personal_information_heading",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T06:26:09.322Z"
+    },
+    {
+      "TestID": "WEB-FI-00103",
+      "Category": "UI/UX",
+      "Module / Page": "Phone Usage",
+      "Test Case": "element_present_header_open_menu_button",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T06:26:29.657Z"
+    },
+    {
+      "TestID": "WEB-FI-00104",
+      "Category": "UI/UX",
+      "Module / Page": "Phone Usage",
+      "Test Case": "element_present_header_notifications_button",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T06:26:49.787Z"
+    },
+    {
+      "TestID": "WEB-FI-00105",
+      "Category": "UI/UX",
+      "Module / Page": "Phone Usage",
+      "Test Case": "element_present_refresh_button",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T06:27:09.917Z"
+    },
+    {
+      "TestID": "WEB-FI-00106",
+      "Category": "UI/UX",
+      "Module / Page": "Phone Usage",
+      "Test Case": "element_present_log_usage_button",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T06:27:30.056Z"
+    },
+    {
+      "TestID": "WEB-FI-00107",
+      "Category": "UI/UX",
+      "Module / Page": "Phone Usage",
+      "Test Case": "element_present_app_usage_breakdown_heading",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T06:27:50.187Z"
+    },
+    {
+      "TestID": "WEB-FI-00108",
+      "Category": "UI/UX",
+      "Module / Page": "Phone Usage",
+      "Test Case": "element_present_screen_time_trend_heading",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T06:28:10.320Z"
+    },
+    {
+      "TestID": "WEB-FI-00109",
+      "Category": "UI/UX",
+      "Module / Page": "Phone Usage",
+      "Test Case": "element_present_late_night_pattern_heading",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T06:28:30.452Z"
+    },
+    {
+      "TestID": "WEB-FI-00110",
+      "Category": "UI/UX",
+      "Module / Page": "Emotion Analysis",
+      "Test Case": "element_present_header_open_menu_button",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T06:28:50.736Z"
+    },
+    {
+      "TestID": "WEB-FI-00111",
+      "Category": "UI/UX",
+      "Module / Page": "Emotion Analysis",
+      "Test Case": "element_present_header_notifications_button",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T06:29:10.863Z"
+    },
+    {
+      "TestID": "WEB-FI-00112",
+      "Category": "UI/UX",
+      "Module / Page": "Emotion Analysis",
+      "Test Case": "element_present_current_tab",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T06:29:30.996Z"
+    },
+    {
+      "TestID": "WEB-FI-00113",
+      "Category": "UI/UX",
+      "Module / Page": "Emotion Analysis",
+      "Test Case": "element_present_history_tab",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T06:29:51.130Z"
+    },
+    {
+      "TestID": "WEB-FI-00114",
+      "Category": "UI/UX",
+      "Module / Page": "Emotion Analysis",
+      "Test Case": "element_present_trends_tab",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T06:30:11.261Z"
+    },
+    {
+      "TestID": "WEB-FI-00115",
+      "Category": "UI/UX",
+      "Module / Page": "Emotion Analysis",
+      "Test Case": "element_present_emotion_detection_heading",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T06:30:31.393Z"
+    },
+    {
+      "TestID": "WEB-FI-00116",
+      "Category": "UI/UX",
+      "Module / Page": "Emotion Analysis",
+      "Test Case": "element_present_refresh_data_button",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T06:30:51.521Z"
+    },
+    {
+      "TestID": "WEB-FI-00117",
+      "Category": "UI/UX",
+      "Module / Page": "Emotion Analysis",
+      "Test Case": "element_present_log_happy_emotion_button",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T06:31:11.651Z"
+    },
+    {
+      "TestID": "WEB-FI-00118",
+      "Category": "UI/UX",
+      "Module / Page": "Activity Tracker",
+      "Test Case": "element_present_header_open_menu_button",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T06:31:31.940Z"
+    },
+    {
+      "TestID": "WEB-FI-00119",
+      "Category": "UI/UX",
+      "Module / Page": "Activity Tracker",
+      "Test Case": "element_present_header_notifications_button",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T06:31:52.069Z"
+    },
+    {
+      "TestID": "WEB-FI-00120",
+      "Category": "UI/UX",
+      "Module / Page": "Activity Tracker",
+      "Test Case": "element_present_refresh_button",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T06:32:12.196Z"
+    },
+    {
+      "TestID": "WEB-FI-00121",
+      "Category": "UI/UX",
+      "Module / Page": "Activity Tracker",
+      "Test Case": "element_present_log_activity_button",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T06:32:32.330Z"
+    },
+    {
+      "TestID": "WEB-FI-00122",
+      "Category": "UI/UX",
+      "Module / Page": "Activity Tracker",
+      "Test Case": "element_present_todays_progress_heading",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T06:32:52.462Z"
+    },
+    {
+      "TestID": "WEB-FI-00123",
+      "Category": "UI/UX",
+      "Module / Page": "Activity Tracker",
+      "Test Case": "element_present_activity_summary_heading",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T06:33:12.592Z"
+    },
+    {
+      "TestID": "WEB-FI-00124",
+      "Category": "UI/UX",
+      "Module / Page": "Activity Tracker",
+      "Test Case": "element_present_activity_heatmap_heading",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T06:33:32.722Z"
+    },
+    {
+      "TestID": "WEB-FI-00125",
+      "Category": "UI/UX",
+      "Module / Page": "Activity Tracker",
+      "Test Case": "element_present_activity_log_heading",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T06:33:52.847Z"
+    },
+    {
+      "TestID": "WEB-FI-00126",
       "Category": "Functional",
       "Module / Page": "Phone Usage",
       "Test Case": "page_loads_with_content",
@@ -2031,10 +3692,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "287 chars rendered",
-      "Executed At": "2026-07-24T19:42:58.833Z"
+      "Executed At": "2026-07-27T06:33:53.518Z"
     },
     {
-      "TestID": "WEB-FI-00071",
+      "TestID": "WEB-FI-00127",
       "Category": "Functional",
       "Module / Page": "Emotion Analysis",
       "Test Case": "page_loads_with_content",
@@ -2042,10 +3703,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "287 chars rendered",
-      "Executed At": "2026-07-24T19:42:59.501Z"
+      "Executed At": "2026-07-27T06:33:54.189Z"
     },
     {
-      "TestID": "WEB-FI-00072",
+      "TestID": "WEB-FI-00128",
       "Category": "Functional",
       "Module / Page": "Activity Tracker",
       "Test Case": "page_loads_with_content",
@@ -2053,10 +3714,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "287 chars rendered",
-      "Executed At": "2026-07-24T19:43:00.179Z"
+      "Executed At": "2026-07-27T06:33:54.854Z"
     },
     {
-      "TestID": "WEB-FI-00073",
+      "TestID": "WEB-FI-00129",
       "Category": "Functional",
       "Module / Page": "Sleep Tracker",
       "Test Case": "tab_switching_works",
@@ -2064,10 +3725,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:43:20.533Z"
+      "Executed At": "2026-07-27T06:34:15.147Z"
     },
     {
-      "TestID": "WEB-FI-00074",
+      "TestID": "WEB-FI-00130",
       "Category": "Functional",
       "Module / Page": "Sleep Tracker",
       "Test Case": "log_sleep_modal_open_cancel",
@@ -2075,10 +3736,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:43:40.836Z"
+      "Executed At": "2026-07-27T06:34:35.445Z"
     },
     {
-      "TestID": "WEB-FI-00075",
+      "TestID": "WEB-FI-00131",
       "Category": "Functional",
       "Module / Page": "Recommendations",
       "Test Case": "category_filters_clickable",
@@ -2086,10 +3747,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:44:01.131Z"
+      "Executed At": "2026-07-27T06:34:55.728Z"
     },
     {
-      "TestID": "WEB-FI-00076",
+      "TestID": "WEB-FI-00132",
       "Category": "Functional",
       "Module / Page": "Analytics",
       "Test Case": "range_toggle_works",
@@ -2097,10 +3758,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:44:21.451Z"
+      "Executed At": "2026-07-27T06:35:16.041Z"
     },
     {
-      "TestID": "WEB-FI-00077",
+      "TestID": "WEB-FI-00133",
       "Category": "E2E",
       "Module / Page": "Wellness Chat",
       "Test Case": "send_message_gets_real_reply",
@@ -2108,10 +3769,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:44:41.754Z"
+      "Executed At": "2026-07-27T06:35:36.322Z"
     },
     {
-      "TestID": "WEB-FI-00078",
+      "TestID": "WEB-FI-00134",
       "Category": "Functional",
       "Module / Page": "Profile",
       "Test Case": "tab_switching_works",
@@ -2119,10 +3780,153 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Fail",
       "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
-      "Executed At": "2026-07-24T19:45:02.050Z"
+      "Executed At": "2026-07-27T06:35:56.611Z"
     },
     {
-      "TestID": "WEB-FI-00079",
+      "TestID": "WEB-FI-00135",
+      "Category": "Functional",
+      "Module / Page": "Phone Usage",
+      "Test Case": "log_usage_modal_open_cancel",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T06:36:16.915Z"
+    },
+    {
+      "TestID": "WEB-FI-00136",
+      "Category": "Functional",
+      "Module / Page": "Activity Tracker",
+      "Test Case": "log_activity_modal_open_cancel",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T06:36:37.248Z"
+    },
+    {
+      "TestID": "WEB-FI-00137",
+      "Category": "Functional",
+      "Module / Page": "Emotion Analysis",
+      "Test Case": "tab_switching_works",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T06:36:57.533Z"
+    },
+    {
+      "TestID": "WEB-FI-00138",
+      "Category": "UI/UX",
+      "Module / Page": "Sidebar",
+      "Test Case": "mobile_menu_open_close",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T06:37:18.356Z"
+    },
+    {
+      "TestID": "WEB-FI-00139",
+      "Category": "UI/UX",
+      "Module / Page": "Sidebar",
+      "Test Case": "collapse_expand_toggle_works",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T06:37:38.649Z"
+    },
+    {
+      "TestID": "WEB-FI-00140",
+      "Category": "Functional",
+      "Module / Page": "Header",
+      "Test Case": "notifications_dropdown_mark_all_read",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T06:37:58.928Z"
+    },
+    {
+      "TestID": "WEB-FI-00141",
+      "Category": "Functional",
+      "Module / Page": "Profile",
+      "Test Case": "edit_cancel_toggle_works",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T06:38:19.241Z"
+    },
+    {
+      "TestID": "WEB-FI-00142",
+      "Category": "UI/UX",
+      "Module / Page": "Profile",
+      "Test Case": "notifications_tab_shows_settings_heading",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T06:38:39.528Z"
+    },
+    {
+      "TestID": "WEB-FI-00143",
+      "Category": "UI/UX",
+      "Module / Page": "Profile",
+      "Test Case": "privacy_tab_shows_data_privacy_heading",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T06:38:59.816Z"
+    },
+    {
+      "TestID": "WEB-FI-00144",
+      "Category": "UI/UX",
+      "Module / Page": "Sleep Tracker",
+      "Test Case": "calendar_tab_shows_heading",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T06:39:20.108Z"
+    },
+    {
+      "TestID": "WEB-FI-00145",
+      "Category": "Functional",
+      "Module / Page": "Analytics",
+      "Test Case": "export_modal_open_close",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T06:39:40.394Z"
+    },
+    {
+      "TestID": "WEB-FI-00146",
+      "Category": "E2E",
+      "Module / Page": "Wellness Chat",
+      "Test Case": "starter_prompt_click_sends_message",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
+      "Status": "Fail",
+      "Observed Result (evidence)": "Element not found / timed out: TimeoutException",
+      "Executed At": "2026-07-27T06:40:00.682Z"
+    },
+    {
+      "TestID": "WEB-FI-00147",
+      "Category": "Compatibility",
+      "Module / Page": "Dashboard",
+      "Test Case": "responsive_mobile-small_320x568",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
+      "Status": "Pass",
+      "Observed Result (evidence)": "Renders content at 320x568 (mobile-small)",
+      "Executed At": "2026-07-27T06:40:01.759Z"
+    },
+    {
+      "TestID": "WEB-FI-00148",
       "Category": "Compatibility",
       "Module / Page": "Dashboard",
       "Test Case": "responsive_mobile_375x812",
@@ -2130,10 +3934,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Renders content at 375x812 (mobile)",
-      "Executed At": "2026-07-24T19:45:03.135Z"
+      "Executed At": "2026-07-27T06:40:02.690Z"
     },
     {
-      "TestID": "WEB-FI-00080",
+      "TestID": "WEB-FI-00149",
       "Category": "Compatibility",
       "Module / Page": "Dashboard",
       "Test Case": "responsive_tablet_768x1024",
@@ -2141,10 +3945,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Renders content at 768x1024 (tablet)",
-      "Executed At": "2026-07-24T19:45:03.582Z"
+      "Executed At": "2026-07-27T06:40:03.133Z"
     },
     {
-      "TestID": "WEB-FI-00081",
+      "TestID": "WEB-FI-00150",
       "Category": "Compatibility",
       "Module / Page": "Dashboard",
       "Test Case": "responsive_desktop_1440x900",
@@ -2152,10 +3956,32 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Renders content at 1440x900 (desktop)",
-      "Executed At": "2026-07-24T19:45:04.027Z"
+      "Executed At": "2026-07-27T06:40:03.577Z"
     },
     {
-      "TestID": "WEB-FI-00082",
+      "TestID": "WEB-FI-00151",
+      "Category": "Compatibility",
+      "Module / Page": "Dashboard",
+      "Test Case": "responsive_desktop-large_1920x1080",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
+      "Status": "Pass",
+      "Observed Result (evidence)": "Renders content at 1920x1080 (desktop-large)",
+      "Executed At": "2026-07-27T06:40:04.010Z"
+    },
+    {
+      "TestID": "WEB-FI-00152",
+      "Category": "Compatibility",
+      "Module / Page": "Sleep Tracker",
+      "Test Case": "responsive_mobile-small_320x568",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
+      "Status": "Pass",
+      "Observed Result (evidence)": "Renders content at 320x568 (mobile-small)",
+      "Executed At": "2026-07-27T06:40:05.083Z"
+    },
+    {
+      "TestID": "WEB-FI-00153",
       "Category": "Compatibility",
       "Module / Page": "Sleep Tracker",
       "Test Case": "responsive_mobile_375x812",
@@ -2163,10 +3989,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Renders content at 375x812 (mobile)",
-      "Executed At": "2026-07-24T19:45:05.100Z"
+      "Executed At": "2026-07-27T06:40:06.015Z"
     },
     {
-      "TestID": "WEB-FI-00083",
+      "TestID": "WEB-FI-00154",
       "Category": "Compatibility",
       "Module / Page": "Sleep Tracker",
       "Test Case": "responsive_tablet_768x1024",
@@ -2174,10 +4000,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Renders content at 768x1024 (tablet)",
-      "Executed At": "2026-07-24T19:45:05.547Z"
+      "Executed At": "2026-07-27T06:40:06.459Z"
     },
     {
-      "TestID": "WEB-FI-00084",
+      "TestID": "WEB-FI-00155",
       "Category": "Compatibility",
       "Module / Page": "Sleep Tracker",
       "Test Case": "responsive_desktop_1440x900",
@@ -2185,10 +4011,32 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Renders content at 1440x900 (desktop)",
-      "Executed At": "2026-07-24T19:45:05.992Z"
+      "Executed At": "2026-07-27T06:40:06.904Z"
     },
     {
-      "TestID": "WEB-FI-00085",
+      "TestID": "WEB-FI-00156",
+      "Category": "Compatibility",
+      "Module / Page": "Sleep Tracker",
+      "Test Case": "responsive_desktop-large_1920x1080",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
+      "Status": "Pass",
+      "Observed Result (evidence)": "Renders content at 1920x1080 (desktop-large)",
+      "Executed At": "2026-07-27T06:40:07.340Z"
+    },
+    {
+      "TestID": "WEB-FI-00157",
+      "Category": "Compatibility",
+      "Module / Page": "Phone Usage",
+      "Test Case": "responsive_mobile-small_320x568",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
+      "Status": "Pass",
+      "Observed Result (evidence)": "Renders content at 320x568 (mobile-small)",
+      "Executed At": "2026-07-27T06:40:08.418Z"
+    },
+    {
+      "TestID": "WEB-FI-00158",
       "Category": "Compatibility",
       "Module / Page": "Phone Usage",
       "Test Case": "responsive_mobile_375x812",
@@ -2196,10 +4044,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Renders content at 375x812 (mobile)",
-      "Executed At": "2026-07-24T19:45:07.080Z"
+      "Executed At": "2026-07-27T06:40:09.351Z"
     },
     {
-      "TestID": "WEB-FI-00086",
+      "TestID": "WEB-FI-00159",
       "Category": "Compatibility",
       "Module / Page": "Phone Usage",
       "Test Case": "responsive_tablet_768x1024",
@@ -2207,10 +4055,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Renders content at 768x1024 (tablet)",
-      "Executed At": "2026-07-24T19:45:07.526Z"
+      "Executed At": "2026-07-27T06:40:09.795Z"
     },
     {
-      "TestID": "WEB-FI-00087",
+      "TestID": "WEB-FI-00160",
       "Category": "Compatibility",
       "Module / Page": "Phone Usage",
       "Test Case": "responsive_desktop_1440x900",
@@ -2218,10 +4066,32 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Renders content at 1440x900 (desktop)",
-      "Executed At": "2026-07-24T19:45:07.971Z"
+      "Executed At": "2026-07-27T06:40:10.239Z"
     },
     {
-      "TestID": "WEB-FI-00088",
+      "TestID": "WEB-FI-00161",
+      "Category": "Compatibility",
+      "Module / Page": "Phone Usage",
+      "Test Case": "responsive_desktop-large_1920x1080",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
+      "Status": "Pass",
+      "Observed Result (evidence)": "Renders content at 1920x1080 (desktop-large)",
+      "Executed At": "2026-07-27T06:40:10.672Z"
+    },
+    {
+      "TestID": "WEB-FI-00162",
+      "Category": "Compatibility",
+      "Module / Page": "Emotion Analysis",
+      "Test Case": "responsive_mobile-small_320x568",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
+      "Status": "Pass",
+      "Observed Result (evidence)": "Renders content at 320x568 (mobile-small)",
+      "Executed At": "2026-07-27T06:40:11.748Z"
+    },
+    {
+      "TestID": "WEB-FI-00163",
       "Category": "Compatibility",
       "Module / Page": "Emotion Analysis",
       "Test Case": "responsive_mobile_375x812",
@@ -2229,10 +4099,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Renders content at 375x812 (mobile)",
-      "Executed At": "2026-07-24T19:45:09.065Z"
+      "Executed At": "2026-07-27T06:40:12.678Z"
     },
     {
-      "TestID": "WEB-FI-00089",
+      "TestID": "WEB-FI-00164",
       "Category": "Compatibility",
       "Module / Page": "Emotion Analysis",
       "Test Case": "responsive_tablet_768x1024",
@@ -2240,10 +4110,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Renders content at 768x1024 (tablet)",
-      "Executed At": "2026-07-24T19:45:09.510Z"
+      "Executed At": "2026-07-27T06:40:13.123Z"
     },
     {
-      "TestID": "WEB-FI-00090",
+      "TestID": "WEB-FI-00165",
       "Category": "Compatibility",
       "Module / Page": "Emotion Analysis",
       "Test Case": "responsive_desktop_1440x900",
@@ -2251,10 +4121,32 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Renders content at 1440x900 (desktop)",
-      "Executed At": "2026-07-24T19:45:09.954Z"
+      "Executed At": "2026-07-27T06:40:13.564Z"
     },
     {
-      "TestID": "WEB-FI-00091",
+      "TestID": "WEB-FI-00166",
+      "Category": "Compatibility",
+      "Module / Page": "Emotion Analysis",
+      "Test Case": "responsive_desktop-large_1920x1080",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
+      "Status": "Pass",
+      "Observed Result (evidence)": "Renders content at 1920x1080 (desktop-large)",
+      "Executed At": "2026-07-27T06:40:13.999Z"
+    },
+    {
+      "TestID": "WEB-FI-00167",
+      "Category": "Compatibility",
+      "Module / Page": "Activity Tracker",
+      "Test Case": "responsive_mobile-small_320x568",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
+      "Status": "Pass",
+      "Observed Result (evidence)": "Renders content at 320x568 (mobile-small)",
+      "Executed At": "2026-07-27T06:40:15.072Z"
+    },
+    {
+      "TestID": "WEB-FI-00168",
       "Category": "Compatibility",
       "Module / Page": "Activity Tracker",
       "Test Case": "responsive_mobile_375x812",
@@ -2262,10 +4154,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Renders content at 375x812 (mobile)",
-      "Executed At": "2026-07-24T19:45:11.040Z"
+      "Executed At": "2026-07-27T06:40:16.004Z"
     },
     {
-      "TestID": "WEB-FI-00092",
+      "TestID": "WEB-FI-00169",
       "Category": "Compatibility",
       "Module / Page": "Activity Tracker",
       "Test Case": "responsive_tablet_768x1024",
@@ -2273,10 +4165,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Renders content at 768x1024 (tablet)",
-      "Executed At": "2026-07-24T19:45:11.485Z"
+      "Executed At": "2026-07-27T06:40:16.449Z"
     },
     {
-      "TestID": "WEB-FI-00093",
+      "TestID": "WEB-FI-00170",
       "Category": "Compatibility",
       "Module / Page": "Activity Tracker",
       "Test Case": "responsive_desktop_1440x900",
@@ -2284,10 +4176,32 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Renders content at 1440x900 (desktop)",
-      "Executed At": "2026-07-24T19:45:11.929Z"
+      "Executed At": "2026-07-27T06:40:16.891Z"
     },
     {
-      "TestID": "WEB-FI-00094",
+      "TestID": "WEB-FI-00171",
+      "Category": "Compatibility",
+      "Module / Page": "Activity Tracker",
+      "Test Case": "responsive_desktop-large_1920x1080",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
+      "Status": "Pass",
+      "Observed Result (evidence)": "Renders content at 1920x1080 (desktop-large)",
+      "Executed At": "2026-07-27T06:40:17.327Z"
+    },
+    {
+      "TestID": "WEB-FI-00172",
+      "Category": "Compatibility",
+      "Module / Page": "Recommendations",
+      "Test Case": "responsive_mobile-small_320x568",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
+      "Status": "Pass",
+      "Observed Result (evidence)": "Renders content at 320x568 (mobile-small)",
+      "Executed At": "2026-07-27T06:40:18.396Z"
+    },
+    {
+      "TestID": "WEB-FI-00173",
       "Category": "Compatibility",
       "Module / Page": "Recommendations",
       "Test Case": "responsive_mobile_375x812",
@@ -2295,10 +4209,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Renders content at 375x812 (mobile)",
-      "Executed At": "2026-07-24T19:45:13.021Z"
+      "Executed At": "2026-07-27T06:40:19.326Z"
     },
     {
-      "TestID": "WEB-FI-00095",
+      "TestID": "WEB-FI-00174",
       "Category": "Compatibility",
       "Module / Page": "Recommendations",
       "Test Case": "responsive_tablet_768x1024",
@@ -2306,10 +4220,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Renders content at 768x1024 (tablet)",
-      "Executed At": "2026-07-24T19:45:13.466Z"
+      "Executed At": "2026-07-27T06:40:19.768Z"
     },
     {
-      "TestID": "WEB-FI-00096",
+      "TestID": "WEB-FI-00175",
       "Category": "Compatibility",
       "Module / Page": "Recommendations",
       "Test Case": "responsive_desktop_1440x900",
@@ -2317,10 +4231,32 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Renders content at 1440x900 (desktop)",
-      "Executed At": "2026-07-24T19:45:13.917Z"
+      "Executed At": "2026-07-27T06:40:20.212Z"
     },
     {
-      "TestID": "WEB-FI-00097",
+      "TestID": "WEB-FI-00176",
+      "Category": "Compatibility",
+      "Module / Page": "Recommendations",
+      "Test Case": "responsive_desktop-large_1920x1080",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
+      "Status": "Pass",
+      "Observed Result (evidence)": "Renders content at 1920x1080 (desktop-large)",
+      "Executed At": "2026-07-27T06:40:20.646Z"
+    },
+    {
+      "TestID": "WEB-FI-00177",
+      "Category": "Compatibility",
+      "Module / Page": "Analytics",
+      "Test Case": "responsive_mobile-small_320x568",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
+      "Status": "Pass",
+      "Observed Result (evidence)": "Renders content at 320x568 (mobile-small)",
+      "Executed At": "2026-07-27T06:40:21.728Z"
+    },
+    {
+      "TestID": "WEB-FI-00178",
       "Category": "Compatibility",
       "Module / Page": "Analytics",
       "Test Case": "responsive_mobile_375x812",
@@ -2328,10 +4264,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Renders content at 375x812 (mobile)",
-      "Executed At": "2026-07-24T19:45:14.992Z"
+      "Executed At": "2026-07-27T06:40:22.661Z"
     },
     {
-      "TestID": "WEB-FI-00098",
+      "TestID": "WEB-FI-00179",
       "Category": "Compatibility",
       "Module / Page": "Analytics",
       "Test Case": "responsive_tablet_768x1024",
@@ -2339,10 +4275,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Renders content at 768x1024 (tablet)",
-      "Executed At": "2026-07-24T19:45:15.437Z"
+      "Executed At": "2026-07-27T06:40:23.106Z"
     },
     {
-      "TestID": "WEB-FI-00099",
+      "TestID": "WEB-FI-00180",
       "Category": "Compatibility",
       "Module / Page": "Analytics",
       "Test Case": "responsive_desktop_1440x900",
@@ -2350,10 +4286,32 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Renders content at 1440x900 (desktop)",
-      "Executed At": "2026-07-24T19:45:15.881Z"
+      "Executed At": "2026-07-27T06:40:23.550Z"
     },
     {
-      "TestID": "WEB-FI-00100",
+      "TestID": "WEB-FI-00181",
+      "Category": "Compatibility",
+      "Module / Page": "Analytics",
+      "Test Case": "responsive_desktop-large_1920x1080",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
+      "Status": "Pass",
+      "Observed Result (evidence)": "Renders content at 1920x1080 (desktop-large)",
+      "Executed At": "2026-07-27T06:40:23.986Z"
+    },
+    {
+      "TestID": "WEB-FI-00182",
+      "Category": "Compatibility",
+      "Module / Page": "Wellness Chat",
+      "Test Case": "responsive_mobile-small_320x568",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
+      "Status": "Pass",
+      "Observed Result (evidence)": "Renders content at 320x568 (mobile-small)",
+      "Executed At": "2026-07-27T06:40:25.057Z"
+    },
+    {
+      "TestID": "WEB-FI-00183",
       "Category": "Compatibility",
       "Module / Page": "Wellness Chat",
       "Test Case": "responsive_mobile_375x812",
@@ -2361,10 +4319,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Renders content at 375x812 (mobile)",
-      "Executed At": "2026-07-24T19:45:16.951Z"
+      "Executed At": "2026-07-27T06:40:25.988Z"
     },
     {
-      "TestID": "WEB-FI-00101",
+      "TestID": "WEB-FI-00184",
       "Category": "Compatibility",
       "Module / Page": "Wellness Chat",
       "Test Case": "responsive_tablet_768x1024",
@@ -2372,10 +4330,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Renders content at 768x1024 (tablet)",
-      "Executed At": "2026-07-24T19:45:17.396Z"
+      "Executed At": "2026-07-27T06:40:26.435Z"
     },
     {
-      "TestID": "WEB-FI-00102",
+      "TestID": "WEB-FI-00185",
       "Category": "Compatibility",
       "Module / Page": "Wellness Chat",
       "Test Case": "responsive_desktop_1440x900",
@@ -2383,10 +4341,32 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Renders content at 1440x900 (desktop)",
-      "Executed At": "2026-07-24T19:45:17.840Z"
+      "Executed At": "2026-07-27T06:40:26.877Z"
     },
     {
-      "TestID": "WEB-FI-00103",
+      "TestID": "WEB-FI-00186",
+      "Category": "Compatibility",
+      "Module / Page": "Wellness Chat",
+      "Test Case": "responsive_desktop-large_1920x1080",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
+      "Status": "Pass",
+      "Observed Result (evidence)": "Renders content at 1920x1080 (desktop-large)",
+      "Executed At": "2026-07-27T06:40:27.309Z"
+    },
+    {
+      "TestID": "WEB-FI-00187",
+      "Category": "Compatibility",
+      "Module / Page": "Profile",
+      "Test Case": "responsive_mobile-small_320x568",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
+      "Status": "Pass",
+      "Observed Result (evidence)": "Renders content at 320x568 (mobile-small)",
+      "Executed At": "2026-07-27T06:40:28.385Z"
+    },
+    {
+      "TestID": "WEB-FI-00188",
       "Category": "Compatibility",
       "Module / Page": "Profile",
       "Test Case": "responsive_mobile_375x812",
@@ -2394,10 +4374,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Renders content at 375x812 (mobile)",
-      "Executed At": "2026-07-24T19:45:18.923Z"
+      "Executed At": "2026-07-27T06:40:29.316Z"
     },
     {
-      "TestID": "WEB-FI-00104",
+      "TestID": "WEB-FI-00189",
       "Category": "Compatibility",
       "Module / Page": "Profile",
       "Test Case": "responsive_tablet_768x1024",
@@ -2405,10 +4385,10 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Renders content at 768x1024 (tablet)",
-      "Executed At": "2026-07-24T19:45:19.368Z"
+      "Executed At": "2026-07-27T06:40:29.760Z"
     },
     {
-      "TestID": "WEB-FI-00105",
+      "TestID": "WEB-FI-00190",
       "Category": "Compatibility",
       "Module / Page": "Profile",
       "Test Case": "responsive_desktop_1440x900",
@@ -2416,7 +4396,18 @@
       "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
       "Status": "Pass",
       "Observed Result (evidence)": "Renders content at 1440x900 (desktop)",
-      "Executed At": "2026-07-24T19:45:19.812Z"
+      "Executed At": "2026-07-27T06:40:30.202Z"
+    },
+    {
+      "TestID": "WEB-FI-00191",
+      "Category": "Compatibility",
+      "Module / Page": "Profile",
+      "Test Case": "responsive_desktop-large_1920x1080",
+      "Method": "UI",
+      "Environment": "Web (React/Vite @ 127.0.0.1:3000) \u2014 firefox real browser engine",
+      "Status": "Pass",
+      "Observed Result (evidence)": "Renders content at 1920x1080 (desktop-large)",
+      "Executed At": "2026-07-27T06:40:30.637Z"
     }
   ]
 }
