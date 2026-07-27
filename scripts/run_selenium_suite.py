@@ -24,7 +24,7 @@ from selenium import webdriver
 from selenium.common.exceptions import (NoSuchElementException, TimeoutException, WebDriverException)
 from selenium.webdriver.chrome.options import Options as ChromeOptions
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
-from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support.ui import WebDriverWait, Select
 from selenium.webdriver.support import expected_conditions as EC
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -250,6 +250,103 @@ def run_browser_suite(browser, web_url, backend_url, rec):
             return (True, f"Landed on {driver.current_url}")
         safe(rec, "UI/UX", "Register", "login_link_navigates", nav_to_login)
 
+        # ---- Additional real client-side validation checks (react-hook-form) ----
+        def login_empty_submit_shows_required_errors():
+            nav_get(driver, f"{web_url}/login")
+            find(driver, "xpath", "//button[@type='submit']").click()
+            time.sleep(0.3)
+            body_text = driver.find_element("tag name", "body").text
+            ok = "Username is required" in body_text and "Password is required" in body_text
+            return (ok, f"react-hook-form required-field messages present: {ok}")
+        safe(rec, "Functional", "Login", "empty_submit_shows_required_errors", login_empty_submit_shows_required_errors)
+
+        def login_password_toggle_reverts():
+            nav_get(driver, f"{web_url}/login")
+            pwd = find(driver, "id", "password")
+            initial_type = pwd.get_attribute("type")
+            find(driver, "css selector", "[aria-label='Show password']").click()
+            mid_type = find(driver, "id", "password").get_attribute("type")
+            find(driver, "css selector", "[aria-label='Hide password']").click()
+            final_type = find(driver, "id", "password").get_attribute("type")
+            ok = initial_type != mid_type and final_type == initial_type
+            return (ok, f"type sequence {initial_type} -> {mid_type} -> {final_type}")
+        safe(rec, "Functional", "Login", "password_toggle_reverts_on_second_click", login_password_toggle_reverts)
+
+        def register_empty_submit_shows_required_errors():
+            nav_get(driver, f"{web_url}/register")
+            find(driver, "xpath", "//button[@type='submit']").click()
+            time.sleep(0.3)
+            body_text = driver.find_element("tag name", "body").text
+            ok = "Full name is required" in body_text and "Username is required" in body_text
+            return (ok, f"react-hook-form required-field messages present: {ok}")
+        safe(rec, "Functional", "Register", "empty_submit_shows_required_errors", register_empty_submit_shows_required_errors)
+
+        def register_invalid_email_format_blocked():
+            nav_get(driver, f"{web_url}/register")
+            find(driver, "id", "full_name").send_keys("QA Selenium User")
+            find(driver, "id", "username").send_keys(f"qaselemail_{uuid.uuid4().hex[:6]}")
+            find(driver, "id", "email").send_keys("not-an-email")
+            find(driver, "id", "password").send_keys("Str0ngPassw0rd!")
+            find(driver, "id", "confirmPassword").send_keys("Str0ngPassw0rd!")
+            find(driver, "xpath", "//button[@type='submit']").click()
+            time.sleep(0.5)
+            body_text = driver.find_element("tag name", "body").text
+            ok = "Invalid email" in body_text and driver.current_url.endswith("/register")
+            return (ok, "Invalid email format correctly blocked client-side submit")
+        safe(rec, "Functional", "Register", "invalid_email_format_blocked", register_invalid_email_format_blocked)
+
+        def register_username_min_length_blocked():
+            nav_get(driver, f"{web_url}/register")
+            find(driver, "id", "full_name").send_keys("QA Selenium User")
+            find(driver, "id", "username").send_keys("ab")
+            find(driver, "id", "email").send_keys(f"qaselminlen_{uuid.uuid4().hex[:6]}@healthsense.test")
+            find(driver, "id", "password").send_keys("Str0ngPassw0rd!")
+            find(driver, "id", "confirmPassword").send_keys("Str0ngPassw0rd!")
+            find(driver, "xpath", "//button[@type='submit']").click()
+            time.sleep(0.5)
+            body_text = driver.find_element("tag name", "body").text
+            ok = "Min 3 characters" in body_text and driver.current_url.endswith("/register")
+            return (ok, "Sub-minimum-length username correctly blocked client-side submit")
+        safe(rec, "Functional", "Register", "username_min_length_blocked", register_username_min_length_blocked)
+
+        def register_username_invalid_chars_blocked():
+            nav_get(driver, f"{web_url}/register")
+            find(driver, "id", "full_name").send_keys("QA Selenium User")
+            find(driver, "id", "username").send_keys("bad user!")
+            find(driver, "id", "email").send_keys(f"qaselchars_{uuid.uuid4().hex[:6]}@healthsense.test")
+            find(driver, "id", "password").send_keys("Str0ngPassw0rd!")
+            find(driver, "id", "confirmPassword").send_keys("Str0ngPassw0rd!")
+            find(driver, "xpath", "//button[@type='submit']").click()
+            time.sleep(0.5)
+            body_text = driver.find_element("tag name", "body").text
+            ok = "Letters, numbers and underscore only" in body_text and driver.current_url.endswith("/register")
+            return (ok, "Username with invalid characters correctly blocked client-side submit")
+        safe(rec, "Functional", "Register", "username_invalid_chars_blocked", register_username_invalid_chars_blocked)
+
+        def register_age_out_of_range_blocked():
+            nav_get(driver, f"{web_url}/register")
+            find(driver, "id", "full_name").send_keys("QA Selenium User")
+            find(driver, "id", "username").send_keys(f"qaselage_{uuid.uuid4().hex[:6]}")
+            find(driver, "id", "email").send_keys(f"qaselage_{uuid.uuid4().hex[:6]}@healthsense.test")
+            find(driver, "id", "age").send_keys("5")
+            find(driver, "id", "password").send_keys("Str0ngPassw0rd!")
+            find(driver, "id", "confirmPassword").send_keys("Str0ngPassw0rd!")
+            find(driver, "xpath", "//button[@type='submit']").click()
+            time.sleep(0.5)
+            body_text = driver.find_element("tag name", "body").text
+            ok = "Min age 13" in body_text and driver.current_url.endswith("/register")
+            return (ok, "Below-minimum age correctly blocked client-side submit")
+        safe(rec, "Functional", "Register", "age_out_of_range_blocked", register_age_out_of_range_blocked)
+
+        def register_gender_select_options_present():
+            nav_get(driver, f"{web_url}/register")
+            sel = Select(find(driver, "id", "gender"))
+            option_texts = [o.text for o in sel.options]
+            expected = ["Prefer not to say", "Male", "Female", "Non-binary", "Other"]
+            ok = option_texts == expected
+            return (ok, f"Gender select options: {option_texts}")
+        safe(rec, "Functional", "Register", "gender_select_has_expected_options", register_gender_select_options_present)
+
         # ---------------- Phase 2: real registration + real login ----------------
         suffix = uuid.uuid4().hex[:8]
         real_email = f"selenium.{browser}.{suffix}@healthsense.test"
@@ -375,6 +472,118 @@ def run_browser_suite(browser, web_url, backend_url, rec):
             return (True, "Cycled through Profile/Notifications/Privacy tabs")
         safe(rec, "Functional", "Profile", "tab_switching_works", profile_tabs)
 
+        # ---- Additional real interaction checks (new pages/behaviors) ----
+        def phone_log_usage_modal_open_cancel():
+            nav_get(driver, f"{web_url}/phone")
+            find(driver, "xpath", "//button[contains(.,'Log Usage')]").click()
+            find(driver, "css selector", "input[type='date']")  # confirms modal opened
+            find(driver, "xpath", "//button[normalize-space()='Cancel']").click()
+            return (True, "Log Phone Usage modal opened and Cancel closed it")
+        safe(rec, "Functional", "Phone Usage", "log_usage_modal_open_cancel", phone_log_usage_modal_open_cancel)
+
+        def activity_log_modal_open_cancel():
+            nav_get(driver, f"{web_url}/activity")
+            find(driver, "xpath", "//button[contains(.,'Log Activity')]").click()
+            find(driver, "css selector", "input[type='date']")  # confirms modal opened
+            find(driver, "xpath", "//button[normalize-space()='Cancel']").click()
+            return (True, "Log Activity modal opened and Cancel closed it")
+        safe(rec, "Functional", "Activity Tracker", "log_activity_modal_open_cancel", activity_log_modal_open_cancel)
+
+        def emotion_tabs_cycle():
+            nav_get(driver, f"{web_url}/emotions")
+            for tab in ("history", "trends", "current"):
+                label = "Current Emotion" if tab == "current" else tab
+                find(driver, "xpath", f"//button[normalize-space()='{label}']").click()
+                time.sleep(0.3)
+            return (True, "Cycled through Current Emotion/history/trends tabs")
+        safe(rec, "Functional", "Emotion Analysis", "tab_switching_works", emotion_tabs_cycle)
+
+        def mobile_menu_opens_and_closes():
+            try:
+                driver.set_window_size(375, 812)
+                nav_get(driver, f"{web_url}/dashboard")
+                find(driver, "css selector", "[aria-label='Open menu']").click()
+                overlay = find(driver, "xpath", "//div[contains(@class,'bg-black/60')]")
+                opened = bool(overlay)
+                find(driver, "css selector", "[aria-label='Close sidebar']").click()
+                time.sleep(0.3)
+                overlays_after = driver.find_elements("xpath", "//div[contains(@class,'bg-black/60')]")
+                closed = len(overlays_after) == 0
+                return (opened and closed, f"Mobile menu opened={opened}, closed_after_close_click={closed}")
+            finally:
+                driver.set_window_size(1440, 900)
+        safe(rec, "UI/UX", "Sidebar", "mobile_menu_open_close", mobile_menu_opens_and_closes)
+
+        def sidebar_collapse_toggle():
+            nav_get(driver, f"{web_url}/dashboard")
+            find(driver, "css selector", "[aria-label='Collapse sidebar']").click()
+            time.sleep(0.3)
+            expanded_btn = find(driver, "css selector", "[aria-label='Expand sidebar']")
+            expanded_btn.click()
+            time.sleep(0.3)
+            collapsed_btn = find(driver, "css selector", "[aria-label='Collapse sidebar']")
+            return (bool(collapsed_btn), "Sidebar collapse/expand toggle button aria-label swaps correctly")
+        safe(rec, "UI/UX", "Sidebar", "collapse_expand_toggle_works", sidebar_collapse_toggle)
+
+        def notifications_dropdown_mark_all_read():
+            nav_get(driver, f"{web_url}/dashboard")
+            find(driver, "css selector", "[aria-label='Notifications']").click()
+            find(driver, "xpath", "//button[contains(.,'Mark all as read')]").click()
+            time.sleep(0.3)
+            remaining = driver.find_elements("xpath", "//button[contains(.,'Mark all as read')]")
+            return (len(remaining) == 0, "Notifications dropdown closed after Mark all as read click")
+        safe(rec, "Functional", "Header", "notifications_dropdown_mark_all_read", notifications_dropdown_mark_all_read)
+
+        def profile_edit_cancel_toggle():
+            nav_get(driver, f"{web_url}/profile")
+            find(driver, "xpath", "//button[contains(.,'Edit')]").click()
+            time.sleep(0.3)
+            find(driver, "xpath", "//button[normalize-space()='Cancel']").click()
+            time.sleep(0.3)
+            edit_btn = find(driver, "xpath", "//button[contains(.,'Edit')]")
+            return (bool(edit_btn), "Edit button reappears after Cancel")
+        safe(rec, "Functional", "Profile", "edit_cancel_toggle_works", profile_edit_cancel_toggle)
+
+        def profile_notifications_tab_heading():
+            nav_get(driver, f"{web_url}/profile")
+            find(driver, "xpath", "//button[normalize-space()='Notifications']").click()
+            heading = find(driver, "xpath", "//*[contains(text(),'Notification Settings')]")
+            return (bool(heading), "Notification Settings heading appears after clicking Notifications tab")
+        safe(rec, "UI/UX", "Profile", "notifications_tab_shows_settings_heading", profile_notifications_tab_heading)
+
+        def profile_privacy_tab_heading():
+            nav_get(driver, f"{web_url}/profile")
+            find(driver, "xpath", "//button[normalize-space()='Privacy']").click()
+            heading = find(driver, "xpath", "//*[contains(text(),'Data & Privacy')]")
+            return (bool(heading), "Data & Privacy heading appears after clicking Privacy tab")
+        safe(rec, "UI/UX", "Profile", "privacy_tab_shows_data_privacy_heading", profile_privacy_tab_heading)
+
+        def sleep_calendar_heading_after_tab_click():
+            nav_get(driver, f"{web_url}/sleep")
+            find(driver, "xpath", "//button[normalize-space()='calendar']").click()
+            heading = find(driver, "xpath", "//*[contains(text(),'30-Day Sleep Calendar')]")
+            return (bool(heading), "30-Day Sleep Calendar heading appears after clicking calendar tab")
+        safe(rec, "UI/UX", "Sleep Tracker", "calendar_tab_shows_heading", sleep_calendar_heading_after_tab_click)
+
+        def analytics_export_modal_open_close():
+            nav_get(driver, f"{web_url}/analytics")
+            find(driver, "xpath", "//button[contains(.,'Export')]").click()
+            find(driver, "xpath", "//*[contains(text(),'Export Data')]")  # confirms modal opened
+            find(driver, "css selector", "[aria-label='Close']").click()
+            time.sleep(0.3)
+            remaining = driver.find_elements("xpath", "//*[contains(text(),'Export Data')]")
+            return (len(remaining) == 0, "Export Data modal opened and Close button closed it")
+        safe(rec, "Functional", "Analytics", "export_modal_open_close", analytics_export_modal_open_close)
+
+        def chat_starter_prompt_click_sends_message():
+            nav_get(driver, f"{web_url}/chat")
+            find(driver, "xpath", "//button[contains(.,'How can I improve my sleep quality?')]").click()
+            time.sleep(3.0)
+            body_text = driver.find_element("tag name", "body").text
+            return ("How can I improve my sleep quality?" in body_text,
+                     "Clicking a starter prompt sends it as a real chat message")
+        safe(rec, "E2E", "Wellness Chat", "starter_prompt_click_sends_message", chat_starter_prompt_click_sends_message)
+
         # ---------------- Phase 5: responsive checks ----------------
         # One navigation per page, then resize within that same loaded page —
         # CSS media queries reflow live on resize, no reload needed. Cuts 33
@@ -410,6 +619,29 @@ def run_browser_suite(browser, web_url, backend_url, rec):
                     messages = "; ".join(l.get("message", "")[:150] for l in severe[:3])
                     return (False, f"{len(severe)} severe console errors: {messages}")
                 safe(rec, "Accessibility", BASE_PATH_TITLES.get(path, path), "no_severe_console_errors", console_check)
+
+            # Second real Chrome-only console pass: this one drives navigation
+            # via React Router client-side transitions (sidebar link clicks,
+            # no full page reload) rather than driver.get() — a genuinely
+            # different code path than the full-load check above, since SPA
+            # route changes don't re-run the same script/module init sequence
+            # a hard navigation does.
+            nav_get(driver, f"{web_url}/dashboard")
+            driver.get_log("browser")
+            for label, target in SIDEBAR_LINKS:
+                def console_check_spa(label=label, target=target):
+                    driver.get_log("browser")  # drain so only this transition's own console output is measured
+                    find(driver, "partial link text", label).click()
+                    WebDriverWait(driver, 8).until(EC.url_contains(target))
+                    time.sleep(0.5)
+                    logs = driver.get_log("browser")
+                    severe = [l for l in logs if l.get("level") == "SEVERE"]
+                    if not severe:
+                        return (True, "No severe console errors after SPA client-side navigation")
+                    messages = "; ".join(l.get("message", "")[:150] for l in severe[:3])
+                    return (False, f"{len(severe)} severe console errors after SPA nav: {messages}")
+                safe(rec, "Accessibility", BASE_PATH_TITLES.get(target, target),
+                     "no_severe_console_errors_after_spa_nav", console_check_spa)
 
     finally:
         driver.quit()

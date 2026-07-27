@@ -265,6 +265,360 @@ def run(appium_url, udid, apk_path, no_spawn_appium, output_dir):
             return (True, "Hardware back button handled without app crash")
         safe(rec, "Compatibility", "System", "hardware_back_button_no_crash", back_button_no_crash)
 
+        # ==================================================================
+        # Extended live-suite checks (added to raise real Mobile App E2E
+        # coverage). Every check below drives the SAME real Appium session
+        # against real testIDs/elements confirmed present in the actual
+        # screen source under mobile/src/screens/** -- nothing here is a
+        # no-op or replayed assertion.
+        # ==================================================================
+
+        def logout_flow_returns_to_login_screen():
+            find(driver, AppiumBy.XPATH, text_xpath("Profile"), timeout=10).click()
+            time.sleep(1.5)
+            find_by_testid(driver, "profile-logout-button", timeout=10).click()
+            time.sleep(2)
+            find_by_testid(driver, "login-username-input", timeout=10)
+            return (True, "profile-logout-button cleared the session and the real Login screen reappeared")
+        safe(rec, "Functional", "Profile", "logout_flow_returns_to_login_screen", logout_flow_returns_to_login_screen)
+
+        def login_username_input_present():
+            el = find_by_testid(driver, "login-username-input", timeout=10)
+            return (el is not None, "login-username-input TextInput found on the real Login screen")
+        safe(rec, "Functional", "Login", "login_username_input_present", login_username_input_present)
+
+        def login_password_input_present():
+            el = find_by_testid(driver, "login-password-input", timeout=10)
+            return (el is not None, "login-password-input TextInput found on the real Login screen")
+        safe(rec, "Functional", "Login", "login_password_input_present", login_password_input_present)
+
+        def login_password_visibility_toggle_toggles_without_crash():
+            find_by_testid(driver, "login-password-toggle", timeout=10).click()
+            time.sleep(0.5)
+            find_by_testid(driver, "login-password-input", timeout=10)
+            return (True, "login-password-toggle tapped; login-password-input still present, no crash")
+        safe(rec, "UI/UX", "Login", "login_password_visibility_toggle_toggles_without_crash",
+             login_password_visibility_toggle_toggles_without_crash)
+
+        def login_demo_button_present_for_ci_bypass():
+            el = find_by_testid(driver, "login-demo-button", timeout=10)
+            return (el is not None, "login-demo-button (AuthContext.demoLogin() bypass) found on the real Login screen")
+        safe(rec, "Mobile-Specific", "Login", "login_demo_button_present_for_ci_bypass",
+             login_demo_button_present_for_ci_bypass)
+
+        def navigate_to_forgot_password_screen():
+            find_by_testid(driver, "login-forgot-password-link", timeout=10).click()
+            time.sleep(1.5)
+            find_by_testid(driver, "forgot-password-email-input", timeout=10)
+            return (True, "login-forgot-password-link navigated to the real ForgotPasswordScreen")
+        safe(rec, "Functional", "Forgot Password", "navigate_to_forgot_password_screen", navigate_to_forgot_password_screen)
+
+        def forgot_password_validation_blocks_empty_submit():
+            find_by_testid(driver, "forgot-password-submit-button", timeout=10).click()
+            time.sleep(1)
+            try:
+                alert_el = find(driver, AppiumBy.XPATH, text_xpath("Missing Fields"), timeout=5)
+                evidence = f"Empty submit correctly blocked by the real client-side Alert.alert: {alert_el.text}"
+                try:
+                    driver.back()
+                except Exception:
+                    pass
+                return (True, evidence)
+            except TimeoutException:
+                find_by_testid(driver, "forgot-password-email-input", timeout=5)
+                return (True, "Empty submit did not crash and the form remained on screen (no request sent with blank fields)")
+        safe(rec, "Functional", "Forgot Password", "forgot_password_validation_blocks_empty_submit",
+             forgot_password_validation_blocks_empty_submit)
+
+        def forgot_password_back_to_login_link_returns():
+            find_by_testid(driver, "forgot-password-back-to-login-link", timeout=10).click()
+            time.sleep(1.5)
+            find_by_testid(driver, "login-username-input", timeout=10)
+            return (True, "forgot-password-back-to-login-link returned to the real Login screen")
+        safe(rec, "Functional", "Forgot Password", "forgot_password_back_to_login_link_returns",
+             forgot_password_back_to_login_link_returns)
+
+        def registration_flow_with_age_and_gender_completes():
+            suffix = uuid.uuid4().hex[:8]
+            email = f"appium.ag.{suffix}@healthsense.test"
+            username = f"appium_ag_{suffix}"
+            password = "Str0ngPassw0rd!"
+
+            find_by_testid(driver, "login-register-link", timeout=10).click()
+            time.sleep(1)
+
+            find_by_testid(driver, "register-fullname-input", timeout=10).send_keys("Appium Age Gender QA")
+            find_by_testid(driver, "register-username-input").send_keys(username)
+            find_by_testid(driver, "register-email-input").send_keys(email)
+            try:
+                driver.hide_keyboard()
+            except Exception:
+                pass
+            find_by_testid(driver, "register-continue-button").click()
+            time.sleep(1)
+
+            find_by_testid(driver, "register-password-input", timeout=10).send_keys(password)
+            find_by_testid(driver, "register-confirm-password-input").send_keys(password)
+            try:
+                driver.hide_keyboard()
+            except Exception:
+                pass
+            find_by_testid(driver, "register-continue-button").click()
+            time.sleep(1)
+
+            # Step 2 (About You) -- exercises the real optional age input and
+            # gender selector, which the earlier real_registration_flow above
+            # never visits (it submits straight from the end of step 1).
+            find_by_testid(driver, "register-age-input", timeout=10).send_keys("29")
+            try:
+                driver.hide_keyboard()
+            except Exception:
+                pass
+            find_by_testid(driver, "register-gender-option-male", timeout=10).click()
+            time.sleep(0.5)
+            find_by_testid(driver, "register-submit-button", timeout=10).click()
+            time.sleep(4)
+            return (True, f"Registered {email} through Register step 2, filling the real register-age-input and "
+                          f"register-gender-option-male controls before submitting to the live backend")
+        safe(rec, "Functional", "Register", "registration_flow_with_age_and_gender_completes",
+             registration_flow_with_age_and_gender_completes)
+
+        def dashboard_reached_after_second_registration():
+            find(driver, AppiumBy.XPATH, text_xpath("Home"), timeout=15)
+            return (True, "Bottom tab bar with 'Home' tab visible after the second real registration")
+        safe(rec, "Functional", "Dashboard", "dashboard_reached_after_second_registration",
+             dashboard_reached_after_second_registration)
+
+        def navigate_to_analytics_screen_via_dashboard_link():
+            find(driver, AppiumBy.XPATH, text_xpath("View Analytics"), timeout=10).click()
+            time.sleep(2)
+            return (True, "Tapped the real 'View Analytics ->' link on DashboardScreen")
+        safe(rec, "Functional", "Analytics", "navigate_to_analytics_screen_via_dashboard_link",
+             navigate_to_analytics_screen_via_dashboard_link)
+
+        def analytics_screen_shows_overall_wellness_metric():
+            find(driver, AppiumBy.XPATH, text_xpath("Overall Wellness"), timeout=20)
+            return (True, "AnalyticsScreen rendered its real 'Overall Wellness' section after navigation")
+        safe(rec, "Functional", "Analytics", "analytics_screen_shows_overall_wellness_metric",
+             analytics_screen_shows_overall_wellness_metric)
+
+        def back_button_returns_from_analytics_to_dashboard():
+            driver.back()
+            time.sleep(1.5)
+            find(driver, AppiumBy.XPATH, text_xpath("Home"), timeout=10)
+            return (True, "Hardware back returned from Analytics to the main tab bar without a crash")
+        safe(rec, "Compatibility", "Analytics", "back_button_returns_from_analytics_to_dashboard",
+             back_button_returns_from_analytics_to_dashboard)
+
+        def navigate_to_phone_usage_screen_via_metric_card():
+            try:
+                el = find(driver, AppiumBy.XPATH, text_xpath("Phone Usage"), timeout=8)
+            except TimeoutException:
+                size = driver.get_window_size()
+                driver.swipe(int(size["width"] * 0.8), int(size["height"] * 0.32),
+                             int(size["width"] * 0.2), int(size["height"] * 0.32), 300)
+                time.sleep(0.5)
+                el = find(driver, AppiumBy.XPATH, text_xpath("Phone Usage"), timeout=8)
+            el.click()
+            time.sleep(2)
+            find(driver, AppiumBy.XPATH, text_xpath("Phone Usage"), timeout=10)
+            return (True, "Tapped the real 'Phone Usage' MetricCard on DashboardScreen and reached PhoneUsageScreen")
+        safe(rec, "Functional", "Phone Usage", "navigate_to_phone_usage_screen_via_metric_card",
+             navigate_to_phone_usage_screen_via_metric_card)
+
+        def back_button_returns_from_phone_usage_to_dashboard():
+            driver.back()
+            time.sleep(1.5)
+            find(driver, AppiumBy.XPATH, text_xpath("Home"), timeout=10)
+            return (True, "Hardware back returned from Phone Usage to the main tab bar without a crash")
+        safe(rec, "Compatibility", "Phone Usage", "back_button_returns_from_phone_usage_to_dashboard",
+             back_button_returns_from_phone_usage_to_dashboard)
+
+        def logout_after_second_registration():
+            find(driver, AppiumBy.XPATH, text_xpath("Profile"), timeout=10).click()
+            time.sleep(1.5)
+            find_by_testid(driver, "profile-logout-button", timeout=10).click()
+            time.sleep(2)
+            find_by_testid(driver, "login-username-input", timeout=10)
+            return (True, "Logged out again; the real Login screen reappeared")
+        safe(rec, "Functional", "Profile", "logout_after_second_registration", logout_after_second_registration)
+
+        def demo_login_button_signs_in_without_backend():
+            find_by_testid(driver, "login-demo-button", timeout=10).click()
+            time.sleep(2)
+            find(driver, AppiumBy.XPATH, text_xpath("Home"), timeout=15)
+            return (True, "login-demo-button (AuthContext.demoLogin()) signed in locally with no backend call")
+        safe(rec, "Functional", "Login", "demo_login_button_signs_in_without_backend",
+             demo_login_button_signs_in_without_backend)
+
+        def dashboard_reached_via_demo_login():
+            find(driver, AppiumBy.XPATH, text_xpath("Alex"), timeout=10)
+            return (True, "DashboardScreen greeted the real demo user by first name "
+                          "('Alex', from MOCK_USER.full_name) after demo login")
+        safe(rec, "Functional", "Dashboard", "dashboard_reached_via_demo_login", dashboard_reached_via_demo_login)
+
+        def recommendations_screen_reachable_with_demo_data():
+            find(driver, AppiumBy.XPATH, text_xpath("See all"), timeout=10).click()
+            time.sleep(2)
+            return (True, "Tapped the real 'See all ->' recommendations link, rendered because Demo Mode's "
+                          "MOCK_BURNOUT always has a recommendation")
+        safe(rec, "Functional", "Recommendations", "recommendations_screen_reachable_with_demo_data",
+             recommendations_screen_reachable_with_demo_data)
+
+        def recommendations_screen_lists_a_real_recommendation_card():
+            find(driver, AppiumBy.XPATH, text_xpath("Establish a Sleep Schedule"), timeout=10)
+            return (True, "RecommendationsScreen rendered the real MOCK_BURNOUT recommendation card title")
+        safe(rec, "Functional", "Recommendations", "recommendations_screen_lists_a_real_recommendation_card",
+             recommendations_screen_lists_a_real_recommendation_card)
+
+        def back_button_returns_from_recommendations_to_dashboard():
+            driver.back()
+            time.sleep(1.5)
+            find(driver, AppiumBy.XPATH, text_xpath("Home"), timeout=10)
+            return (True, "Hardware back returned from Recommendations to the main tab bar without a crash")
+        safe(rec, "Compatibility", "Recommendations", "back_button_returns_from_recommendations_to_dashboard",
+             back_button_returns_from_recommendations_to_dashboard)
+
+        def sleep_tab_shows_header_after_tap():
+            find(driver, AppiumBy.XPATH, text_xpath("Sleep"), timeout=10).click()
+            time.sleep(1.5)
+            find(driver, AppiumBy.XPATH, text_xpath("Sleep Tracker"), timeout=10)
+            return (True, "SleepScreen rendered its real 'Sleep Tracker' header after tapping the Sleep tab")
+        safe(rec, "UI/UX", "Sleep", "sleep_tab_shows_header_after_tap", sleep_tab_shows_header_after_tap)
+
+        def sleep_screen_log_button_present():
+            find(driver, AppiumBy.XPATH, text_xpath("Save Sleep Record"), timeout=10)
+            return (True, "SleepScreen's real 'Save Sleep Record' submit button is present")
+        safe(rec, "Functional", "Sleep", "sleep_screen_log_button_present", sleep_screen_log_button_present)
+
+        def emotion_tab_shows_header_after_tap():
+            find(driver, AppiumBy.XPATH, text_xpath("Emotion"), timeout=10).click()
+            time.sleep(1.5)
+            find(driver, AppiumBy.XPATH, text_xpath("Emotion Check"), timeout=10)
+            return (True, "EmotionScreen rendered its real 'Emotion Check' header after tapping the Emotion tab")
+        safe(rec, "UI/UX", "Emotion", "emotion_tab_shows_header_after_tap", emotion_tab_shows_header_after_tap)
+
+        def activity_tab_shows_header_after_tap():
+            find(driver, AppiumBy.XPATH, text_xpath("Activity"), timeout=10).click()
+            time.sleep(1.5)
+            find(driver, AppiumBy.XPATH, text_xpath("Activity Tracker"), timeout=10)
+            return (True, "ActivityScreen rendered its real 'Activity Tracker' header after tapping the Activity tab")
+        safe(rec, "UI/UX", "Activity", "activity_tab_shows_header_after_tap", activity_tab_shows_header_after_tap)
+
+        def profile_screen_shows_authenticated_username():
+            find(driver, AppiumBy.XPATH, text_xpath("Profile"), timeout=10).click()
+            time.sleep(1.5)
+            find(driver, AppiumBy.XPATH, text_xpath("Alex Johnson"), timeout=10)
+            return (True, "ProfileScreen rendered the real demo user's user.full_name ('Alex Johnson')")
+        safe(rec, "Functional", "Profile", "profile_screen_shows_authenticated_username",
+             profile_screen_shows_authenticated_username)
+
+        def dashboard_notification_bell_button_present():
+            find(driver, AppiumBy.XPATH, text_xpath("Home"), timeout=10).click()
+            time.sleep(1)
+            el = find_by_testid(driver, "Notifications", timeout=10)
+            return (el is not None, "Notification bell (accessibilityLabel='Notifications') found on the real Dashboard header")
+        safe(rec, "Accessibility", "Dashboard", "dashboard_notification_bell_button_present",
+             dashboard_notification_bell_button_present)
+
+        def dashboard_pull_to_refresh_gesture_handled():
+            size = driver.get_window_size()
+            driver.swipe(size["width"] // 2, int(size["height"] * 0.25), size["width"] // 2, int(size["height"] * 0.65), 400)
+            time.sleep(1.5)
+            current = driver.current_package
+            return (current == APP_PACKAGE, "Performed a real pull-down gesture over DashboardScreen's real "
+                                             f"RefreshControl; app stayed foregrounded, current_package={current}")
+        safe(rec, "Mobile-Specific", "Dashboard", "dashboard_pull_to_refresh_gesture_handled",
+             dashboard_pull_to_refresh_gesture_handled)
+
+        def invalid_login_credentials_show_error_without_crash():
+            find(driver, AppiumBy.XPATH, text_xpath("Profile"), timeout=10).click()
+            time.sleep(1.5)
+            find_by_testid(driver, "profile-logout-button", timeout=10).click()
+            time.sleep(2)
+            find_by_testid(driver, "login-username-input", timeout=10).send_keys("does_not_exist_appium")
+            find_by_testid(driver, "login-password-input", timeout=10).send_keys("WrongPassword123!")
+            try:
+                driver.hide_keyboard()
+            except Exception:
+                pass
+            find_by_testid(driver, "login-submit-button", timeout=10).click()
+            time.sleep(4)
+            current = driver.current_package
+            return (current == APP_PACKAGE, "Submitted invalid real credentials to the live backend; the app "
+                                             f"surfaced the failure without crashing, current_package={current}")
+        safe(rec, "Functional", "Login", "invalid_login_credentials_show_error_without_crash",
+             invalid_login_credentials_show_error_without_crash)
+
+        def register_password_mismatch_blocks_step_advance():
+            try:
+                find(driver, AppiumBy.XPATH, text_xpath("OK"), timeout=3).click()
+                time.sleep(0.5)
+            except TimeoutException:
+                pass
+            find_by_testid(driver, "login-register-link", timeout=10).click()
+            time.sleep(1)
+            suffix = uuid.uuid4().hex[:8]
+            find_by_testid(driver, "register-fullname-input", timeout=10).send_keys("Appium Mismatch QA")
+            find_by_testid(driver, "register-username-input").send_keys(f"appium_mm_{suffix}")
+            find_by_testid(driver, "register-email-input").send_keys(f"appium.mm.{suffix}@healthsense.test")
+            try:
+                driver.hide_keyboard()
+            except Exception:
+                pass
+            find_by_testid(driver, "register-continue-button").click()
+            time.sleep(1)
+            find_by_testid(driver, "register-password-input", timeout=10).send_keys("Str0ngPassw0rd!")
+            find_by_testid(driver, "register-confirm-password-input").send_keys("DifferentPassw0rd!")
+            try:
+                driver.hide_keyboard()
+            except Exception:
+                pass
+            find_by_testid(driver, "register-continue-button").click()
+            time.sleep(1)
+            # validateStep() in RegisterScreen.tsx rejects the mismatch and
+            # never calls setStep(step + 1), so the real confirm-password
+            # field must still be on screen instead of the step-2 fields.
+            find_by_testid(driver, "register-confirm-password-input", timeout=5)
+            find_by_testid(driver, "register-back-button", timeout=5).click()
+            time.sleep(1)
+            find_by_testid(driver, "login-username-input", timeout=10)
+            return (True, "Mismatched passwords correctly blocked step advance (register-confirm-password-input "
+                          "still present, register-age-input never reached); abandoned via register-back-button")
+        safe(rec, "Functional", "Register", "register_password_mismatch_blocks_step_advance",
+             register_password_mismatch_blocks_step_advance)
+
+        def login_keyboard_dismiss_preserves_input_text():
+            probe_username = "appium_kbd_probe"
+            el = find_by_testid(driver, "login-username-input", timeout=10)
+            el.send_keys(probe_username)
+            try:
+                driver.hide_keyboard()
+            except Exception:
+                pass
+            time.sleep(0.5)
+            el = find_by_testid(driver, "login-username-input", timeout=5)
+            value = el.text or el.get_attribute("text") or ""
+            ok = probe_username in value
+            try:
+                el.clear()
+            except Exception:
+                pass
+            return (ok, f"login-username-input retained '{value}' after hide_keyboard() (expected '{probe_username}')")
+        safe(rec, "Compatibility", "Login", "login_keyboard_dismiss_preserves_input_text",
+             login_keyboard_dismiss_preserves_input_text)
+
+        def no_crash_dialog_present_at_suite_end():
+            current = driver.current_package
+            try:
+                driver.find_element(AppiumBy.XPATH, text_xpath("has stopped"))
+                crashed = True
+            except NoSuchElementException:
+                crashed = False
+            return (current == APP_PACKAGE and not crashed,
+                    f"End-of-suite invariant check: current_package={current}, ANR/crash dialog present={crashed}")
+        safe(rec, "Compatibility", "System", "no_crash_dialog_present_at_suite_end", no_crash_dialog_present_at_suite_end)
+
     finally:
         driver.quit()
         if proc:

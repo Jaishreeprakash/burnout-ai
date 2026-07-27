@@ -4,6 +4,7 @@ from sqlalchemy import create_engine, event, text
 from sqlalchemy.exc import OperationalError
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.pool import NullPool
 from config import settings
 
 db_url = settings.effective_database_url
@@ -24,7 +25,11 @@ connect_args = {"check_same_thread": False, "timeout": 30} if is_sqlite else {}
 # load balancers (e.g. Supabase's pooler) tend to close them.
 engine_kwargs = {"connect_args": connect_args, "pool_pre_ping": True}
 if not is_sqlite:
-    engine_kwargs.update(pool_size=20, max_overflow=30, pool_recycle=280, pool_timeout=30)
+    if ":6543" in db_url:
+        # Use NullPool for Transaction Pooler to avoid conflicts and socket hangs
+        engine_kwargs.update(poolclass=NullPool)
+    else:
+        engine_kwargs.update(pool_size=20, max_overflow=30, pool_recycle=280, pool_timeout=30)
 
 engine = create_engine(db_url, **engine_kwargs)
 

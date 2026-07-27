@@ -28,7 +28,10 @@ SIDEBAR_LINKS = [
     ("AI Coach Chat", "/chat"), ("Profile", "/profile"),
 ]
 
-VIEWPORTS = [("mobile", 375, 812), ("tablet", 768, 1024), ("desktop", 1440, 900)]
+VIEWPORTS = [
+    ("mobile-small", 320, 568), ("mobile", 375, 812), ("tablet", 768, 1024),
+    ("desktop", 1440, 900), ("desktop-large", 1920, 1080),
+]
 
 # Per-page element-presence checks: (page_path, check_name, by, selector)
 PAGE_ELEMENT_CHECKS = [
@@ -88,6 +91,70 @@ PAGE_ELEMENT_CHECKS = [
     ("/profile", "privacy_tab", By.XPATH, "//button[normalize-space()='Privacy']"),
     ("/profile", "edit_button", By.XPATH, "//button[contains(.,'Edit')]"),
     ("/profile", "sign_out_button", By.XPATH, "//button[contains(.,'Sign Out')]"),
+]
+
+# --- Additional real checks: header (shared Layout component), and giving
+# Phone Usage / Emotion Analysis / Activity Tracker genuine per-element
+# coverage (previously only a generic BASIC_PAGES load check, kept below
+# unchanged / additive). Every selector below was verified against the
+# actual source in web/src before being added.
+
+# Header.tsx renders on every authenticated page via Layout.tsx — verify its
+# two always-in-DOM controls are present on each of the 9 authenticated pages.
+_AUTHENTICATED_PAGES = ["/dashboard", "/sleep", "/phone", "/emotions", "/activity",
+                         "/recommendations", "/analytics", "/chat", "/profile"]
+for _p in _AUTHENTICATED_PAGES:
+    PAGE_ELEMENT_CHECKS.append((_p, "header_open_menu_button", By.CSS_SELECTOR, "[aria-label='Open menu']"))
+    PAGE_ELEMENT_CHECKS.append((_p, "header_notifications_button", By.CSS_SELECTOR, "[aria-label='Notifications']"))
+
+PAGE_ELEMENT_CHECKS += [
+    # Phone Usage (web/src/pages/PhoneUsage.tsx)
+    ("/phone", "refresh_button", By.CSS_SELECTOR, "[aria-label='Refresh']"),
+    ("/phone", "log_usage_button", By.XPATH, "//button[contains(.,'Log Usage')]"),
+    ("/phone", "app_usage_breakdown_heading", By.XPATH, "//*[contains(text(),'App Usage Breakdown')]"),
+    ("/phone", "screen_time_trend_heading", By.XPATH, "//*[contains(text(),'Screen Time Trend')]"),
+    ("/phone", "late_night_pattern_heading", By.XPATH, "//*[contains(text(),'Late Night Usage Pattern')]"),
+
+    # Emotion Analysis (web/src/pages/EmotionAnalysis.tsx)
+    ("/emotions", "current_tab", By.XPATH, "//button[normalize-space()='Current Emotion']"),
+    ("/emotions", "history_tab", By.XPATH, "//button[normalize-space()='history']"),
+    ("/emotions", "trends_tab", By.XPATH, "//button[normalize-space()='trends']"),
+    ("/emotions", "emotion_detection_heading", By.XPATH, "//*[contains(text(),'Emotion Detection')]"),
+    ("/emotions", "refresh_data_button", By.XPATH, "//button[contains(.,'Refresh Data')]"),
+    ("/emotions", "log_happy_emotion_button", By.XPATH, "//button[contains(.,'Happy')]"),
+
+    # Activity Tracker (web/src/pages/ActivityTracker.tsx)
+    ("/activity", "refresh_button", By.CSS_SELECTOR, "[aria-label='Refresh']"),
+    ("/activity", "log_activity_button", By.XPATH, "//button[contains(.,'Log Activity')]"),
+    ("/activity", "todays_progress_heading", By.XPATH, "//*[contains(text(),\"Today's Progress\")]"),
+    ("/activity", "activity_summary_heading", By.XPATH, "//*[contains(text(),'Activity Summary')]"),
+    ("/activity", "activity_heatmap_heading", By.XPATH, "//*[contains(text(),'Activity Heatmap')]"),
+    ("/activity", "activity_log_heading", By.XPATH, "//*[contains(text(),'Activity Log')]"),
+
+    # Analytics (web/src/pages/Analytics.tsx)
+    ("/analytics", "burnout_score_trend_heading", By.XPATH, "//*[contains(text(),'Burnout Score Trend')]"),
+    ("/analytics", "all_metrics_overlay_heading", By.XPATH, "//*[contains(text(),'All Metrics Overlay')]"),
+    ("/analytics", "burnout_records_region", By.CSS_SELECTOR, "[aria-label='Burnout records list']"),
+    ("/analytics", "analytics_dashboard_label", By.XPATH, "//*[contains(text(),'Analytics Dashboard')]"),
+
+    # Sleep Tracker (web/src/pages/SleepTracker.tsx) — overview tab is the default active tab
+    ("/sleep", "sleep_duration_heading", By.XPATH, "//*[contains(text(),'Sleep Duration')]"),
+    ("/sleep", "sleep_quality_heading", By.XPATH, "//*[contains(text(),'Sleep Quality')]"),
+
+    # Wellness Chat (web/src/pages/WellnessChat.tsx)
+    ("/chat", "coach_heading", By.XPATH, "//*[contains(text(),'BurnoutAI Wellness Coach')]"),
+    ("/chat", "starter_prompt_button", By.XPATH, "//button[contains(.,'How can I improve my sleep quality?')]"),
+
+    # Profile (web/src/pages/Profile.tsx)
+    ("/profile", "personal_information_heading", By.XPATH, "//*[contains(text(),'Personal Information')]"),
+
+    # Recommendations (web/src/pages/Recommendations.tsx)
+    ("/recommendations", "overall_progress_heading", By.XPATH, "//*[contains(text(),'Overall Progress')]"),
+    ("/recommendations", "high_priority_label", By.XPATH, "//*[contains(text(),'High Priority')]"),
+
+    # Login (web/src/pages/Login.tsx)
+    ("/login", "forgot_password_button", By.XPATH, "//button[contains(.,'Forgot password?')]"),
+    ("/login", "ai_analysis_feature_label", By.XPATH, "//*[contains(text(),'AI Analysis')]"),
 ]
 
 # Pages that only get a basic load+heading check (less UI detail available)
