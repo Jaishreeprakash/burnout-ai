@@ -1,10 +1,10 @@
 # Executive Summary
 
-Generated: 2026-07-28T06:10:57.753Z
+Generated: 2026-07-28T04:33:19.884Z
 
 ## Total Findings
 
-- Critical: 133
+- Critical: 117
 - High: 29
 - Medium: 93
 - Low: 5
@@ -20,14 +20,14 @@ Generated: 2026-07-28T06:10:57.753Z
 
 1. **[Critical]** python-jose 3.3.0 — CVE-2024-33663 — Trivy (dependency scan) (A06:2021-Vulnerable and Outdated Components)
 2. **[Critical]** tar 7.5.15 — CVE-2026-59873 — Trivy (dependency scan) (A06:2021-Vulnerable and Outdated Components)
-3. **[Critical]** jwt in reports/history/build-27/unified_test_dashboard.html — Gitleaks (secret scan) (CWE-798: Use of Hard-coded Credentials) (A02:2021-Cryptographic Failures)
-4. **[Critical]** jwt in reports/history/build-27/unified_test_dashboard.html — Gitleaks (secret scan) (CWE-798: Use of Hard-coded Credentials) (A02:2021-Cryptographic Failures)
-5. **[Critical]** jwt in reports/history/build-27/backend_security_results.json — Gitleaks (secret scan) (CWE-798: Use of Hard-coded Credentials) (A02:2021-Cryptographic Failures)
-6. **[Critical]** jwt in reports/history/build-27/backend_security_results.json — Gitleaks (secret scan) (CWE-798: Use of Hard-coded Credentials) (A02:2021-Cryptographic Failures)
-7. **[Critical]** jwt in reports/history/build-27/backend_security_results.csv — Gitleaks (secret scan) (CWE-798: Use of Hard-coded Credentials) (A02:2021-Cryptographic Failures)
-8. **[Critical]** jwt in reports/history/build-27/backend_security_results.csv — Gitleaks (secret scan) (CWE-798: Use of Hard-coded Credentials) (A02:2021-Cryptographic Failures)
-9. **[Critical]** jwt in reports/history/build-27/unified_test_dashboard.md — Gitleaks (secret scan) (CWE-798: Use of Hard-coded Credentials) (A02:2021-Cryptographic Failures)
-10. **[Critical]** jwt in reports/history/build-27/unified_test_dashboard.md — Gitleaks (secret scan) (CWE-798: Use of Hard-coded Credentials) (A02:2021-Cryptographic Failures)
+3. **[Critical]** jwt in reports/latest/backend_security_results.json — Gitleaks (secret scan) (CWE-798: Use of Hard-coded Credentials) (A02:2021-Cryptographic Failures)
+4. **[Critical]** jwt in reports/latest/backend_security_results.json — Gitleaks (secret scan) (CWE-798: Use of Hard-coded Credentials) (A02:2021-Cryptographic Failures)
+5. **[Critical]** jwt in reports/history/build-26/backend_security_results.json — Gitleaks (secret scan) (CWE-798: Use of Hard-coded Credentials) (A02:2021-Cryptographic Failures)
+6. **[Critical]** jwt in reports/history/build-26/backend_security_results.json — Gitleaks (secret scan) (CWE-798: Use of Hard-coded Credentials) (A02:2021-Cryptographic Failures)
+7. **[Critical]** jwt in reports/history/build-26/unified_test_dashboard.html — Gitleaks (secret scan) (CWE-798: Use of Hard-coded Credentials) (A02:2021-Cryptographic Failures)
+8. **[Critical]** jwt in reports/history/build-26/unified_test_dashboard.html — Gitleaks (secret scan) (CWE-798: Use of Hard-coded Credentials) (A02:2021-Cryptographic Failures)
+9. **[Critical]** jwt in reports/latest/unified_test_dashboard.md — Gitleaks (secret scan) (CWE-798: Use of Hard-coded Credentials) (A02:2021-Cryptographic Failures)
+10. **[Critical]** jwt in reports/latest/unified_test_dashboard.md — Gitleaks (secret scan) (CWE-798: Use of Hard-coded Credentials) (A02:2021-Cryptographic Failures)
 
 ## Overall Security Score
 
@@ -170,46 +170,30 @@ Generated: 2026-07-28T06:10:57.753Z
 | Medium | Trivy (dependency scan) | react-router 6.30.4 — CVE-2026-53666 |  | A06:2021-Vulnerable and Outdated Components | React Router: Arbitrary Constructor Injection via deserializeErrors() in React Router SSR Hydration |
 | Medium | Trivy (dependency scan) | react-router 6.30.4 — CVE-2026-53669 |  | A06:2021-Vulnerable and Outdated Components | React Router: Open redirect via backslash in <Link> and useNavigate (CVE-2025-68470 bypass) |
 | Medium | Trivy (dependency scan) | react-router-dom 6.30.4 — CVE-2026-53668 |  | A06:2021-Vulnerable and Outdated Components | React Router: Open redirect leading to XSS |
-| Critical | Gitleaks (secret scan) | jwt in reports/history/build-27/unified_test_dashboard.html | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 20 |
-| Critical | Gitleaks (secret scan) | jwt in reports/history/build-27/unified_test_dashboard.html | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 20 |
-| Critical | Gitleaks (secret scan) | jwt in reports/history/build-27/backend_security_results.json | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 173 |
-| Critical | Gitleaks (secret scan) | jwt in reports/history/build-27/backend_security_results.json | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 589 |
-| Critical | Gitleaks (secret scan) | jwt in reports/history/build-27/backend_security_results.csv | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 14 |
-| Critical | Gitleaks (secret scan) | jwt in reports/history/build-27/backend_security_results.csv | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 46 |
-| Critical | Gitleaks (secret scan) | jwt in reports/history/build-27/unified_test_dashboard.md | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 269 |
-| Critical | Gitleaks (secret scan) | jwt in reports/history/build-27/unified_test_dashboard.md | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 301 |
 | Critical | Gitleaks (secret scan) | jwt in reports/latest/backend_security_results.json | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 173 |
 | Critical | Gitleaks (secret scan) | jwt in reports/latest/backend_security_results.json | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 589 |
-| Critical | Gitleaks (secret scan) | jwt in reports/latest/unified_test_dashboard.md | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 153 |
-| Critical | Gitleaks (secret scan) | jwt in reports/latest/backend_security_results.csv | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 14 |
-| Critical | Gitleaks (secret scan) | jwt in reports/latest/backend_security_results.csv | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 46 |
-| Critical | Gitleaks (secret scan) | jwt in reports/latest/unified_test_dashboard.md | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 185 |
-| Critical | Gitleaks (secret scan) | jwt in reports/latest/unified_test_dashboard.html | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 20 |
-| Critical | Gitleaks (secret scan) | jwt in reports/latest/unified_test_dashboard.html | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 20 |
 | Critical | Gitleaks (secret scan) | jwt in reports/history/build-26/backend_security_results.json | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 173 |
 | Critical | Gitleaks (secret scan) | jwt in reports/history/build-26/backend_security_results.json | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 589 |
-| Critical | Gitleaks (secret scan) | jwt in reports/history/build-26/backend_security_results.csv | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 14 |
-| Critical | Gitleaks (secret scan) | jwt in reports/history/build-26/backend_security_results.csv | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 46 |
 | Critical | Gitleaks (secret scan) | jwt in reports/history/build-26/unified_test_dashboard.html | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 20 |
 | Critical | Gitleaks (secret scan) | jwt in reports/history/build-26/unified_test_dashboard.html | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 20 |
-| Critical | Gitleaks (secret scan) | jwt in reports/latest/backend_security_results.json | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 173 |
-| Critical | Gitleaks (secret scan) | jwt in reports/latest/backend_security_results.json | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 589 |
-| Critical | Gitleaks (secret scan) | jwt in reports/history/build-26/unified_test_dashboard.md | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 269 |
-| Critical | Gitleaks (secret scan) | jwt in reports/history/build-26/unified_test_dashboard.md | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 301 |
 | Critical | Gitleaks (secret scan) | jwt in reports/latest/unified_test_dashboard.md | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 269 |
 | Critical | Gitleaks (secret scan) | jwt in reports/latest/unified_test_dashboard.md | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 301 |
+| Critical | Gitleaks (secret scan) | jwt in reports/history/build-26/unified_test_dashboard.md | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 269 |
+| Critical | Gitleaks (secret scan) | jwt in reports/history/build-26/unified_test_dashboard.md | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 301 |
+| Critical | Gitleaks (secret scan) | jwt in reports/history/build-26/backend_security_results.csv | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 14 |
+| Critical | Gitleaks (secret scan) | jwt in reports/history/build-26/backend_security_results.csv | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 46 |
 | Critical | Gitleaks (secret scan) | jwt in reports/latest/backend_security_results.csv | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 14 |
 | Critical | Gitleaks (secret scan) | jwt in reports/latest/backend_security_results.csv | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 46 |
 | Critical | Gitleaks (secret scan) | jwt in reports/latest/unified_test_dashboard.html | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 20 |
 | Critical | Gitleaks (secret scan) | jwt in reports/latest/unified_test_dashboard.html | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 20 |
 | Critical | Gitleaks (secret scan) | jwt in reports/history/build-25/backend_security_results.csv | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 14 |
 | Critical | Gitleaks (secret scan) | jwt in reports/history/build-25/backend_security_results.csv | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 46 |
-| Critical | Gitleaks (secret scan) | jwt in reports/history/build-25/unified_test_dashboard.md | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 275 |
-| Critical | Gitleaks (secret scan) | jwt in reports/history/build-25/unified_test_dashboard.md | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 307 |
 | Critical | Gitleaks (secret scan) | jwt in reports/history/build-25/backend_security_results.json | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 173 |
 | Critical | Gitleaks (secret scan) | jwt in reports/history/build-25/backend_security_results.json | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 589 |
 | Critical | Gitleaks (secret scan) | jwt in reports/history/build-25/unified_test_dashboard.html | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 20 |
 | Critical | Gitleaks (secret scan) | jwt in reports/history/build-25/unified_test_dashboard.html | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 20 |
+| Critical | Gitleaks (secret scan) | jwt in reports/history/build-25/unified_test_dashboard.md | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 275 |
+| Critical | Gitleaks (secret scan) | jwt in reports/history/build-25/unified_test_dashboard.md | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 307 |
 | Critical | Gitleaks (secret scan) | jwt in reports/latest/backend_security_results.json | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 173 |
 | Critical | Gitleaks (secret scan) | jwt in reports/latest/backend_security_results.json | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 589 |
 | Critical | Gitleaks (secret scan) | jwt in reports/latest/backend_security_results.csv | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 14 |
@@ -220,18 +204,18 @@ Generated: 2026-07-28T06:10:57.753Z
 | Critical | Gitleaks (secret scan) | jwt in reports/latest/unified_test_dashboard.html | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 20 |
 | Critical | Gitleaks (secret scan) | jwt in reports/history/build-24/backend_security_results.json | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 173 |
 | Critical | Gitleaks (secret scan) | jwt in reports/history/build-24/backend_security_results.json | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 589 |
+| Critical | Gitleaks (secret scan) | jwt in reports/history/build-24/unified_test_dashboard.html | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 20 |
+| Critical | Gitleaks (secret scan) | jwt in reports/history/build-24/unified_test_dashboard.html | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 20 |
 | Critical | Gitleaks (secret scan) | jwt in reports/history/build-24/backend_security_results.csv | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 14 |
 | Critical | Gitleaks (secret scan) | jwt in reports/history/build-24/backend_security_results.csv | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 46 |
-| Critical | Gitleaks (secret scan) | jwt in reports/history/build-24/unified_test_dashboard.html | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 20 |
-| Critical | Gitleaks (secret scan) | jwt in reports/history/build-24/unified_test_dashboard.html | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 20 |
 | Critical | Gitleaks (secret scan) | jwt in reports/history/build-24/unified_test_dashboard.md | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 37 |
 | Critical | Gitleaks (secret scan) | jwt in reports/history/build-24/unified_test_dashboard.md | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 69 |
 | Critical | Gitleaks (secret scan) | jwt in reports/latest/backend_security_results.json | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 173 |
 | Critical | Gitleaks (secret scan) | jwt in reports/latest/backend_security_results.json | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 589 |
-| Critical | Gitleaks (secret scan) | jwt in reports/latest/backend_security_results.csv | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 14 |
-| Critical | Gitleaks (secret scan) | jwt in reports/latest/backend_security_results.csv | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 46 |
 | Critical | Gitleaks (secret scan) | jwt in reports/latest/unified_test_dashboard.md | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 275 |
 | Critical | Gitleaks (secret scan) | jwt in reports/latest/unified_test_dashboard.md | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 307 |
+| Critical | Gitleaks (secret scan) | jwt in reports/latest/backend_security_results.csv | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 14 |
+| Critical | Gitleaks (secret scan) | jwt in reports/latest/backend_security_results.csv | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 46 |
 | Critical | Gitleaks (secret scan) | jwt in reports/latest/unified_test_dashboard.html | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 20 |
 | Critical | Gitleaks (secret scan) | jwt in reports/latest/unified_test_dashboard.html | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 20 |
 | Critical | Gitleaks (secret scan) | jwt in reports/history/build-23/backend_security_results.csv | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 14 |
@@ -240,60 +224,60 @@ Generated: 2026-07-28T06:10:57.753Z
 | Critical | Gitleaks (secret scan) | jwt in reports/history/build-23/backend_security_results.json | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 589 |
 | Critical | Gitleaks (secret scan) | jwt in reports/history/build-23/unified_test_dashboard.html | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 20 |
 | Critical | Gitleaks (secret scan) | jwt in reports/history/build-23/unified_test_dashboard.html | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 20 |
+| Critical | Gitleaks (secret scan) | jwt in reports/history/build-23/unified_test_dashboard.md | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 275 |
+| Critical | Gitleaks (secret scan) | jwt in reports/history/build-23/unified_test_dashboard.md | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 307 |
 | Critical | Gitleaks (secret scan) | jwt in reports/latest/backend_security_results.json | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 173 |
 | Critical | Gitleaks (secret scan) | jwt in reports/latest/backend_security_results.json | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 589 |
 | Critical | Gitleaks (secret scan) | jwt in reports/latest/backend_security_results.csv | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 14 |
 | Critical | Gitleaks (secret scan) | jwt in reports/latest/backend_security_results.csv | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 46 |
-| Critical | Gitleaks (secret scan) | jwt in reports/history/build-23/unified_test_dashboard.md | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 275 |
-| Critical | Gitleaks (secret scan) | jwt in reports/history/build-23/unified_test_dashboard.md | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 307 |
 | Critical | Gitleaks (secret scan) | jwt in reports/latest/unified_test_dashboard.md | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 37 |
 | Critical | Gitleaks (secret scan) | jwt in reports/latest/unified_test_dashboard.md | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 69 |
 | Critical | Gitleaks (secret scan) | jwt in reports/latest/unified_test_dashboard.html | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 20 |
 | Critical | Gitleaks (secret scan) | jwt in reports/latest/unified_test_dashboard.html | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 20 |
-| Critical | Gitleaks (secret scan) | jwt in reports/history/build-22/backend_security_results.csv | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 14 |
-| Critical | Gitleaks (secret scan) | jwt in reports/history/build-22/backend_security_results.csv | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 46 |
-| Critical | Gitleaks (secret scan) | jwt in reports/history/build-22/unified_test_dashboard.html | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 20 |
-| Critical | Gitleaks (secret scan) | jwt in reports/history/build-22/unified_test_dashboard.html | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 20 |
 | Critical | Gitleaks (secret scan) | jwt in reports/history/build-22/unified_test_dashboard.md | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 37 |
 | Critical | Gitleaks (secret scan) | jwt in reports/history/build-22/unified_test_dashboard.md | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 69 |
+| Critical | Gitleaks (secret scan) | jwt in reports/history/build-22/unified_test_dashboard.html | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 20 |
+| Critical | Gitleaks (secret scan) | jwt in reports/history/build-22/unified_test_dashboard.html | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 20 |
+| Critical | Gitleaks (secret scan) | jwt in reports/history/build-22/backend_security_results.csv | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 14 |
+| Critical | Gitleaks (secret scan) | jwt in reports/history/build-22/backend_security_results.csv | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 46 |
 | Critical | Gitleaks (secret scan) | jwt in reports/latest/backend_security_results.json | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 173 |
 | Critical | Gitleaks (secret scan) | jwt in reports/latest/backend_security_results.json | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 589 |
 | Critical | Gitleaks (secret scan) | jwt in reports/history/build-22/backend_security_results.json | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 173 |
 | Critical | Gitleaks (secret scan) | jwt in reports/history/build-22/backend_security_results.json | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 589 |
 | Critical | Gitleaks (secret scan) | jwt in reports/latest/backend_security_results.csv | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 14 |
 | Critical | Gitleaks (secret scan) | jwt in reports/latest/backend_security_results.csv | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 46 |
-| Critical | Gitleaks (secret scan) | jwt in reports/latest/unified_test_dashboard.html | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 20 |
-| Critical | Gitleaks (secret scan) | jwt in reports/latest/unified_test_dashboard.html | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 20 |
 | Critical | Gitleaks (secret scan) | jwt in reports/latest/unified_test_dashboard.md | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 275 |
 | Critical | Gitleaks (secret scan) | jwt in reports/latest/unified_test_dashboard.md | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 307 |
 | Critical | Gitleaks (secret scan) | jwt in reports/latest/backend_security_results.csv | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 14 |
 | Critical | Gitleaks (secret scan) | jwt in reports/latest/backend_security_results.csv | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 46 |
 | Critical | Gitleaks (secret scan) | jwt in reports/latest/unified_test_dashboard.html | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 20 |
 | Critical | Gitleaks (secret scan) | jwt in reports/latest/unified_test_dashboard.html | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 20 |
-| Critical | Gitleaks (secret scan) | jwt in reports/latest/backend_security_results.json | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 173 |
-| Critical | Gitleaks (secret scan) | jwt in reports/latest/backend_security_results.json | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 589 |
+| Critical | Gitleaks (secret scan) | jwt in reports/latest/unified_test_dashboard.html | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 20 |
+| Critical | Gitleaks (secret scan) | jwt in reports/latest/unified_test_dashboard.html | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 20 |
 | Critical | Gitleaks (secret scan) | jwt in reports/latest/unified_test_dashboard.md | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 37 |
 | Critical | Gitleaks (secret scan) | jwt in reports/latest/unified_test_dashboard.md | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 69 |
 | Critical | Gitleaks (secret scan) | jwt in reports/unified_test_dashboard.md | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 275 |
 | Critical | Gitleaks (secret scan) | jwt in reports/unified_test_dashboard.md | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 307 |
+| Critical | Gitleaks (secret scan) | jwt in reports/latest/backend_security_results.json | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 173 |
+| Critical | Gitleaks (secret scan) | jwt in reports/latest/backend_security_results.json | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 589 |
 | Critical | Gitleaks (secret scan) | jwt in reports/unified_test_dashboard.html | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 20 |
 | Critical | Gitleaks (secret scan) | jwt in reports/unified_test_dashboard.html | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 20 |
+| Critical | Gitleaks (secret scan) | jwt in reports/unified_test_dashboard.html | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 20 |
+| Critical | Gitleaks (secret scan) | jwt in reports/unified_test_dashboard.html | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 20 |
+| Critical | Gitleaks (secret scan) | jwt in QA_Test_Report_Live.csv | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 341 |
+| Critical | Gitleaks (secret scan) | jwt in QA_Test_Report_Live.csv | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 373 |
 | Critical | Gitleaks (secret scan) | jwt in reports/unified_test_dashboard.md | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 275 |
 | Critical | Gitleaks (secret scan) | jwt in reports/unified_test_dashboard.md | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 307 |
-| Critical | Gitleaks (secret scan) | jwt in reports/unified_test_dashboard.html | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 20 |
-| Critical | Gitleaks (secret scan) | jwt in reports/unified_test_dashboard.html | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 20 |
 | Critical | Gitleaks (secret scan) | jwt in reports/unified_test_dashboard.md | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 275 |
 | Critical | Gitleaks (secret scan) | jwt in reports/unified_test_dashboard.md | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 307 |
 | Critical | Gitleaks (secret scan) | jwt in QA_Test_Report_Live.csv | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 341 |
 | Critical | Gitleaks (secret scan) | jwt in QA_Test_Report_Live.csv | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 373 |
-| Critical | Gitleaks (secret scan) | jwt in QA_Test_Report_Live.csv | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 341 |
-| Critical | Gitleaks (secret scan) | jwt in QA_Test_Report_Live.csv | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 373 |
-| Critical | Gitleaks (secret scan) | jwt in reports/unified_test_dashboard.html | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 20 |
-| Critical | Gitleaks (secret scan) | jwt in reports/unified_test_dashboard.html | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 20 |
-| Critical | Gitleaks (secret scan) | jwt in reports/unified_test_dashboard.html | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 20 |
-| Critical | Gitleaks (secret scan) | jwt in reports/unified_test_dashboard.html | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 20 |
 | Critical | Gitleaks (secret scan) | jwt in reports/unified_test_dashboard.md | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 228 |
 | Critical | Gitleaks (secret scan) | jwt in reports/unified_test_dashboard.md | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 260 |
+| Critical | Gitleaks (secret scan) | jwt in reports/unified_test_dashboard.html | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 20 |
+| Critical | Gitleaks (secret scan) | jwt in reports/unified_test_dashboard.html | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 20 |
+| Critical | Gitleaks (secret scan) | jwt in reports/unified_test_dashboard.html | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 20 |
+| Critical | Gitleaks (secret scan) | jwt in reports/unified_test_dashboard.html | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 20 |
 | Critical | Gitleaks (secret scan) | jwt in QA_Test_Report_Live.csv | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 294 |
 | Critical | Gitleaks (secret scan) | jwt in QA_Test_Report_Live.csv | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 326 |
 | Critical | Gitleaks (secret scan) | jwt in QA_Test_Report_Live.csv | CWE-798: Use of Hard-coded Credentials | A02:2021-Cryptographic Failures | line 341 |
