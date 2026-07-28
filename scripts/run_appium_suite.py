@@ -680,43 +680,69 @@ def run(appium_url, udid, apk_path, no_spawn_appium, output_dir):
              invalid_login_credentials_show_error_without_crash)
 
         def register_password_mismatch_blocks_step_advance():
+            # Instrumented rather than guessed further: two prior fixes
+            # (find_by_testid strategy order, longer timeouts) didn't change
+            # this check's ~21s time-to-failure at all, meaning the real
+            # failure point is earlier in this function than either fix
+            # touched. Every step below is labeled so the next CI failure
+            # reports exactly which step and how long it ran, instead of a
+            # generic TimeoutException with no location.
+            step = "init"
+            t0 = time.time()
             try:
-                find(driver, AppiumBy.XPATH, text_xpath("OK"), timeout=3).click()
-                time.sleep(0.5)
-            except TimeoutException:
-                pass
-            find_by_testid(driver, "login-register-link", timeout=10).click()
-            time.sleep(1)
-            suffix = uuid.uuid4().hex[:8]
-            find_by_testid(driver, "register-fullname-input", timeout=10).send_keys("Appium Mismatch QA")
-            find_by_testid(driver, "register-username-input").send_keys(f"appium_mm_{suffix}")
-            find_by_testid(driver, "register-email-input").send_keys(f"appium.mm.{suffix}@healthsense.test")
-            try:
-                driver.hide_keyboard()
-            except Exception:
-                pass
-            find_by_testid(driver, "register-continue-button").click()
-            time.sleep(1)
-            find_by_testid(driver, "register-password-input", timeout=10).send_keys("Str0ngPassw0rd!")
-            find_by_testid(driver, "register-confirm-password-input").send_keys("DifferentPassw0rd!")
-            try:
-                driver.hide_keyboard()
-            except Exception:
-                pass
-            find_by_testid(driver, "register-continue-button").click()
-            time.sleep(1)
-            # validateStep() in RegisterScreen.tsx rejects the mismatch and
-            # never calls setStep(step + 1), so the real confirm-password
-            # field must still be on screen instead of the step-2 fields.
-            # By this point in the suite this is the third real registration
-            # flow in one continuous session -- give these two checks the
-            # same longer headroom used elsewhere in this suite for
-            # long-session slowdowns, rather than the tighter 5s this
-            # started with.
-            find_by_testid(driver, "register-confirm-password-input", timeout=10)
-            find_by_testid(driver, "register-back-button", timeout=10).click()
-            time.sleep(1)
-            find_by_testid(driver, "login-username-input", timeout=10)
+                step = "dismiss_leftover_alert"
+                try:
+                    find(driver, AppiumBy.XPATH, text_xpath("OK"), timeout=3).click()
+                    time.sleep(0.5)
+                except TimeoutException:
+                    pass
+
+                step = "click_login_register_link"
+                find_by_testid(driver, "login-register-link", timeout=10).click()
+                time.sleep(1)
+
+                suffix = uuid.uuid4().hex[:8]
+                step = "fill_fullname"
+                find_by_testid(driver, "register-fullname-input", timeout=10).send_keys("Appium Mismatch QA")
+                step = "fill_username"
+                find_by_testid(driver, "register-username-input").send_keys(f"appium_mm_{suffix}")
+                step = "fill_email"
+                find_by_testid(driver, "register-email-input").send_keys(f"appium.mm.{suffix}@healthsense.test")
+                try:
+                    driver.hide_keyboard()
+                except Exception:
+                    pass
+                step = "click_continue_step0"
+                find_by_testid(driver, "register-continue-button").click()
+                time.sleep(1)
+
+                step = "fill_password"
+                find_by_testid(driver, "register-password-input", timeout=10).send_keys("Str0ngPassw0rd!")
+                step = "fill_confirm_password_mismatched"
+                find_by_testid(driver, "register-confirm-password-input").send_keys("DifferentPassw0rd!")
+                try:
+                    driver.hide_keyboard()
+                except Exception:
+                    pass
+                step = "click_continue_step1"
+                find_by_testid(driver, "register-continue-button").click()
+                time.sleep(1)
+
+                # validateStep() in RegisterScreen.tsx rejects the mismatch
+                # and never calls setStep(step + 1), so the real
+                # confirm-password field must still be on screen instead of
+                # the step-2 fields.
+                step = "verify_still_on_confirm_password_field"
+                find_by_testid(driver, "register-confirm-password-input", timeout=10)
+                step = "click_back_button"
+                find_by_testid(driver, "register-back-button", timeout=10).click()
+                time.sleep(1)
+                step = "verify_back_on_login"
+                find_by_testid(driver, "login-username-input", timeout=10)
+            except (NoSuchElementException, TimeoutException) as e:
+                raise RuntimeError(
+                    f"failed at step '{step}' after {time.time() - t0:.1f}s: {e.__class__.__name__}"
+                ) from e
             return (True, "Mismatched passwords correctly blocked step advance (register-confirm-password-input "
                           "still present, register-age-input never reached); abandoned via register-back-button")
         safe(rec, "Functional", "Register", "register_password_mismatch_blocks_step_advance",
