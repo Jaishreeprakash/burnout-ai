@@ -377,8 +377,16 @@ def run(appium_url, udid, apk_path, no_spawn_appium, output_dir):
             try:
                 alert_el = find(driver, AppiumBy.XPATH, text_xpath("Missing Fields"), timeout=5)
                 evidence = f"Empty submit correctly blocked by the real client-side Alert.alert: {alert_el.text}"
+                # Confirmed by direct on-device inspection: driver.back() here
+                # dismisses BOTH this single-button Alert.alert AND pops the
+                # whole ForgotPasswordScreen in one press, landing on Login
+                # instead of leaving this alert-only screen -- which broke
+                # the very next check (it assumes it's still on Forgot
+                # Password). Tapping the alert's own OK button (confirmed via
+                # UI dump to be the standard android:id/button1) dismisses
+                # only the alert.
                 try:
-                    driver.back()
+                    find(driver, AppiumBy.ID, "android:id/button1", timeout=3).click()
                 except Exception:
                     pass
                 return (True, evidence)
