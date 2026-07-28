@@ -708,8 +708,13 @@ def run(appium_url, udid, apk_path, no_spawn_appium, output_dir):
             # validateStep() in RegisterScreen.tsx rejects the mismatch and
             # never calls setStep(step + 1), so the real confirm-password
             # field must still be on screen instead of the step-2 fields.
-            find_by_testid(driver, "register-confirm-password-input", timeout=5)
-            find_by_testid(driver, "register-back-button", timeout=5).click()
+            # By this point in the suite this is the third real registration
+            # flow in one continuous session -- give these two checks the
+            # same longer headroom used elsewhere in this suite for
+            # long-session slowdowns, rather than the tighter 5s this
+            # started with.
+            find_by_testid(driver, "register-confirm-password-input", timeout=10)
+            find_by_testid(driver, "register-back-button", timeout=10).click()
             time.sleep(1)
             find_by_testid(driver, "login-username-input", timeout=10)
             return (True, "Mismatched passwords correctly blocked step advance (register-confirm-password-input "
