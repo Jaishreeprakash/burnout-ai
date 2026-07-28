@@ -125,6 +125,19 @@ def text_xpath(text):
     return f'//*[@text="{text}" or contains(@text,"{text}")]'
 
 
+def scroll_screen_up(driver, times=2):
+    """Reverse of scroll_screen_down -- React Navigation tab screens keep
+    their scroll position when a tab loses and regains focus, so a
+    recommendations_screen_reachable_with_demo_data call earlier in the
+    suite that scrolled the Dashboard down leaves it scrolled down the next
+    time the Home tab is revisited, hiding header elements like the
+    notification bell above the current scroll position."""
+    size = driver.get_window_size()
+    for _ in range(times):
+        driver.swipe(size["width"] // 2, int(size["height"] * 0.2), size["width"] // 2, int(size["height"] * 0.75), 400)
+        time.sleep(0.5)
+
+
 def scroll_screen_down(driver, times=1):
     """A plain swipe-up gesture to reveal content below the fold. Confirmed
     via direct on-device UI-hierarchy inspection: this app's ScrollView only
@@ -630,6 +643,7 @@ def run(appium_url, udid, apk_path, no_spawn_appium, output_dir):
         def dashboard_notification_bell_button_present():
             find(driver, AppiumBy.XPATH, text_xpath("Home"), timeout=10).click()
             time.sleep(1)
+            scroll_screen_up(driver)
             el = find_by_testid(driver, "Notifications", timeout=10)
             return (el is not None, "Notification bell (accessibilityLabel='Notifications') found on the real Dashboard header")
         safe(rec, "Accessibility", "Dashboard", "dashboard_notification_bell_button_present",
