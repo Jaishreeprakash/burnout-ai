@@ -117,6 +117,20 @@ def text_xpath(text):
     return f'//*[@text="{text}" or contains(@text,"{text}")]'
 
 
+def scroll_screen_down(driver, times=1):
+    """A plain swipe-up gesture to reveal content below the fold. Confirmed
+    via direct on-device UI-hierarchy inspection: this app's ScrollView only
+    exposes off-screen children to Appium/UiAutomator once they've actually
+    been scrolled into the rendered viewport -- unlike a web ScrollView,
+    which keeps everything mounted regardless of scroll position -- so a
+    bare find() with a longer timeout never succeeds here no matter how
+    long it waits."""
+    size = driver.get_window_size()
+    for _ in range(times):
+        driver.swipe(size["width"] // 2, int(size["height"] * 0.75), size["width"] // 2, int(size["height"] * 0.2), 400)
+        time.sleep(0.5)
+
+
 def safe_back_to_root_tab(driver, evidence_prefix):
     """Only presses hardware back if we're not already on a root bottom-tab
     screen. Confirmed via CI (current_package became
@@ -543,11 +557,13 @@ def run(appium_url, udid, apk_path, no_spawn_appium, output_dir):
         safe(rec, "Functional", "Dashboard", "dashboard_reached_via_demo_login", dashboard_reached_via_demo_login)
 
         def recommendations_screen_reachable_with_demo_data():
-            # DashboardScreen only renders this link once burnout?.recommendations[0]
-            # has actually rendered -- the same chart-heavy first-render slowness
-            # already worked around for SleepScreen affects this screen's line
-            # chart too, so this needs the same longer headroom on this emulator.
-            find(driver, AppiumBy.XPATH, text_xpath("See all"), timeout=25).click()
+            # This link sits below the wellness ring and emotional-stability
+            # chart -- confirmed via direct on-device inspection that it isn't
+            # exposed to Appium at all until scrolled into view, regardless of
+            # timeout length (a chart-render-speed theory was ruled out the
+            # same way).
+            scroll_screen_down(driver)
+            find(driver, AppiumBy.XPATH, text_xpath("See all"), timeout=10).click()
             time.sleep(2)
             return (True, "Tapped the real 'See all ->' recommendations link, rendered because Demo Mode's "
                           "MOCK_BURNOUT always has a recommendation")
@@ -573,14 +589,11 @@ def run(appium_url, udid, apk_path, no_spawn_appium, output_dir):
         safe(rec, "UI/UX", "Sleep", "sleep_tab_shows_header_after_tap", sleep_tab_shows_header_after_tap)
 
         def sleep_screen_log_button_present():
-            # SleepScreen renders a react-native-chart-kit/react-native-svg bar
-            # chart above this button; on the CI emulator's software-rendered
-            # (swiftshader) GPU that chart measurably delays the rest of the
-            # ScrollView's layout commit, so this needs more headroom than a
-            # plain-text check elsewhere on the same screen (confirmed: the
-            # "Sleep Tracker" header check right before this one, which sits
-            # above the chart, doesn't need it).
-            find(driver, AppiumBy.XPATH, text_xpath("Save Sleep Record"), timeout=25)
+            # Same below-the-fold visibility issue as the Dashboard
+            # recommendation link -- confirmed via direct on-device
+            # inspection, not actually a chart-render-speed issue.
+            scroll_screen_down(driver, times=2)
+            find(driver, AppiumBy.XPATH, text_xpath("Save Sleep Record"), timeout=10)
             return (True, "SleepScreen's real 'Save Sleep Record' submit button is present")
         safe(rec, "Functional", "Sleep", "sleep_screen_log_button_present", sleep_screen_log_button_present)
 
@@ -687,7 +700,13 @@ def run(appium_url, udid, apk_path, no_spawn_appium, output_dir):
             el = find_by_testid(driver, "login-username-input", timeout=10)
             el.send_keys(probe_username)
             try:
-                driver.hide_keyboard()
+                # driver.hide_keyboard() drives Android's IME "done" action,
+                # which can trigger the field's IME action handler rather
+                # than a plain dismiss. Confirmed via direct on-device
+                # testing: a raw hardware back-key press reliably dismisses
+                # the keyboard while preserving the field's text, so use
+                # that explicitly instead.
+                driver.press_keycode(4)
             except Exception:
                 pass
             time.sleep(0.5)
@@ -698,7 +717,7 @@ def run(appium_url, udid, apk_path, no_spawn_appium, output_dir):
                 el.clear()
             except Exception:
                 pass
-            return (ok, f"login-username-input retained '{value}' after hide_keyboard() (expected '{probe_username}')")
+            return (ok, f"login-username-input retained '{value}' after a back-key press dismissed the keyboard (expected '{probe_username}')")
         safe(rec, "Compatibility", "Login", "login_keyboard_dismiss_preserves_input_text",
              login_keyboard_dismiss_preserves_input_text)
 
