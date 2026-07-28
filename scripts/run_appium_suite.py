@@ -117,17 +117,61 @@ def text_xpath(text):
     return f'//*[@text="{text}" or contains(@text,"{text}")]'
 
 
+def click_profile_logout_button(driver, timeout=10):
+    """profile-logout-button sits below the fold in ProfileScreen's
+    ScrollView -- confirmed by direct on-device inspection (had to swipe up
+    to even see it). find_by_testid can still locate it for a presence
+    check since RN's ScrollView keeps off-screen children in the native
+    view hierarchy, but Appium's .click() computes a tap point from the
+    element's bounds and that point lands outside the visible screen for an
+    off-screen element, so the tap silently doesn't register -- which is
+    almost certainly why every logout-dependent live check failed
+    identically in CI (dialog never opens) even though the dialog's own
+    locator (android:id/button1) was independently confirmed correct.
+    UiScrollable.scrollIntoView() forces the real scroll before the click."""
+    try:
+        driver.find_element(
+            AppiumBy.ANDROID_UIAUTOMATOR,
+            'new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView('
+            'new UiSelector().descriptionContains("profile-logout-button"))'
+        )
+    except Exception:
+        pass
+    find_by_testid(driver, "profile-logout-button", timeout=timeout).click()
+
+
 def confirm_sign_out_dialog(driver, timeout=8):
     """ProfileScreen.handleLogout() shows a native Alert.alert('Sign Out',
     'Are you sure...', [Cancel, Sign Out]) confirmation before it actually
     calls logout() -- tapping profile-logout-button alone only opens this
-    dialog. On Android, RN maps a 2-button Alert to [negative, positive]
-    system buttons, so the destructive 'Sign Out' choice (second/last entry)
-    is the dialog's standard positive button, android:id/button1 -- using
-    the resource-id (not text) avoids any ambiguity with the screen's own
-    'Sign Out' button label underneath the dialog."""
-    find(driver, AppiumBy.ID, "android:id/button1", timeout=timeout).click()
-    time.sleep(0.5)
+    dialog. AlertFragment.kt confirms RN builds this via a standard
+    AlertDialog.Builder.setPositiveButton(...)/setNegativeButton(...), and
+    Alert.js's validButtons.pop() order confirms a 2-button [Cancel, 'Sign
+    Out'] array maps 'Sign Out' to the positive slot -- so android:id/button1
+    should be correct. First CI attempt at this still failed the same way
+    despite that, so this now falls back to a text-based match (both the
+    screen's own logout button and the dialog's destructive option render
+    the exact text 'Sign Out'; the dialog's copy is whichever one is NOT the
+    original screen button, i.e. the second match) and, if that also fails,
+    raises with the actual on-screen text so the failure is diagnosable from
+    the report instead of a bare timeout."""
+    try:
+        find(driver, AppiumBy.ID, "android:id/button1", timeout=timeout).click()
+        time.sleep(0.5)
+        return
+    except TimeoutException:
+        pass
+    candidates = driver.find_elements(AppiumBy.XPATH, text_xpath("Sign Out"))
+    if len(candidates) >= 2:
+        candidates[-1].click()
+        time.sleep(0.5)
+        return
+    visible = [el.get_attribute("text") for el in driver.find_elements(AppiumBy.XPATH, "//*[@text]")][:20]
+    raise TimeoutException(
+        f"Sign Out dialog button not found via android:id/button1, and only "
+        f"{len(candidates)} 'Sign Out' text match(es) on screen (need 2+ to "
+        f"disambiguate). Visible texts: {visible}"
+    )
 
 
 def run(appium_url, udid, apk_path, no_spawn_appium, output_dir):
@@ -289,7 +333,7 @@ def run(appium_url, udid, apk_path, no_spawn_appium, output_dir):
         def logout_flow_returns_to_login_screen():
             find(driver, AppiumBy.XPATH, text_xpath("Profile"), timeout=10).click()
             time.sleep(1.5)
-            find_by_testid(driver, "profile-logout-button", timeout=10).click()
+            click_profile_logout_button(driver)
             confirm_sign_out_dialog(driver)
             time.sleep(2)
             find_by_testid(driver, "login-username-input", timeout=10)
@@ -451,7 +495,7 @@ def run(appium_url, udid, apk_path, no_spawn_appium, output_dir):
         def logout_after_second_registration():
             find(driver, AppiumBy.XPATH, text_xpath("Profile"), timeout=10).click()
             time.sleep(1.5)
-            find_by_testid(driver, "profile-logout-button", timeout=10).click()
+            click_profile_logout_button(driver)
             confirm_sign_out_dialog(driver)
             time.sleep(2)
             find_by_testid(driver, "login-username-input", timeout=10)
@@ -556,7 +600,7 @@ def run(appium_url, udid, apk_path, no_spawn_appium, output_dir):
         def invalid_login_credentials_show_error_without_crash():
             find(driver, AppiumBy.XPATH, text_xpath("Profile"), timeout=10).click()
             time.sleep(1.5)
-            find_by_testid(driver, "profile-logout-button", timeout=10).click()
+            click_profile_logout_button(driver)
             confirm_sign_out_dialog(driver)
             time.sleep(2)
             find_by_testid(driver, "login-username-input", timeout=10).send_keys("does_not_exist_appium")
