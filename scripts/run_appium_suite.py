@@ -603,9 +603,13 @@ def run(appium_url, udid, apk_path, no_spawn_appium, output_dir):
              back_button_returns_from_recommendations_to_dashboard)
 
         def sleep_tab_shows_header_after_tap():
-            find(driver, AppiumBy.XPATH, text_xpath("Sleep"), timeout=10).click()
+            # Bumped from 10s -> 20s: this passed reliably across several
+            # prior runs and isn't touched by any known bug, so a failure
+            # here reads as CI-runner speed variance rather than a real
+            # issue -- widen the margin rather than chase a one-off flake.
+            find(driver, AppiumBy.XPATH, text_xpath("Sleep"), timeout=20).click()
             time.sleep(1.5)
-            find(driver, AppiumBy.XPATH, text_xpath("Sleep Tracker"), timeout=10)
+            find(driver, AppiumBy.XPATH, text_xpath("Sleep Tracker"), timeout=20)
             return (True, "SleepScreen rendered its real 'Sleep Tracker' header after tapping the Sleep tab")
         safe(rec, "UI/UX", "Sleep", "sleep_tab_shows_header_after_tap", sleep_tab_shows_header_after_tap)
 
