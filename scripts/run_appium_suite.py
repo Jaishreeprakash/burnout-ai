@@ -757,17 +757,24 @@ def run(appium_url, udid, apk_path, no_spawn_appium, output_dir):
              register_password_mismatch_blocks_step_advance)
 
         def login_keyboard_dismiss_preserves_input_text():
+            # CI showed the real bug in the previous fix: WebElement.send_keys()
+            # via UiAutomator2 often sets an EditText's value directly through
+            # the accessibility API without ever presenting the real on-screen
+            # IME keyboard -- unlike a manual adb `input tap` + `input text`
+            # reproduction (which always opens the real IME), so there was
+            # nothing for a back-key press to dismiss. With no keyboard to
+            # dismiss, that back press instead popped the Login screen and
+            # exited the whole app (confirmed: current_package became the
+            # launcher). Click the field first to force a real focus event
+            # (which does reliably open the IME on this app), and only send
+            # the back-key press if the keyboard is actually confirmed shown.
             probe_username = "appium_kbd_probe"
             el = find_by_testid(driver, "login-username-input", timeout=10)
+            el.click()
             el.send_keys(probe_username)
             try:
-                # driver.hide_keyboard() drives Android's IME "done" action,
-                # which can trigger the field's IME action handler rather
-                # than a plain dismiss. Confirmed via direct on-device
-                # testing: a raw hardware back-key press reliably dismisses
-                # the keyboard while preserving the field's text, so use
-                # that explicitly instead.
-                driver.press_keycode(4)
+                if driver.is_keyboard_shown():
+                    driver.press_keycode(4)
             except Exception:
                 pass
             time.sleep(0.5)
