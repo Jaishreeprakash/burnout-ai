@@ -94,12 +94,20 @@ def find(driver, by, sel, timeout=15):
 
 
 def find_by_testid(driver, testid, timeout=15):
-    """React Native's testID -> Android locator mapping isn't 100% consistent
-    across RN/Appium versions (sometimes content-desc/accessibility-id,
-    sometimes resource-id). Try both rather than guess wrong and time out."""
+    """React Native's testID maps to Android resource-id in this app --
+    confirmed across every screen inspected on a real device (resource-id
+    always equals the real testID; content-desc is either empty or an
+    unrelated human-readable label). Try that first: since WebDriverWait
+    returns as soon as an element is found, this makes the overwhelming
+    majority of calls resolve almost instantly instead of always burning
+    through a doomed accessibility-id lookup first. A few call sites here
+    pass an accessibilityLabel (not a real testID) as `testid` on purpose
+    (e.g. the notification bell, which has no testID prop at all) -- the
+    accessibility-id strategy is kept as a real fallback, not just insurance,
+    for exactly that case."""
     strategies = [
-        (AppiumBy.ACCESSIBILITY_ID, testid, timeout * 0.6),
-        (AppiumBy.ANDROID_UIAUTOMATOR, f'new UiSelector().resourceId("{testid}")', timeout * 0.25),
+        (AppiumBy.ANDROID_UIAUTOMATOR, f'new UiSelector().resourceId("{testid}")', timeout * 0.6),
+        (AppiumBy.ACCESSIBILITY_ID, testid, timeout * 0.25),
         (AppiumBy.XPATH,
          f'//*[@content-desc="{testid}" or @resource-id="{testid}" or contains(@resource-id,":id/{testid}")]',
          timeout * 0.15),
