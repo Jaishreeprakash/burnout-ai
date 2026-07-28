@@ -734,7 +734,15 @@ def run(appium_url, udid, apk_path, no_spawn_appium, output_dir):
                 # the step-2 fields.
                 step = "verify_still_on_confirm_password_field"
                 find_by_testid(driver, "register-confirm-password-input", timeout=10)
-                step = "click_back_button"
+                # register-back-button's onPress is `step > 0 ? setStep(step - 1)
+                # : navigation.goBack()` (RegisterScreen.tsx) -- we're on step 1
+                # (Security) here, so one click only steps back to step 0
+                # (Personal Info) within the wizard; a second click from step 0
+                # is what actually calls navigation.goBack() to reach Login.
+                step = "click_back_button_step1_to_step0"
+                find_by_testid(driver, "register-back-button", timeout=10).click()
+                time.sleep(1)
+                step = "click_back_button_step0_to_login"
                 find_by_testid(driver, "register-back-button", timeout=10).click()
                 time.sleep(1)
                 step = "verify_back_on_login"
