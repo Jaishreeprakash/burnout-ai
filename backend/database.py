@@ -16,7 +16,15 @@ is_sqlite = db_url.startswith("sqlite")
 # locked", instead of the 5s default — under concurrent writers (multiple
 # uvicorn workers sharing one file) that default was surfacing as real 500s
 # under load rather than just queuing briefly.
-connect_args = {"check_same_thread": False, "timeout": 30} if is_sqlite else {}
+if is_sqlite:
+    connect_args = {"check_same_thread": False, "timeout": 30}
+else:
+    # connect_timeout: bounds how long a single connection attempt can take
+    # (DNS failure, unreachable host, wrong credentials after a config
+    # change) before psycopg2 gives up and raises -- without this, a broken
+    # DATABASE_URL can hang a request (including /health) indefinitely
+    # instead of failing fast with a clear error.
+    connect_args = {"connect_timeout": 10}
 
 # pool_pre_ping tests each connection with a cheap query before handing it to
 # the app, so a connection the remote DB has silently dropped (idle timeout,
