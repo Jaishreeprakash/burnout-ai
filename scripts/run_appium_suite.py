@@ -117,6 +117,30 @@ def text_xpath(text):
     return f'//*[@text="{text}" or contains(@text,"{text}")]'
 
 
+def safe_back_to_root_tab(driver, evidence_prefix):
+    """Only presses hardware back if we're not already on a root bottom-tab
+    screen. Confirmed via CI (current_package became
+    com.google.android.apps.nexuslauncher): if the preceding navigation
+    check silently failed to actually leave the dashboard (e.g. a slow
+    chart render meant its target link never appeared in time), blindly
+    pressing back here pops past the app's root and exits to the home
+    launcher instead of being the safe no-op these checks assume -- and
+    every check after that assumes the app is still open. The bottom tab
+    bar (with a "Home" label) is only rendered on root tab screens, not on
+    pushed stack screens like Analytics/Phone Usage/Recommendations, so
+    its presence is a reliable signal for "nothing left to pop"."""
+    try:
+        find(driver, AppiumBy.XPATH, text_xpath("Home"), timeout=2)
+        already_root = True
+    except TimeoutException:
+        already_root = False
+    if not already_root:
+        driver.back()
+        time.sleep(1.5)
+    find(driver, AppiumBy.XPATH, text_xpath("Home"), timeout=10)
+    return (True, f"{evidence_prefix} (was already on a root tab, so back was skipped={already_root})")
+
+
 def click_profile_logout_button(driver, timeout=10):
     """profile-logout-button sits below the fold in ProfileScreen's
     ScrollView -- confirmed by direct on-device inspection (had to swipe up
@@ -469,10 +493,7 @@ def run(appium_url, udid, apk_path, no_spawn_appium, output_dir):
              analytics_screen_shows_overall_wellness_metric)
 
         def back_button_returns_from_analytics_to_dashboard():
-            driver.back()
-            time.sleep(1.5)
-            find(driver, AppiumBy.XPATH, text_xpath("Home"), timeout=10)
-            return (True, "Hardware back returned from Analytics to the main tab bar without a crash")
+            return safe_back_to_root_tab(driver, "Hardware back returned from Analytics to the main tab bar without a crash")
         safe(rec, "Compatibility", "Analytics", "back_button_returns_from_analytics_to_dashboard",
              back_button_returns_from_analytics_to_dashboard)
 
@@ -493,10 +514,7 @@ def run(appium_url, udid, apk_path, no_spawn_appium, output_dir):
              navigate_to_phone_usage_screen_via_metric_card)
 
         def back_button_returns_from_phone_usage_to_dashboard():
-            driver.back()
-            time.sleep(1.5)
-            find(driver, AppiumBy.XPATH, text_xpath("Home"), timeout=10)
-            return (True, "Hardware back returned from Phone Usage to the main tab bar without a crash")
+            return safe_back_to_root_tab(driver, "Hardware back returned from Phone Usage to the main tab bar without a crash")
         safe(rec, "Compatibility", "Phone Usage", "back_button_returns_from_phone_usage_to_dashboard",
              back_button_returns_from_phone_usage_to_dashboard)
 
@@ -525,7 +543,11 @@ def run(appium_url, udid, apk_path, no_spawn_appium, output_dir):
         safe(rec, "Functional", "Dashboard", "dashboard_reached_via_demo_login", dashboard_reached_via_demo_login)
 
         def recommendations_screen_reachable_with_demo_data():
-            find(driver, AppiumBy.XPATH, text_xpath("See all"), timeout=10).click()
+            # DashboardScreen only renders this link once burnout?.recommendations[0]
+            # has actually rendered -- the same chart-heavy first-render slowness
+            # already worked around for SleepScreen affects this screen's line
+            # chart too, so this needs the same longer headroom on this emulator.
+            find(driver, AppiumBy.XPATH, text_xpath("See all"), timeout=25).click()
             time.sleep(2)
             return (True, "Tapped the real 'See all ->' recommendations link, rendered because Demo Mode's "
                           "MOCK_BURNOUT always has a recommendation")
@@ -539,10 +561,7 @@ def run(appium_url, udid, apk_path, no_spawn_appium, output_dir):
              recommendations_screen_lists_a_real_recommendation_card)
 
         def back_button_returns_from_recommendations_to_dashboard():
-            driver.back()
-            time.sleep(1.5)
-            find(driver, AppiumBy.XPATH, text_xpath("Home"), timeout=10)
-            return (True, "Hardware back returned from Recommendations to the main tab bar without a crash")
+            return safe_back_to_root_tab(driver, "Hardware back returned from Recommendations to the main tab bar without a crash")
         safe(rec, "Compatibility", "Recommendations", "back_button_returns_from_recommendations_to_dashboard",
              back_button_returns_from_recommendations_to_dashboard)
 
