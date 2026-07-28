@@ -8,6 +8,7 @@ from fastapi import FastAPI, Depends, HTTPException, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, field_validator
+from sqlalchemy import text
 from sqlalchemy.exc import DataError
 from sqlalchemy.orm import Session
 from typing import List, Optional
@@ -228,7 +229,15 @@ def chat_with_ai(
 
 
 @app.get("/health")
-def health():
+def health(db: Session = Depends(get_db)):
+    # A bare "the process is up" check isn't a reliable readiness signal on
+    # its own -- with NullPool (see database.py, used for Supabase's
+    # transaction pooler) every request opens a fresh DB connection, so the
+    # web process can report healthy well before the DB path is actually
+    # warm. Exercising a real query here means callers that wait on this
+    # endpoint (e.g. the E2E suite's readiness check) don't race the first
+    # real request against a cold connection.
+    db.execute(text("SELECT 1"))
     return {"status": "ok"}
 
 
