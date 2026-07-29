@@ -69,6 +69,7 @@ def make_driver(browser):
         opts.add_argument("--window-size=1440,900")
         opts.add_argument("--disable-gpu")
         opts.add_argument("--no-sandbox")
+        opts.add_argument("--disable-dev-shm-usage")
         opts.set_capability("goog:loggingPrefs", {"browser": "ALL"})
         return webdriver.Chrome(options=opts)
     if browser == "firefox":

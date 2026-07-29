@@ -141,19 +141,30 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Web Dependencies
+        run: |
+          cd web
+          npm ci
+
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.10'
 
-      - name: Install Test Dependencies
+      - name: Install Backend + Test Dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install selenium httpx
+          pip install -r backend/requirements.txt
+          pip install selenium httpx jose python-jose
 
       - name: Run Selenium E2E Suite (400 test cases)
         run: |
-          python scripts/run_selenium_suite.py --no-spawn-web --no-spawn-backend || python scripts/run_selenium_suite.py
+          python scripts/run_selenium_suite.py
 
       - name: Upload Website E2E Report
         if: always()
