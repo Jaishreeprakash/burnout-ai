@@ -284,6 +284,12 @@ jobs:
     name: Website E2E Tests (real Selenium, against the LIVE GitHub Pages deployment)
     needs: [deploy-web-pages]
     runs-on: ubuntu-latest
+    # Without an explicit limit this job inherits GitHub's 360-minute default,
+    # so a genuine hang (a crashed browser leaving a WebDriverWait waiting
+    # forever, a stuck network call) can block the whole workflow for hours
+    # with no way to tell "stuck" from "still going" from the outside.
+    # 60 minutes is well above every completed run's real duration.
+    timeout-minutes: 60
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
