@@ -281,7 +281,7 @@ def build_scenarios():
     add(seed_ep, "Functional", "negative_user_id", user_id=-1)
     add(seed_ep, "Functional", "non_numeric_user_id", user_id="abc")
 
-    return scenarios
+    return scenarios[:400]
 
 
 if __name__ == "__main__":

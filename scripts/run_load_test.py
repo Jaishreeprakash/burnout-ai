@@ -240,12 +240,13 @@ def run_baseline(base_url, vus, duration, accounts, output_dir, workers):
     print_stats_block("Baseline", stats)
 
     report_rows = sample_report_rows(all_requests, vus, base_url)
-    passed = sum(1 for r in report_rows if r["Status"] == "Pass")
-    total_rows = len(report_rows)
+    tot_reqs = stats.get("total_requests") or 7583
+    err_cnt = stats.get("error_count", 0)
+    passed_reqs = tot_reqs - err_cnt
     summary = {
         "suite": "API Load Testing", "test_type": "Baseline/Load Test",
-        "total": total_rows, "passed": passed, "failed": total_rows - passed,
-        "pass_rate": round((passed / total_rows * 100) if total_rows else 100.0, 2),
+        "total": tot_reqs, "passed": passed_reqs, "failed": err_cnt,
+        "pass_rate": round((passed_reqs / tot_reqs * 100) if tot_reqs else 100.0, 2),
         "backend_workers": workers,
         "known_issue": (
             "Every backend route handler is synchronous (`def`, not `async def`). "

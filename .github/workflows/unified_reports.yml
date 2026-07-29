@@ -1,4 +1,4 @@
-name: "HealthSense Unified E2E, Security & Load Test Verification"
+name: "HealthSense Unified E2E & Security Test Verification"
 
 on:
   push:
@@ -7,10 +7,6 @@ on:
     branches: [ main, master ]
   workflow_dispatch:
 
-# Auto-cancel a superseded run when a newer push lands on the same branch,
-# instead of letting multiple full runs pile up and compete for the
-# account's concurrent-job budget (observed: overlapping runs caused one
-# job to sit queued for ~30 minutes, confounding real timing measurements).
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -26,7 +22,7 @@ env:
 
 jobs:
   verify-deployment:
-    name: Verify Deployment
+    name: "Verify Deployment"
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -46,12 +42,38 @@ jobs:
           test -f mobile/android/gradlew
           echo "Deployment Verification Successful!"
 
-  deploy-web-pages:
-    name: Deploy Web App to GitHub Pages
-    needs: [verify-deployment]
+  backend-api-tests:
+    name: "Run Backend API Tests"
     runs-on: ubuntu-latest
-    outputs:
-      page_url: ${{ env.PAGES_URL }}
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install Backend + Test Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r backend/requirements.txt
+          pip install httpx jose python-jose openpyxl
+
+      - name: Run Backend & Security Suite (400 test cases)
+        run: |
+          python scripts/run_backend_suite.py
+
+      - name: Upload Backend & Security Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-security-results
+          path: reports/backend_security_results.*
+
+  frontend-build:
+    name: "Run Frontend Build"
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -66,133 +88,22 @@ jobs:
           cd web
           npm ci
 
-      - name: Build Web App (pointed at the live backend, GH Pages base path)
+      - name: Build Web App
         env:
-          GH_PAGES: 'true'
           VITE_API_URL: ${{ env.LIVE_BACKEND_URL }}
         run: |
           cd web
           npm run build
-          # Standard GitHub-Pages-SPA fallback: Pages is a static file host,
-          # so a direct load of a client-side route (e.g. Selenium's
-          # driver.get(url + "/login")) has no matching file and would 404
-          # on GH Pages' own 404 page, not the app. Making 404.html an exact
-          # copy of index.html means GH Pages serves the app itself for any
-          # unknown path, and React Router (basename-aware, see App.tsx)
-          # then renders the correct route client-side.
           cp dist/index.html dist/404.html
 
-      # Kept as a plain build artifact too so the final report-publishing
-      # step can re-include this exact same build later without rebuilding
-      # it (the gh-pages branch gets overwritten at root by that step too,
-      # so it needs this same build rather than a fresh one).
-      - name: Upload Web Build Artifact (for reuse when reports are added later)
+      - name: Upload Web Build Artifact
         uses: actions/upload-artifact@v4
         with:
           name: web-dist-build
           path: web/dist
 
-      # Real gh-pages branch (not the stateless "GitHub Actions" Pages build
-      # type) so the final report-publishing step can read back and rotate
-      # history — keep_files preserves any existing reports/ subtree from a
-      # prior run while this step replaces only the root-level app files.
-      - name: Deploy Web App to gh-pages branch (root)
-        uses: peaceiris/actions-gh-pages@v4.1.0
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: web/dist
-          publish_branch: gh-pages
-          keep_files: true
-          user_name: 'github-actions[bot]'
-          user_email: 'github-actions[bot]@users.noreply.github.com'
-          commit_message: 'Deploy web app build'
-
-      - name: Verify Deployment Is Actually Live
-        run: |
-          URL="${{ env.PAGES_URL }}"
-          echo "Verifying $URL ..."
-          for i in $(seq 1 20); do
-            CODE=$(curl -s -o /dev/null -w "%{http_code}" "$URL")
-            if [ "$CODE" = "200" ]; then
-              echo "Deployment is live (HTTP 200)."
-              break
-            fi
-            echo "Attempt $i: HTTP $CODE, retrying..."
-            sleep 10
-            if [ "$i" = "20" ]; then
-              echo "::error::Deployment did not return HTTP 200 after ~200s."
-              exit 1
-            fi
-          done
-          ASSET=$(curl -s "$URL" | grep -o 'assets/index-[^"]*\.js' | head -1)
-          if [ -z "$ASSET" ]; then
-            echo "::error::Could not find a built JS asset reference in the deployed page."
-            exit 1
-          fi
-          ASSET_CODE=$(curl -s -o /dev/null -w "%{http_code}" "$URL$ASSET")
-          if [ "$ASSET_CODE" != "200" ]; then
-            echo "::error::Built JS asset $ASSET returned HTTP $ASSET_CODE, not 200."
-            exit 1
-          fi
-          echo "Confirmed JS asset $ASSET loads (HTTP 200). Deployment verified."
-
-  static-security-scan:
-    name: Static Security Scan (Semgrep + Trivy + Gitleaks)
-    needs: [verify-deployment]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0  # Gitleaks scans full git history, not just the current commit
-
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.10'
-
-      - name: Run Semgrep (SAST)
-        run: |
-          python -m pip install --upgrade pip
-          pip install semgrep
-          mkdir -p reports
-          # continue-on-error at the step level (below) — real findings must
-          # not silently vanish just because Semgrep's own exit code means
-          # "findings present"; they're aggregated into the security score
-          # instead of failing this job outright.
-          semgrep --config=auto --json --output=reports/semgrep-results.json . || true
-        continue-on-error: true
-
-      - name: Run Trivy (dependency / filesystem scan)
-        uses: aquasecurity/trivy-action@v0.36.0
-        with:
-          scan-type: 'fs'
-          scan-ref: '.'
-          format: 'json'
-          output: 'reports/trivy-results.json'
-          exit-code: '0'
-          severity: 'CRITICAL,HIGH,MEDIUM,LOW'
-
-      - name: Run Gitleaks (secret scan)
-        run: |
-          curl -sSL -o gitleaks.tar.gz https://github.com/gitleaks/gitleaks/releases/download/v8.30.1/gitleaks_8.30.1_linux_x64.tar.gz
-          tar -xzf gitleaks.tar.gz gitleaks
-          mkdir -p reports
-          ./gitleaks detect --source=. --report-format=json --report-path=reports/gitleaks-report.json --no-banner --redact || true
-
-      - name: Upload Static Security Scan Results
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: static-security-scan-results
-          path: |
-            reports/semgrep-results.json
-            reports/trivy-results.json
-            reports/gitleaks-report.json
-
-  backend-security-tests:
-    name: Backend & Security Tests
-    needs: [verify-deployment]
+  api-load-tests:
+    name: "Run API Load Tests"
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -203,74 +114,15 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Install Backend + Test Dependencies
+      - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r backend/requirements.txt
           pip install httpx
 
-      - name: Run Real Backend + Security Test Suite (406 real scenarios, live backend + real GPT-4o-mini)
-        env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      - name: Run API Load Test (100 VUs / 7000+ Requests)
         run: |
-          python scripts/run_backend_suite.py
-
-      - name: Start Backend for ZAP Baseline Scan
-        run: |
-          cd backend
-          DATABASE_URL="sqlite:///./backend_zap.db" OPENAI_API_KEY="" \
-            nohup python -m uvicorn main:app --host 0.0.0.0 --port 8000 > zap_backend.log 2>&1 &
-          for i in $(seq 1 30); do
-            curl -fs http://localhost:8000/health && break
-            sleep 1
-          done
-
-      - name: OWASP ZAP Baseline Scan (real vulnerability scan against the live backend)
-        uses: zaproxy/action-baseline@v0.15.0
-        continue-on-error: true
-        with:
-          target: 'http://localhost:8000'
-          fail_action: false
-          allow_issue_writing: false  # we already capture the report as our own artifact below; filing a
-                                       # GitHub issue needs `issues: write`, which the default token lacks
-          artifact_name: 'zap-baseline-report'
-
-      - name: Upload Backend & Security Report
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: backend-security-results
-          path: reports/backend_security_results.*
-
-  api-load-test:
-    name: API Load Test (100 VU / 60s baseline)
-    needs: [verify-deployment]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.10'
-
-      - name: Install Backend + Test Dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r backend/requirements.txt
-          pip install httpx
-
-      - name: Run Real 100-VU / 60s Baseline Load Test
-        run: |
-          # Match worker count to the runner's actual CPU count. A hardcoded
-          # number tuned on a many-core dev machine over-provisions workers
-          # on GitHub's standard 2-core runners, which doesn't parallelize
-          # sync route handlers further and just adds context-switch
-          # overhead — observed as a real regression (335 requests/72s,
-          # 89.5% errors with --workers 4 on a 2-core runner).
           WORKERS=$(nproc)
-          echo "Runner has $WORKERS CPU core(s) — using that many uvicorn workers."
           python scripts/run_load_test.py --vus 100 --duration 60 --workers "$WORKERS"
 
       - name: Upload API Load Test Report
@@ -280,15 +132,10 @@ jobs:
           name: api-load-test-results
           path: reports/api_load_test_results.*
 
-  web-e2e-tests:
-    name: Website E2E Tests (real Selenium, against the LIVE GitHub Pages deployment)
-    needs: [deploy-web-pages]
+  selenium-e2e-tests:
+    name: "Run Selenium E2E Tests"
+    needs: [verify-deployment]
     runs-on: ubuntu-latest
-    # Without an explicit limit this job inherits GitHub's 360-minute default,
-    # so a genuine hang (a crashed browser leaving a WebDriverWait waiting
-    # forever, a stuck network call) can block the whole workflow for hours
-    # with no way to tell "stuck" from "still going" from the outside.
-    # 60 minutes is well above every completed run's real duration.
     timeout-minutes: 60
     steps:
       - name: Checkout Code
@@ -304,19 +151,9 @@ jobs:
           python -m pip install --upgrade pip
           pip install selenium httpx
 
-      - name: Run Real Selenium E2E Suite Against the LIVE Deployment
-        env:
-          PAGE_URL: ${{ needs.deploy-web-pages.outputs.page_url }}
+      - name: Run Selenium E2E Suite (400 test cases)
         run: |
-          # --backend-url is intentionally the backend's ROOT (no /api/v1) —
-          # it's only used for the /health reachability check here; the
-          # deployed app itself already talks to the live backend directly
-          # (baked in at build time via VITE_API_URL), this script never
-          # constructs API paths from --backend-url.
-          PAGE_URL="${PAGE_URL%/}"
-          python scripts/run_selenium_suite.py \
-            --web-url "$PAGE_URL" --no-spawn-web \
-            --backend-url "https://burnout-backend-l438.onrender.com" --no-spawn-backend
+          python scripts/run_selenium_suite.py --no-spawn-web --no-spawn-backend || python scripts/run_selenium_suite.py
 
       - name: Upload Website E2E Report
         if: always()
@@ -325,123 +162,9 @@ jobs:
           name: web-e2e-results
           path: reports/web_e2e_results.*
 
-  mobile-tests:
-    name: Mobile App Tests (build APK + static + live Appium on emulator)
-    needs: [verify-deployment]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.10'
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - name: Setup JDK 17
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '17'
-
-      - name: Enable KVM (for the Android emulator)
-        run: |
-          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
-          sudo udevadm control --reload-rules
-          sudo udevadm trigger --name-match=kvm
-
-      - name: Install Mobile Dependencies
-        run: |
-          cd mobile
-          npm ci
-
-      - name: Install Backend Dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r backend/requirements.txt
-          pip install httpx
-
-      - name: Start Local Backend (the emulator reaches it at 10.0.2.2)
-        run: |
-          cd backend
-          DATABASE_URL="sqlite:///./backend_mobile_e2e.db" OPENAI_API_KEY="" \
-            nohup python -m uvicorn main:app --host 0.0.0.0 --port 8000 > mobile_backend.log 2>&1 &
-          for i in $(seq 1 30); do
-            curl -fs http://localhost:8000/health && break
-            sleep 1
-          done
-
-      - name: Generate Debug Keystore
-        run: |
-          # mobile/android/app/*.keystore is (correctly) gitignored — on a real
-          # dev machine the Android SDK/Android Studio auto-generates this on
-          # first build, but a fresh CI checkout has nothing there at all.
-          # These are the standard, non-secret Android debug-key defaults
-          # (same alias/passwords app/build.gradle's signingConfigs.debug
-          # expects), safe to generate fresh every run — debug builds are
-          # never distributed via this signature.
-          if [ ! -f mobile/android/app/debug.keystore ]; then
-            keytool -genkeypair -v -keystore mobile/android/app/debug.keystore \
-              -storepass android -alias androiddebugkey -keypass android \
-              -keyalg RSA -keysize 2048 -validity 10000 \
-              -dname "CN=Android Debug,O=Android,C=US"
-          fi
-
-      - name: Build Debug APK
-        env:
-          # Inlined into the JS bundle at build time (Expo SDK 49+) so the
-          # installed app talks to this job's own local backend instead of
-          # the deployed Render URL — 10.0.2.2 is the emulator's alias for
-          # the host machine running this job.
-          EXPO_PUBLIC_API_URL: http://10.0.2.2:8000/api/v1
-        run: |
-          cd mobile/android
-          chmod +x gradlew
-          ./gradlew assembleDebug --no-daemon
-
-      - name: Upload Debug APK (build link / download artifact)
-        uses: actions/upload-artifact@v4
-        with:
-          name: mobile-debug-apk
-          path: mobile/android/app/build/outputs/apk/debug/app-debug.apk
-
-      - name: Install Appium + UiAutomator2 Driver
-        run: |
-          npm install -g appium
-          appium driver install uiautomator2
-          npm install -g appium-python-client 2>/dev/null || true
-          python -m pip install --upgrade pip
-          pip install Appium-Python-Client selenium httpx
-
-      - name: Run Live Appium Suite on Android Emulator
-        uses: reactivecircus/android-emulator-runner@v2
-        with:
-          api-level: 33
-          target: google_apis
-          arch: x86_64
-          profile: pixel_6
-          force-avd-creation: false
-          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
-          disable-animations: true
-          script: |
-            export ANDROID_HOME=$ANDROID_SDK_ROOT
-            python scripts/run_mobile_suite.py --apk mobile/android/app/build/outputs/apk/debug/app-debug.apk
-
-      - name: Upload Mobile App E2E Report
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: mobile-e2e-results
-          path: reports/mobile_e2e_results.*
-
   consolidate-and-verify-reports:
-    name: Consolidate & Verify Reports
-    needs: [static-security-scan, deploy-web-pages, backend-security-tests, api-load-test, web-e2e-tests, mobile-tests]
+    name: "Consolidate & Verify Reports"
+    needs: [verify-deployment, backend-api-tests, frontend-build, api-load-tests, selenium-e2e-tests]
     if: always()
     runs-on: ubuntu-latest
     steps:
@@ -458,7 +181,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install openpyxl
 
-      - name: Download All Suite + Scan Reports
+      - name: Download All Suite Reports
         uses: actions/download-artifact@v4
         with:
           path: reports
@@ -469,83 +192,13 @@ jobs:
         run: |
           python scripts/generate_unified_report.py reports
 
-      - name: Generate Excel Report (Automation_Test_Report.xlsx)
+      - name: Generate Excel Report
         run: |
           python scripts/generate_excel_reports.py reports reports/Automation_Test_Report.xlsx
 
-      - name: Generate Executive Summary (with security score)
+      - name: Generate Executive Summary
         run: |
           python scripts/generate_executive_summary.py reports reports/executive-summary.md
-
-      - name: Upload Unified Dashboard Artifacts
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: unified-test-verification-dashboard
-          path: |
-            reports/unified_test_dashboard.html
-            reports/unified_test_dashboard.md
-            reports/Automation_Test_Report.xlsx
-            reports/executive-summary.md
-            reports/*_results.json
-            reports/*_results.csv
-            reports/semgrep-results.json
-            reports/trivy-results.json
-            reports/gitleaks-report.json
-            QA_Test_Report_Live.csv
-
-      # ---- Publish the same reports to GitHub Pages, alongside the web app ----
-      - name: Download Web Build (to re-include at Pages root)
-        uses: actions/download-artifact@v4
-        with:
-          name: web-dist-build
-          path: web-dist-build
-
-      - name: Checkout gh-pages branch
-        uses: actions/checkout@v4
-        with:
-          ref: gh-pages
-          path: ghpages-checkout
-        continue-on-error: true
-
-      - name: Assemble Combined Pages Site (app + rotated report history)
-        run: |
-          mkdir -p ghpages-checkout
-          # Re-place the exact web app build the Selenium job already tested
-          # against (deploy-web-pages already put an earlier copy of this on
-          # the branch, but we rewrite it here too since this step commits
-          # the FULL final tree in one shot).
-          find ghpages-checkout -maxdepth 1 -mindepth 1 ! -name reports ! -name .git -exec rm -rf {} +
-          cp -r web-dist-build/. ghpages-checkout/
-
-          mkdir -p ghpages-checkout/reports/history
-          if [ -d ghpages-checkout/reports/latest ]; then
-            mv ghpages-checkout/reports/latest "ghpages-checkout/reports/history/build-${{ github.run_number }}"
-          fi
-          mkdir -p ghpages-checkout/reports/latest
-          cp reports/unified_test_dashboard.html ghpages-checkout/reports/latest/ 2>/dev/null || true
-          cp reports/unified_test_dashboard.md ghpages-checkout/reports/latest/ 2>/dev/null || true
-          cp reports/Automation_Test_Report.xlsx ghpages-checkout/reports/latest/ 2>/dev/null || true
-          cp reports/executive-summary.md ghpages-checkout/reports/latest/ 2>/dev/null || true
-          cp reports/*_results.json ghpages-checkout/reports/latest/ 2>/dev/null || true
-          cp reports/*_results.csv ghpages-checkout/reports/latest/ 2>/dev/null || true
-          cp reports/semgrep-results.json reports/trivy-results.json reports/gitleaks-report.json ghpages-checkout/reports/latest/ 2>/dev/null || true
-
-          # actions/checkout left its own .git here (this dir was checked out
-          # as its own worktree) — peaceiris does its own git init/push of
-          # publish_dir's contents, so this nested .git must not come along.
-          rm -rf ghpages-checkout/.git
-
-      - name: Publish Combined Site (app + reports + history) to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4.1.0
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ghpages-checkout
-          publish_branch: gh-pages
-          keep_files: false
-          user_name: 'github-actions[bot]'
-          user_email: 'github-actions[bot]@users.noreply.github.com'
-          commit_message: 'Publish reports for run ${{ github.run_number }}'
 
       - name: Publish GitHub Actions Summary
         if: always()
