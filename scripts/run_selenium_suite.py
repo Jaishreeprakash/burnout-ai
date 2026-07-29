@@ -17,6 +17,7 @@ import subprocess
 import sys
 import time
 import uuid
+from concurrent.futures import ThreadPoolExecutor, TimeoutError as FutureTimeoutError
 from datetime import datetime, timezone
 
 import httpx
@@ -79,15 +80,28 @@ def make_driver(browser):
     raise ValueError(browser)
 
 
-def browser_available(browser):
-    try:
+def browser_available(browser, timeout=30):
+    # Confirmed via a real CI run: an incompatible geckodriver/Firefox pairing
+    # on the runner image (a runner-image drift, not an app or test issue --
+    # Selenium Manager itself warned about it) can make webdriver.Firefox()
+    # hang forever during the driver handshake, raising nothing at all for a
+    # plain try/except to catch. Running the probe in a thread with a real
+    # timeout means a hung driver can no longer block the whole suite for an
+    # hour -- it's just treated as "this browser isn't usable right now".
+    def _probe():
         d = make_driver(browser)
         d.quit()
         return True
-    except WebDriverException:
-        return False
-    except Exception:
-        return False
+
+    with ThreadPoolExecutor(max_workers=1) as executor:
+        future = executor.submit(_probe)
+        try:
+            return future.result(timeout=timeout)
+        except FutureTimeoutError:
+            print(f"{browser} driver did not respond within {timeout}s (hung handshake?) — treating as unavailable.")
+            return False
+        except (WebDriverException, Exception):
+            return False
 
 
 class Recorder:
