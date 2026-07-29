@@ -15,9 +15,9 @@ import json
 import os
 import subprocess
 import sys
+import threading
 import time
 import uuid
-from concurrent.futures import ThreadPoolExecutor, TimeoutError as FutureTimeoutError
 from datetime import datetime, timezone
 
 import httpx
@@ -85,23 +85,33 @@ def browser_available(browser, timeout=30):
     # on the runner image (a runner-image drift, not an app or test issue --
     # Selenium Manager itself warned about it) can make webdriver.Firefox()
     # hang forever during the driver handshake, raising nothing at all for a
-    # plain try/except to catch. Running the probe in a thread with a real
-    # timeout means a hung driver can no longer block the whole suite for an
-    # hour -- it's just treated as "this browser isn't usable right now".
-    def _probe():
-        d = make_driver(browser)
-        d.quit()
-        return True
+    # plain try/except to catch.
+    #
+    # A first attempt at this used ThreadPoolExecutor as a context manager --
+    # that still hung for the same hour, because `with ThreadPoolExecutor()`
+    # calls shutdown(wait=True) on exit, which blocks until the worker thread
+    # finishes even after future.result(timeout=...) has already raised and
+    # been handled. A plain daemon Thread has no such join-on-exit behavior:
+    # .join(timeout=...) returns control regardless of whether the thread
+    # ever finishes, and being daemonic means a permanently-hung thread can't
+    # block the interpreter from exiting later either.
+    result = {}
 
-    with ThreadPoolExecutor(max_workers=1) as executor:
-        future = executor.submit(_probe)
+    def _probe():
         try:
-            return future.result(timeout=timeout)
-        except FutureTimeoutError:
-            print(f"{browser} driver did not respond within {timeout}s (hung handshake?) — treating as unavailable.")
-            return False
-        except (WebDriverException, Exception):
-            return False
+            d = make_driver(browser)
+            d.quit()
+            result["ok"] = True
+        except Exception:
+            result["ok"] = False
+
+    thread = threading.Thread(target=_probe, daemon=True)
+    thread.start()
+    thread.join(timeout=timeout)
+    if thread.is_alive():
+        print(f"{browser} driver did not respond within {timeout}s (hung handshake?) — treating as unavailable.")
+        return False
+    return result.get("ok", False)
 
 
 class Recorder:
